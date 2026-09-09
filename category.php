@@ -86,8 +86,8 @@ $heroMedia = ($cat['photo'] ?? '') !== ''
 <?php require __DIR__ . '/includes/modals.php'; ?>
 
 <?php render_vcd_script(); ?>
-<script src="assets/js/catalog.js?v=2.6"></script>
-<script src="assets/js/shop-shared.js?v=2.6"></script>
-<script src="assets/js/category-page.js?v=2.6"></script>
+<script src="/assets/js/catalog.js?v=2.6"></script>
+<script src="/assets/js/shop-shared.js?v=2.6"></script>
+<script src="/assets/js/category-page.js?v=2.6"></script>
 </body>
 </html>

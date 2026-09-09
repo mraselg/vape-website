@@ -36,6 +36,25 @@ if ($path === '/index.php') {
     return true;
 }
 
+/* Ensure directory /admin always redirects to /admin/ (prevents relative link breaks) */
+if ($path === '/admin') {
+    $qs = (string) ($_SERVER['QUERY_STRING'] ?? '');
+    header('Location: /admin/' . ($qs !== '' ? '?' . $qs : ''), true, 301);
+    return true;
+}
+
+/* Fallback asset aliases in case browser or proxy asks for /assets/admin.* */
+if ($path === '/assets/admin.css' || $path === '/assets/admin/admin.css') {
+    header('Content-Type: text/css; charset=UTF-8');
+    readfile(__DIR__ . '/admin/assets/admin.css');
+    return true;
+}
+if ($path === '/assets/admin.js' || $path === '/assets/admin/admin.js') {
+    header('Content-Type: application/javascript; charset=UTF-8');
+    readfile(__DIR__ . '/admin/assets/admin.js');
+    return true;
+}
+
 /* Old .html URLs permanently redirect to the PHP versions (SEO) */
 $legacy = ['/index.html' => '/', '/category.html' => '/category.php', '/product.html' => '/product.php'];
 if (isset($legacy[$path])) {

@@ -20,13 +20,14 @@ if ($authed) {
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<base href="/admin/">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Admin — Vape Club Dubai</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/admin.css?v=1.0">
+<link rel="stylesheet" href="/admin/assets/admin.css?v=2.0">
 </head>
 <body class="adm-body">
 
@@ -87,7 +88,7 @@ if ($authed) {
   window.ADM_CSRF = <?= json_encode($_SESSION['csrf']) ?>;
   window.ADM_USER = <?= json_encode(vcd_load('admin')['username'] ?? 'admin') ?>;
 </script>
-<script src="assets/admin.js?v=1.0"></script>
+<script src="/admin/assets/admin.js?v=2.0"></script>
 <?php endif; ?>
 
 <script>
@@ -103,7 +104,7 @@ if ($authed) {
     btn.disabled = true;
     btn.textContent = 'Signing in…';
     try {
-      const r = await fetch('api.php?action=login', {
+      const r = await fetch('/admin/api.php?action=login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: document.getElementById('loginUser').value.trim(), password: document.getElementById('loginPass').value })

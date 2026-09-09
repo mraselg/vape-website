@@ -74,15 +74,15 @@ function render_head(array $m): void
   <meta name="twitter:image" id="twImage" content="<?= e($ogImageAbs) ?>">
 
   <!-- PWA & icons -->
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32.png">
-  <link rel="apple-touch-icon" href="assets/images/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="/assets/images/icons/apple-touch-icon.png">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2300E599' d='M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5L13 2z'/%3E%3C/svg%3E">
   <script>try{var r=document.documentElement;r.classList.add('js');var t=localStorage.getItem('vcd_theme')||'dark';r.dataset.theme=(t==='midnight'?'dark':t);r.dataset.accent='emerald'}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=<?= e($cssVer) ?>">
+  <link rel="stylesheet" href="/assets/css/style.css?v=<?= e($cssVer) ?>">
 <?php foreach ($jsonld as $schema): ?>
   <script type="application/ld+json"<?= ($schema['@type'] ?? '') === 'Product' ? ' id="productSchema"' : '' ?>><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
 <?php endforeach; ?>

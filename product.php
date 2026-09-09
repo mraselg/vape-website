@@ -49,8 +49,8 @@ if (!$p) {
 <footer class="pd-foot"><div class="container"><p><strong>WARNING:</strong> Nicotine is addictive. 18+ only · ESMA certified · <?= e($S['copyright'] ?? '') ?></p></div></footer>
 <?php require __DIR__ . '/includes/modals.php'; ?>
 <?php render_vcd_script(); ?>
-<script src="assets/js/catalog.js?v=2.6"></script>
-<script src="assets/js/shop-shared.js?v=2.6"></script>
+<script src="/assets/js/catalog.js?v=2.6"></script>
+<script src="/assets/js/shop-shared.js?v=2.6"></script>
 </body>
 </html>
 <?php
@@ -477,8 +477,8 @@ function pd_variants_html(array $p, array $v, string $selPack, ?string $selColor
 <?php require __DIR__ . '/includes/modals.php'; ?>
 
 <?php render_vcd_script(); ?>
-<script src="assets/js/catalog.js?v=2.6"></script>
-<script src="assets/js/shop-shared.js?v=2.6"></script>
-<script src="assets/js/product-page.js?v=2.6"></script>
+<script src="/assets/js/catalog.js?v=2.6"></script>
+<script src="/assets/js/shop-shared.js?v=2.6"></script>
+<script src="/assets/js/product-page.js?v=2.6"></script>
 </body>
 </html>

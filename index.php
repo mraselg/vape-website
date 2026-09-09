@@ -305,8 +305,8 @@ $vip       = $HM['vip_section'] ?? [];
 <?php
 render_vcd_script();
 ?>
-<script src="assets/js/catalog.js?v=2.6"></script>
-<script src="assets/js/shop-shared.js?v=2.6"></script>
-<script src="assets/js/main.js?v=2.6"></script>
+<script src="/assets/js/catalog.js?v=2.6"></script>
+<script src="/assets/js/shop-shared.js?v=2.6"></script>
+<script src="/assets/js/main.js?v=2.6"></script>
 </body>
 </html>

@@ -275,7 +275,7 @@ function stockHtml(p) {
    Fire-and-forget: never blocks WhatsApp handoff or the success view. */
 function logOrderToServer(payload) {
   try {
-    fetch('api/order.php', {
+    fetch('/api/order.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
