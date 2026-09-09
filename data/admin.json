@@ -1,4 +1,16 @@
 {
     "username": "admin",
-    "password_hash": "$2y$10$dxLpPbsGZxYZqACPQY4JJuZZU7XItfwTNKp85ZWAVZP5uZWMARFHO"
+    "password_hash": "$2y$10$dxLpPbsGZxYZqACPQY4JJuZZU7XItfwTNKp85ZWAVZP5uZWMARFHO",
+    "users": [
+        {
+            "id": "usr_admin",
+            "name": "Super Admin",
+            "username": "admin",
+            "phone": "+971 50 123 4567",
+            "password_hash": "$2y$10$dxLpPbsGZxYZqACPQY4JJuZZU7XItfwTNKp85ZWAVZP5uZWMARFHO",
+            "role": "admin",
+            "status": "active",
+            "created_at": "2026-09-10 01:00:00"
+        }
+    ]
 }

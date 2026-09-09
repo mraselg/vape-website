@@ -37,16 +37,16 @@ if ($authed) {
   <form class="adm-login-card" id="loginForm" autocomplete="off">
     <div class="adm-login-logo">⚡</div>
     <h1>Vape Club <span>Admin</span></h1>
-    <p class="adm-login-sub">Site management &amp; SEO control center</p>
-    <label>Username
-      <input type="text" id="loginUser" required placeholder="admin">
+    <p class="adm-login-sub">Site management &amp; Staff control center</p>
+    <label>Username or Phone Number
+      <input type="text" id="loginUser" required placeholder="admin or +971 50 123 4567">
     </label>
     <label>Password
       <input type="password" id="loginPass" required placeholder="••••••••">
     </label>
     <div class="adm-login-err" id="loginErr"></div>
     <button type="submit" class="adm-btn adm-btn-primary adm-btn-block" id="loginBtn">Sign In</button>
-    <p class="adm-login-hint">Default: <b>admin</b> / <b>admin123</b> — change it after first login.</p>
+    <p class="adm-login-hint">Default Admin: <b>admin</b> / <b>admin123</b> (or Phone: <b>+971 50 123 4567</b>)</p>
   </form>
 </div>
 <?php else: ?>
@@ -59,6 +59,15 @@ if ($authed) {
       <div><b>VAPE CLUB</b><small>Admin Panel</small></div>
       <button class="adm-side-close" id="admSideClose" aria-label="Close menu">✕</button>
     </div>
+
+    <div class="adm-user-profile-badge">
+      <div class="adm-user-avatar">👤</div>
+      <div class="adm-user-info">
+        <div class="adm-user-name"><?= htmlspecialchars($_SESSION['admin_name'] ?? 'Admin') ?></div>
+        <div class="adm-user-role-tag adm-role-<?= htmlspecialchars($_SESSION['admin_role'] ?? 'admin') ?>"><?= strtoupper(htmlspecialchars($_SESSION['admin_role'] ?? 'admin')) ?></div>
+      </div>
+    </div>
+
     <nav class="adm-nav" id="admNav">
       <button class="adm-nav-btn is-active" data-view="dashboard"><span>📊</span> Dashboard</button>
       <button class="adm-nav-btn" data-view="products"><span>📦</span> Products</button>
@@ -67,6 +76,7 @@ if ($authed) {
       <button class="adm-nav-btn" data-view="seo"><span>🔍</span> SEO &amp; Schema</button>
       <button class="adm-nav-btn" data-view="orders"><span>🧾</span> Orders <em class="adm-nav-badge" id="ordersBadge" style="display:none"></em></button>
       <button class="adm-nav-btn" data-view="leads"><span>💬</span> WhatsApp Leads <em class="adm-nav-badge" id="leadsBadge" style="display:none"></em></button>
+      <button class="adm-nav-btn" data-view="team" id="navTeamBtn"><span>👥</span> Staff &amp; Roles</button>
       <button class="adm-nav-btn" data-view="settings"><span>⚙️</span> Branding &amp; Settings</button>
       <button class="adm-nav-btn" data-view="account"><span>🔐</span> Account &amp; Backup</button>
     </nav>
@@ -91,10 +101,13 @@ if ($authed) {
 </div>
 <div class="adm-toast-stack" id="admToasts"></div>
 <script>
-  window.ADM_CSRF = <?= json_encode($_SESSION['csrf']) ?>;
-  window.ADM_USER = <?= json_encode(vcd_load('admin')['username'] ?? 'admin') ?>;
+  window.ADM_CSRF = <?= json_encode($_SESSION['csrf'] ?? '') ?>;
+  window.ADM_USER = <?= json_encode($_SESSION['admin_user'] ?? 'admin') ?>;
+  window.ADM_NAME = <?= json_encode($_SESSION['admin_name'] ?? 'Admin') ?>;
+  window.ADM_ROLE = <?= json_encode($_SESSION['admin_role'] ?? 'admin') ?>;
+  window.ADM_PHONE = <?= json_encode($_SESSION['admin_phone'] ?? '') ?>;
 </script>
-<script src="/admin/assets/admin.js?v=2.0"></script>
+<script src="/admin/assets/admin.js?v=2.1"></script>
 <?php endif; ?>
 
 <script>

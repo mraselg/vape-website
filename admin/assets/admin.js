@@ -2275,9 +2275,300 @@
   }
 
   /* ============================================================
+     STAFF & ROLE-BASED ACCESS CONTROL (RBAC)
+     ============================================================ */
+  function renderTeam() {
+    dom.viewTitle.textContent = 'Staff & Role Management';
+    const team = (state.data && state.data.team) || [];
+
+    let html = `
+      <div class="adm-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div>
+          <h3 style="margin:0;"><span>👥</span> Staff &amp; Team Accounts</h3>
+          <p class="adm-card-sub" style="margin:4px 0 0;">Create and manage Author, Editor, and Admin users with Phone Number and Password access.</p>
+        </div>
+        <button class="adm-btn adm-btn-primary" id="btnAddNewStaff">
+          ➕ Add New Staff / Admin
+        </button>
+      </div>
+
+      <!-- ROLE EXPLAINER CARDS -->
+      <div class="adm-team-overview">
+        <div class="adm-role-card">
+          <h4><span>👑 Super Admin</span> <span class="adm-user-role-tag adm-role-admin">Full Access</span></h4>
+          <p>Full control over entire store operations, credentials, and settings.</p>
+          <ul>
+            <li>Products, Categories &amp; Pricing</li>
+            <li>Visual Homepage Customizer &amp; Banners</li>
+            <li>SEO Engine &amp; Meta Schemas</li>
+            <li>Customer Orders &amp; WhatsApp Leads</li>
+            <li>Staff &amp; Role Management (Add/Edit)</li>
+            <li>Full System Backup &amp; Reset</li>
+          </ul>
+        </div>
+        <div class="adm-role-card">
+          <h4><span>✏️ Editor</span> <span class="adm-user-role-tag adm-role-editor">Content &amp; Ops</span></h4>
+          <p>Manages products, catalog content, visual layouts, orders and customer leads.</p>
+          <ul>
+            <li>Full Catalog &amp; Product Management</li>
+            <li>Homepage Customizer &amp; Content</li>
+            <li>SEO Meta Titles &amp; Descriptions</li>
+            <li>Process Customer Orders</li>
+            <li>View and follow up WhatsApp Leads</li>
+            <li><em>No access to staff accounts or backups</em></li>
+          </ul>
+        </div>
+        <div class="adm-role-card">
+          <h4><span>📝 Author</span> <span class="adm-user-role-tag adm-role-author">Products Only</span></h4>
+          <p>Dedicated staff member for catalog inventory, stock, and product publishing.</p>
+          <ul>
+            <li>Add new vape and pod products</li>
+            <li>Update product prices, stock, &amp; tags</li>
+            <li>Upload product gallery images</li>
+            <li>Edit product flavors and nicotine specs</li>
+            <li><em>Locked out of orders, settings, &amp; SEO</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STAFF LIST TABLE -->
+      <div class="adm-card">
+        <h3><span>📋</span> Active Team Members (${team.length})</h3>
+        <div class="adm-team-table-wrap">
+          <table class="adm-team-table">
+            <thead>
+              <tr>
+                <th>User / Name</th>
+                <th>Role</th>
+                <th>Phone Number (Direct Login)</th>
+                <th>Username</th>
+                <th>Status</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
+
+    if (team.length === 0) {
+      html += `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--adm-muted);">No staff records found.</td></tr>`;
+    } else {
+      team.forEach(u => {
+        const isMe = (state.data.admin_user && state.data.admin_user === u.username) || (u.id === 'usr_admin');
+        const roleClass = u.role === 'admin' ? 'adm-role-admin' : (u.role === 'editor' ? 'adm-role-editor' : 'adm-role-author');
+        const roleName = u.role ? (u.role.charAt(0).toUpperCase() + u.role.slice(1)) : 'Author';
+        const phoneDisplay = u.phone ? `<span class="adm-phone-tag">📞 ${esc(u.phone)}</span>` : '<span style="color:var(--adm-muted);font-size:12px;">None</span>';
+        const statusBadge = (u.status || 'active') === 'active'
+          ? '<span style="color:#34d399;font-weight:700;font-size:12px;">● Active</span>'
+          : '<span style="color:#f87171;font-weight:700;font-size:12px;">○ Inactive</span>';
+
+        html += `
+          <tr>
+            <td>
+              <div style="font-weight:700; color:var(--adm-text);">${esc(u.name || u.username)}</div>
+              ${isMe ? '<span style="font-size:11px;color:var(--adm-muted);">(Current Session)</span>' : ''}
+            </td>
+            <td><span class="adm-user-role-tag ${roleClass}">${esc(roleName)}</span></td>
+            <td>${phoneDisplay}</td>
+            <td><code style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;font-size:12px;">${esc(u.username || '—')}</code></td>
+            <td>${statusBadge}</td>
+            <td style="text-align:right;">
+              <div style="display:inline-flex; gap:8px;">
+                <button class="adm-btn adm-btn-sm" onclick="window.ADM.editStaff('${esc(u.id)}')">✏️ Edit</button>
+                ${(u.id !== 'usr_admin' && !isMe) ? `<button class="adm-btn adm-btn-sm adm-btn-danger" onclick="window.ADM.deleteStaff('${esc(u.id)}', '${esc(u.name || u.username)}')">🗑️</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    html += `
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STAFF MODAL -->
+      <div class="adm-modal-overlay" id="admStaffModal">
+        <div class="adm-modal-box" style="max-width:540px;">
+          <div class="adm-modal-head">
+            <h3 id="admStaffModalTitle">👤 Staff Account</h3>
+            <button type="button" class="adm-modal-close" id="admStaffModalClose">✕</button>
+          </div>
+          <div class="adm-modal-body" id="admStaffModalBody"></div>
+          <div class="adm-modal-foot">
+            <button type="button" class="adm-btn" id="admStaffModalCancel">Cancel</button>
+            <button type="button" class="adm-btn adm-btn-primary" id="admStaffModalSave">💾 Save Staff Account</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    dom.content.innerHTML = html;
+
+    const btnAdd = document.getElementById('btnAddNewStaff');
+    if (btnAdd) btnAdd.addEventListener('click', () => showStaffModal(null));
+
+    const modal = document.getElementById('admStaffModal');
+    const closeModal = () => modal.classList.remove('is-open');
+    const closeBtn = document.getElementById('admStaffModalClose');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    const cancelBtn = document.getElementById('admStaffModalCancel');
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+  }
+
+  function showStaffModal(staffId) {
+    const team = (state.data && state.data.team) || [];
+    const staff = staffId ? team.find(u => u.id === staffId) : null;
+    const isEdit = !!staff;
+
+    const modal = document.getElementById('admStaffModal');
+    const title = document.getElementById('admStaffModalTitle');
+    const body = document.getElementById('admStaffModalBody');
+    if (!modal || !title || !body) return;
+
+    title.textContent = isEdit ? `✏️ Edit Staff: ${staff.name || staff.username}` : '➕ Add New Staff Account';
+
+    body.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="adm-field">
+          <label>Full Name *</label>
+          <input type="text" id="stf_name" value="${esc(isEdit ? staff.name : '')}" placeholder="e.g. Tariq Al Nuaimi" required>
+        </div>
+
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Phone Number (Login with this!) *</label>
+            <input type="text" id="stf_phone" value="${esc(isEdit ? staff.phone : '')}" placeholder="+971 50 123 4567 or 0501234567">
+            <small style="color:var(--adm-muted);font-size:11px;margin-top:3px;display:block;">User can sign in with this phone number</small>
+          </div>
+          <div class="adm-field">
+            <label>Username (Optional handle)</label>
+            <input type="text" id="stf_user" value="${esc(isEdit ? staff.username : '')}" placeholder="e.g. tariq">
+          </div>
+        </div>
+
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Role / Permissions *</label>
+            <select id="stf_role">
+              <option value="author" ${isEdit && staff.role === 'author' ? 'selected' : ''}>Author (Products Only)</option>
+              <option value="editor" ${isEdit && staff.role === 'editor' ? 'selected' : ''}>Editor (Products, Layouts, Orders, Leads)</option>
+              <option value="admin" ${isEdit && staff.role === 'admin' ? 'selected' : ''}>Admin (Full Store Control)</option>
+            </select>
+          </div>
+          <div class="adm-field">
+            <label>Account Status</label>
+            <select id="stf_status">
+              <option value="active" ${!isEdit || staff.status === 'active' ? 'selected' : ''}>Active (Can log in)</option>
+              <option value="inactive" ${isEdit && staff.status === 'inactive' ? 'selected' : ''}>Inactive (Blocked)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="adm-field">
+          <label>${isEdit ? 'New Password (Leave blank to keep current)' : 'Password (min 6 chars) *'}</label>
+          <input type="password" id="stf_pass" placeholder="${isEdit ? '••••••••' : 'Enter login password'}" ${isEdit ? '' : 'required'}>
+        </div>
+
+        <div id="stf_modal_err" style="color:var(--adm-red);font-size:12.5px;font-weight:600;display:none;"></div>
+      </div>
+    `;
+
+    modal.classList.add('is-open');
+
+    const saveBtn = document.getElementById('admStaffModalSave');
+    saveBtn.onclick = async () => {
+      const errEl = document.getElementById('stf_modal_err');
+      errEl.style.display = 'none';
+
+      const name = document.getElementById('stf_name').value.trim();
+      const phone = document.getElementById('stf_phone').value.trim();
+      const username = document.getElementById('stf_user').value.trim();
+      const role = document.getElementById('stf_role').value;
+      const status = document.getElementById('stf_status').value;
+      const pass = document.getElementById('stf_pass').value;
+
+      if (!name) {
+        errEl.textContent = 'Please enter staff name.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (!phone && !username) {
+        errEl.textContent = 'Please provide a Phone Number or Username.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (!isEdit && (!pass || pass.length < 6)) {
+        errEl.textContent = 'Password must be at least 6 characters.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (isEdit && pass && pass.length < 6) {
+        errEl.textContent = 'Password must be at least 6 characters.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving…';
+
+      try {
+        let res;
+        if (isEdit) {
+          res = await api('team_update', {
+            id: staff.id,
+            name,
+            phone,
+            username,
+            role,
+            status,
+            password: pass || undefined
+          });
+        } else {
+          res = await api('team_create', {
+            name,
+            phone,
+            username,
+            role,
+            password: pass
+          });
+        }
+
+        if (res && res.ok) {
+          toast(isEdit ? 'Staff account updated!' : 'Staff account created successfully!');
+          modal.classList.remove('is-open');
+          const refreshed = await api('get');
+          if (refreshed && refreshed.ok && refreshed.data) {
+            state.data.team = refreshed.data.team;
+          }
+          renderTeam();
+        } else {
+          errEl.textContent = res.error === 'phone_taken' ? 'Phone number is already in use.'
+            : (res.error === 'username_taken' ? 'Username is already taken.' : (res.error || 'Failed to save staff account.'));
+          errEl.style.display = 'block';
+        }
+      } catch (ex) {
+        errEl.textContent = 'Network or server error.';
+        errEl.style.display = 'block';
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Save Staff Account';
+      }
+    };
+  }
+
+  /* ============================================================
      ROUTER & VIEW SWITCHER
      ============================================================ */
   function switchView(viewName, subview = '') {
+    const role = (window.ADM_ROLE || (state.data && state.data.admin_role) || 'admin').toLowerCase();
+    if (role === 'author' && viewName !== 'products') {
+      viewName = 'products';
+    } else if (role === 'editor' && ['team', 'settings', 'account'].includes(viewName)) {
+      viewName = 'dashboard';
+    }
+
     state.view = viewName;
     state.subview = subview;
     state.editingProductIndex = null;
@@ -2302,6 +2593,7 @@
       case 'seo': renderSEO(); break;
       case 'orders': renderOrders(); break;
       case 'leads': renderLeads(); break;
+      case 'team': renderTeam(); break;
       case 'settings': renderSettings(); break;
       case 'account': renderAccount(); break;
       default: renderDashboard(); break;
@@ -2410,6 +2702,27 @@
         toast('Failed to refresh leads', true);
       }
     },
+    newStaff: () => showStaffModal(null),
+    editStaff: (id) => showStaffModal(id),
+    deleteStaff: async (id, name) => {
+      if (confirm(`Are you sure you want to delete staff member "${name}"?`)) {
+        try {
+          const res = await api('team_delete', { id });
+          if (res && res.ok) {
+            toast(`Staff member "${name}" deleted.`);
+            const refreshed = await api('get');
+            if (refreshed && refreshed.ok && refreshed.data) {
+              state.data.team = refreshed.data.team;
+            }
+            renderTeam();
+          } else {
+            toast('Failed to delete staff: ' + (res.error || 'Server error'), true);
+          }
+        } catch (e) {
+          toast('Error deleting staff member.', true);
+        }
+      }
+    },
     openSectionModal
   };
 
@@ -2428,6 +2741,9 @@
     if (dom.menuBtn) dom.menuBtn.addEventListener('click', openMobileMenu);
     if (dom.sideClose) dom.sideClose.addEventListener('click', closeMobileMenu);
     if (dom.backdrop) dom.backdrop.addEventListener('click', closeMobileMenu);
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 960) closeMobileMenu();
+    });
 
     if (dom.logoutBtn) {
       dom.logoutBtn.addEventListener('click', async () => {
@@ -2452,7 +2768,27 @@
       refreshDatalist();
       updateOrdersBadge();
 
-      switchView('dashboard');
+      // Apply role permission filtering to navigation
+      const role = (window.ADM_ROLE || (state.data && state.data.admin_role) || 'admin').toLowerCase();
+      if (dom.nav) {
+        dom.nav.querySelectorAll('.adm-nav-btn').forEach(btn => {
+          const v = btn.dataset.view;
+          if (role === 'author') {
+            if (v !== 'products') btn.style.display = 'none';
+          } else if (role === 'editor') {
+            if (['team', 'settings', 'account'].includes(v)) btn.style.display = 'none';
+          } else {
+            btn.style.display = '';
+          }
+        });
+      }
+
+      // Initial view based on role
+      if (role === 'author') {
+        switchView('products');
+      } else {
+        switchView('dashboard');
+      }
 
       // 30-sec order poller
       state.pollTimer = setInterval(async () => {
