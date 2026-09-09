@@ -1,0 +1,239 @@
+{
+  "announce_items": [
+    "1-2 Hour Express Delivery in Dubai & Sharjah",
+    "450 AED Free Delivery all UAE",
+    "100% Genuine & ESMA Certified",
+    "Cash or Card on Delivery"
+  ],
+  "currency_chip": "AED د.إ",
+  "show_language_toggle": true,
+  "flash_deal": {
+    "enabled": true,
+    "text": "FLASH DEAL — Free TEREA pack with every ILUMA device · Today only",
+    "cta_label": "Shop now",
+    "cta_href": "#shop"
+  },
+  "hero_slides": [
+    {
+      "enabled": true,
+      "pill": "⚡ Flagship Edition",
+      "title_pre": "IQOS ILUMA i PRIME ",
+      "title_grad": "Remix Edition",
+      "title_post": " — Electric Purple",
+      "heading": "h1",
+      "lede": "Bladeless Smartcore induction · pause mode · zero cleaning.",
+      "price": "440",
+      "old": "520 AED",
+      "save": "SAVE 15%",
+      "cta_type": "add_to_cart",
+      "cta_product": "iluma-prime-remix",
+      "cta_label": "Add to Cart",
+      "cta_href": "#shop",
+      "image": "assets/images/hero-iluma.png",
+      "image_alt": "IQOS ILUMA i PRIME Electric Purple",
+      "art_class": "art-purple",
+      "chips": ["● In Stock", "🇦🇪 Dubai Launch"],
+      "aria_label": "Featured offer: IQOS ILUMA i PRIME Remix Edition"
+    },
+    {
+      "enabled": true,
+      "pill": "🔥 100% Genuine",
+      "title_pre": "TEREA ",
+      "title_grad": "Japan & Swiss",
+      "title_post": " Editions — Just Landed",
+      "heading": "h2",
+      "lede": "Sealed Japan & Swiss packs · weekly flights · verified batch codes.",
+      "price": "140",
+      "old": "165 AED",
+      "save": "PER PACK",
+      "cta_type": "link",
+      "cta_product": "",
+      "cta_label": "Shop TEREA Flavors",
+      "cta_href": "#terea",
+      "image": "assets/images/hero-terea.png",
+      "image_alt": "TEREA Japan and Swiss pack",
+      "art_class": "art-navy",
+      "chips": ["🇯🇵 Japan", "🇨🇭 Swiss"],
+      "aria_label": "Featured offer: TEREA Japan and Swiss editions"
+    },
+    {
+      "enabled": true,
+      "pill": "💨 Mega Puffs",
+      "title_pre": "Mega Disposables — ",
+      "title_grad": "Vozol • Tugboat • Fummo",
+      "title_post": "",
+      "heading": "h2",
+      "lede": "Mesh coil · Type-C · same-day UAE dispatch · from 30 AED.",
+      "price": "65",
+      "old": "85 AED",
+      "save": "-24%",
+      "cta_type": "link",
+      "cta_product": "",
+      "cta_label": "Shop Disposables",
+      "cta_href": "#disposables",
+      "image": "assets/images/hero-vape.png",
+      "image_alt": "Vozol Gear 10000 disposable vape",
+      "art_class": "art-amber",
+      "chips": ["💨 12,000 Puffs", "⚡ Type-C"],
+      "aria_label": "Featured offer: Mega disposable vapes"
+    }
+  ],
+  "pop_categories": {
+    "pop_word": "Popular",
+    "title": "Categories",
+    "tiles": [
+      {"cat": "iluma", "sub": "Best heating kit in Dubai", "title": "HEATING DEVICE", "bg": "assets/images/hero-iluma.webp"},
+      {"cat": "disposables", "sub": "Dubai best disposables", "title": "DISPOSABLE", "bg": "assets/images/hero-vape.png"},
+      {"cat": "pod", "sub": "Best pod kit in Dubai", "title": "POD KIT", "bg": "assets/images/cat-pod.jpg"}
+    ],
+    "more_count": "+9",
+    "more_title": "MORE CATEGORIES",
+    "more_sub": "Tap to view all"
+  },
+  "vip_section": {
+    "badge": "👑 BEST SELLING PRODUCTS · 100% GENUINE & VERIFIED",
+    "pulse": "High Demand Today",
+    "title": "Best Selling Products",
+    "desc": "The most popular heated tobacco devices, authentic TEREA sticks & top disposable vapes our customers re-order every single week. Guaranteed sealed authentic stock with 1-2 hour express delivery.",
+    "features": [
+      {"icon": "i-zap", "text": "1-2h Express Dispatch"},
+      {"icon": "i-shield", "text": "100% Genuine ESMA"},
+      {"icon": "i-star", "text": "4.9/5 Rating (1,400+ Reviews)"},
+      {"icon": "i-truck", "text": "450 AED Free Delivery all UAE"}
+    ],
+    "ranks": [
+      {"rank": "#1", "label": "TOP SELLER", "class": "rank-gold", "icon": "👑"},
+      {"rank": "#2", "label": "MOST POPULAR", "class": "rank-emerald", "icon": "🔥"},
+      {"rank": "#3", "label": "TOP FAVORITE", "class": "rank-cyan", "icon": "💎"},
+      {"rank": "#4", "label": "TOP RATED 4.9★", "class": "rank-violet", "icon": "⭐"},
+      {"rank": "#5", "label": "HOT DEMAND", "class": "rank-amber", "icon": "⚡"},
+      {"rank": "#6", "label": "VALUE CHOICE", "class": "rank-rose", "icon": "💨"}
+    ]
+  },
+  "shop_section": {
+    "eyebrow": "The Collection",
+    "title": "New Arrivals & UAE Favorites",
+    "desc": "Every device and stick is sourced from authorized distributors — sealed stock, verified batch codes."
+  },
+  "terea_section": {
+    "eyebrow": "TEREA by Origin",
+    "title": "Choose Your Country Blend",
+    "desc": "Every market TEREA has a signature profile. Indonesia runs fruity-cool, Japan runs smooth-rich, Switzerland runs refined-balanced.",
+    "legend": [
+      "🇮🇩 Indonesia — fruity & cooling",
+      "🇯🇵 Japan — smooth & rich",
+      "🇨🇭 Switzerland — refined & balanced",
+      "🇰🇿 Kazakhstan — bold classics",
+      "🇮🇹 Italy — aromatic"
+    ]
+  },
+  "disposables_section": {
+    "eyebrow": "High Puff",
+    "title": "Disposable Vapes Showcase",
+    "desc": "Vozol 10k, Tugboat EVO, Fummo Prince, Pod Salt Go — mesh coils, rechargeable, flavors that never fade."
+  },
+  "reviews_section": {
+    "eyebrow": "Verified Buyers",
+    "title": "Loved Across the Emirates"
+  },
+  "reviews": [
+    {
+      "stars": 5,
+      "text": "Ordered the ILUMA i PRIME at 6 PM, it was at my door in Dubai Marina by 7:40. Sealed, original, warranty card inside. This is how vape shopping should work.",
+      "name": "Mohammed A.",
+      "location": "Dubai Marina",
+      "avatar": "M",
+      "avatar_class": ""
+    },
+    {
+      "stars": 5,
+      "text": "Finally real TEREA Japan in Abu Dhabi. Mint and Rich Regular both had fresh batch codes. WhatsApp ordering took 2 minutes, cash on delivery — perfect.",
+      "name": "Sara K.",
+      "location": "Corniche, Abu Dhabi",
+      "avatar": "S",
+      "avatar_class": "av-gold"
+    },
+    {
+      "stars": 5,
+      "text": "The Vozol 10k actually lasts. Flavor stays icy until the end, not like the clones I got before. Sharjah delivery was next morning. Recommended to all my friends.",
+      "name": "Rashid T.",
+      "location": "Al Nahda, Sharjah",
+      "avatar": "R",
+      "avatar_class": "av-violet"
+    }
+  ],
+  "faq_section": {
+    "eyebrow": "Good to Know",
+    "title": "Delivery & Ordering FAQ"
+  },
+  "faqs": [
+    {
+      "q": "How fast is delivery in Dubai, Sharjah & Ajman?",
+      "a": "Orders placed before the daily dispatch cut-off are delivered within <b>1-2 hours</b> in Dubai and Sharjah, and same-day in Ajman. Live courier tracking is shared on WhatsApp once your rider is assigned."
+    },
+    {
+      "q": "Do you deliver to Abu Dhabi and other Emirates?",
+      "a": "Yes. Abu Dhabi receives <b>same-day evening delivery</b> for orders confirmed before 3 PM. Ras Al Khaimah, Fujairah and Umm Al Quwain are next-day via courier. Free delivery applies on orders above 450 AED across all UAE Emirates."
+    },
+    {
+      "q": "What payment methods do you accept?",
+      "a": "Cash on Delivery (COD) is our most popular option. We also accept <b>Card on Delivery</b> (the rider carries a terminal), Apple Pay, and secure payment links sent on WhatsApp before dispatch."
+    },
+    {
+      "q": "Are your products original? What about warranty?",
+      "a": "Every item is 100% authentic, <b>ESMA compliant</b>, and arrives factory-sealed with verifiable batch codes. IQOS devices carry a 12-month UAE warranty — we handle the replacement for you, no service-center visits needed."
+    },
+    {
+      "q": "How do I order through WhatsApp?",
+      "a": "Add your items to the cart and tap <b>\"Complete Order via WhatsApp\"</b>. The app opens with your full order pre-typed — items, quantities and AED total. Just add your delivery address and press send. We confirm in under a minute."
+    }
+  ],
+  "cta_section": {
+    "eyebrow": "24/7 Dubai Assistance",
+    "title_pre": "Need Advice? Speak with our ",
+    "title_highlight": "Vape Specialists.",
+    "text": "Not sure which TEREA flavor, ILUMA device, or disposable vape suits you best? Chat with our team for instant recommendations.",
+    "button_label": "Chat with an Expert"
+  },
+  "footer_shop_links": [
+    {"label": "IQOS ILUMA Devices", "href": "#shop", "filter": "iluma"},
+    {"label": "TEREA Sticks", "href": "#terea", "filter": "terea"},
+    {"label": "Disposable Vapes", "href": "#disposables", "filter": ""},
+    {"label": "Pod Systems", "href": "#shop", "filter": "pod"},
+    {"label": "Offers & Deals", "href": "#bestsellers", "filter": ""}
+  ],
+  "age_gate": {
+    "enabled": true,
+    "title": "Are you 18 or older?",
+    "text": "This store sells nicotine products regulated by UAE law. Please confirm you are of legal smoking age to enter.",
+    "under_msg": "Sorry — you must be 18+ to browse this store. Please come back when you are of legal age.",
+    "yes_label": "Yes, I am 18+",
+    "no_label": "No, I am under 18",
+    "note": "ESMA compliant · Verified original products only"
+  },
+  "checkout": {
+    "eyebrow": "Express Checkout",
+    "title": "Complete Your Order",
+    "sub": "1-2 Hour Express Delivery across Dubai & UAE. Order via WhatsApp or online form.",
+    "wa_banner_badge": "⚡ RECOMMENDED · 1-CLICK FASTEST DISPATCH",
+    "wa_banner_title": "Order Directly via WhatsApp",
+    "wa_banner_text": "Skip filling forms! Send your order directly to our 24/7 Dubai team for immediate dispatch confirmation.",
+    "emirates": [
+      {"value": "Dubai", "label": "Dubai (1–2h Express Delivery)"},
+      {"value": "Sharjah", "label": "Sharjah (Same Day Delivery)"},
+      {"value": "Ajman", "label": "Ajman (Same Day Delivery)"},
+      {"value": "Abu Dhabi", "label": "Abu Dhabi (Next Day Delivery)"},
+      {"value": "Ras Al Khaimah", "label": "Ras Al Khaimah (Next Day Delivery)"},
+      {"value": "Fujairah", "label": "Fujairah (Next Day Delivery)"},
+      {"value": "Umm Al Quwain", "label": "Umm Al Quwain (Same Day Delivery)"}
+    ],
+    "age_confirm_text": "I confirm I am 18+ and have a valid Emirates ID or Passport upon delivery as required by UAE regulations.",
+    "success_title": "Order Confirmed!",
+    "success_text": "Thank you for ordering with Vape Club Dubai."
+  },
+  "search": {
+    "placeholder": "Search IQOS, TEREA, flavors…",
+    "modal_placeholder": "Search ILUMA, TEREA, flavors, puffs…",
+    "empty_text": "No match — try ‘mint’, ‘TEREA’ or ‘10000’."
+  }
+}

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /lib/
+Disallow: /includes/
+Disallow: /data/
+Disallow: /scratch/
+Disallow: /api/
+
+Sitemap: https://iqosai.com/sitemap.xml

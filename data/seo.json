@@ -1,0 +1,36 @@
+{
+  "site_url": "https://iqosai.com",
+  "default_og_image": "assets/images/hero-iluma.png",
+  "twitter_card": "summary_large_image",
+  "twitter_site": "",
+  "geo_region": "AE-DU",
+  "schema_local_business": true,
+  "schema_faq_page": true,
+  "schema_product": true,
+  "schema_breadcrumb": true,
+  "schema_website_search": true,
+  "extra_head_code": "",
+  "pages": {
+    "home": {
+      "title": "Vape Club Dubai — IQOS UAE | TEREA & Disposable Vapes | 1-2 Hour Delivery Dubai",
+      "description": "Luxury vape shop in Dubai. Original IQOS ILUMA, TEREA sticks from Japan, Indonesia & Switzerland plus 10,000+ puff disposables. 1-2 hour express delivery across Dubai, Sharjah & Ajman. 100% ESMA certified.",
+      "keywords": "vape dubai, iqos uae, terea dubai, disposable vape dubai, iqos iluma, terea japan, vape delivery dubai",
+      "robots": "index, follow",
+      "og_image": ""
+    },
+    "category": {
+      "title": "{category} — Buy Online in Dubai | Vape Club Dubai",
+      "description": "Shop {category} in Dubai with 1-2 hour express delivery. 100% genuine, ESMA certified stock. Cash or card on delivery across the UAE.",
+      "keywords": "",
+      "robots": "index, follow",
+      "og_image": ""
+    },
+    "product": {
+      "title": "{product} — Vape Club Dubai",
+      "description": "Buy {product} in Dubai, UAE for {price} AED. 1-2 hour express delivery, 100% genuine ESMA certified stock. Cash or card on delivery.",
+      "keywords": "",
+      "robots": "index, follow",
+      "og_image": ""
+    }
+  }
+}

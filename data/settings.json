@@ -1,0 +1,33 @@
+{
+  "brand_name": "VAPE CLUB",
+  "brand_tagline": "Dubai · IQOS UAE",
+  "brand_footer_note": "Dubai premium destination for original IQOS, TEREA and disposable vapes — delivered faster than shisha arrives.",
+  "wa_number": "971562848450",
+  "phone_display": "+971 56 284 8450",
+  "phone_tel": "+971562848450",
+  "email": "orders@vapeclubdubai.ae",
+  "address": "International City, Dragon Mart, Dubai",
+  "maps_url": "https://maps.google.com/?q=Dragon+Mart+Dubai",
+  "instagram_url": "https://instagram.com",
+  "telegram_url": "https://t.me",
+  "currency": "AED",
+  "delivery_fee": 20,
+  "free_ship_threshold": 450,
+  "qty_cap": 20,
+  "order_prefix": "VCD",
+  "rating_value": "4.9",
+  "rating_count": "214",
+  "show_rating": true,
+  "theme_color": "#070A0F",
+  "copyright": "© 2026 Vape Club Dubai",
+  "hours": [
+    "Daily 10:00 AM – 12:00 AM",
+    "Express dispatch until 11:00 PM"
+  ],
+  "payment_badges": ["COD", "VISA", "MASTERCARD", "APPLE PAY", "SAMSUNG PAY"],
+  "legal_warning": "This product contains nicotine. Nicotine is an addictive chemical. Sale to persons under 18 is prohibited under UAE federal law. All products are ESMA certified. Keep away from children and pets.",
+  "legal_links": ["Privacy Policy", "Terms of Service", "Returns & Warranty", "UAE Compliance"],
+  "wa_msg_assistance": "Hello Vape Club Dubai! I need assistance.",
+  "wa_msg_order": "Hello Vape Club Dubai! I want to order.",
+  "wa_msg_question": "Hello Vape Club Dubai! I have a question about a product."
+}

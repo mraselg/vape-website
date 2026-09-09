@@ -1,0 +1,6 @@
+# Temporary archives and logs
+scratch/*.tar.gz
+scratch/*.log
+scratch/cookies.txt
+.DS_Store
+Thumbs.db
