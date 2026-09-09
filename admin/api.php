@@ -77,7 +77,7 @@ if ($mutating) {
     }
 }
 
-const SECTIONS = ['settings', 'home', 'products', 'categories', 'seo', 'orders'];
+const SECTIONS = ['settings', 'home', 'products', 'categories', 'seo', 'orders', 'leads'];
 
 switch ($action) {
 
@@ -155,6 +155,19 @@ switch ($action) {
         $store = vcd_load('orders');
         $store['orders'] = array_values(array_filter(($store['orders'] ?? []), fn($o) => ($o['id'] ?? '') !== $id));
         vcd_save('orders', $store);
+        out(['ok' => true]);
+    }
+
+    case 'leads_clear': {
+        vcd_save('leads', ['leads' => []]);
+        out(['ok' => true]);
+    }
+
+    case 'lead_delete': {
+        $id = (string) ($body['id'] ?? '');
+        $store = vcd_load('leads');
+        $store['leads'] = array_values(array_filter(($store['leads'] ?? []), fn($l) => ($l['id'] ?? '') !== $id));
+        vcd_save('leads', $store);
         out(['ok' => true]);
     }
 

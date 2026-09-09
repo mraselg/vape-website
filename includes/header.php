@@ -58,7 +58,7 @@ $announceHtml  = '<svg class="icon icon-sm" aria-hidden="true"><use href="#i-zap
       <a class="icon-btn hide-mobile" href="tel:<?= e($S['phone_tel'] ?? '') ?>" aria-label="Call <?= e($S['phone_display'] ?? '') ?>">
         <svg class="icon"><use href="#i-phone"/></svg>
       </a>
-      <a class="icon-btn hide-mobile" href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello!')) ?>" target="_blank" rel="noopener" aria-label="WhatsApp us">
+      <a class="icon-btn hide-mobile js-open-wa-chat" href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello!')) ?>" aria-label="WhatsApp us">
         <svg class="icon"><use href="#i-wa"/></svg>
       </a>
       <button class="icon-btn js-open-search hide-mobile" aria-label="Search">
@@ -187,7 +187,7 @@ $announceHtml  = '<svg class="icon icon-sm" aria-hidden="true"><use href="#i-zap
 
   <!-- Actions -->
   <div class="menu-contact">
-    <a class="btn btn-wa btn-block" href="<?= e(wa_link($S['wa_msg_order'] ?? 'Hello! I want to order.')) ?>" target="_blank" rel="noopener">
+    <a class="btn btn-wa btn-block js-open-wa-chat" href="<?= e(wa_link($S['wa_msg_order'] ?? 'Hello! I want to order.')) ?>" aria-label="WhatsApp Order">
       <svg class="icon"><use href="#i-wa"/></svg> WhatsApp Order (Instant)
     </a>
     <a class="btn btn-ghost btn-block" href="tel:<?= e($S['phone_tel'] ?? '') ?>">

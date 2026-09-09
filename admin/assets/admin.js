@@ -1772,6 +1772,46 @@
         </div>
       </div>
 
+      <!-- TELEGRAM BOT LEAD TELEMETRY & IN-PAGE WHATSAPP CONCIERGE -->
+      <div class="adm-card is-highlight">
+        <h3><span>🤖</span> Telegram Bot Lead Telemetry &amp; In-Page WhatsApp Concierge</h3>
+        <p class="adm-card-sub">Instant background notifications to Telegram whenever a customer enters their WhatsApp number</p>
+
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Telegram Lead Alerts</label>
+            <select id="set_tg_enabled">
+              <option value="1" ${s.telegram_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Real-time Telegram Alerts)</option>
+              <option value="0" ${s.telegram_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
+            </select>
+            <span class="adm-hint">Silently sends visitor phone numbers, cart total, and product viewed to Telegram</span>
+          </div>
+          <div class="adm-field">
+            <label>Telegram Chat ID</label>
+            <input type="text" id="set_tg_chat_id" value="${esc(s.telegram_chat_id || '')}" placeholder="e.g. 5987654321 or -100123456789">
+            <span class="adm-hint">Your Telegram user ID or group channel ID</span>
+          </div>
+        </div>
+
+        <div class="adm-field">
+          <label>Telegram Bot API Token</label>
+          <input type="password" id="set_tg_bot_token" value="${esc(s.telegram_bot_token || '')}" placeholder="e.g. 123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ">
+          <span class="adm-hint">Created from @BotFather on Telegram. Stored safely in data/settings.json</span>
+        </div>
+
+        <div class="adm-grid2" style="margin-top:10px;">
+          <div class="adm-field">
+            <label>In-Page WhatsApp Concierge Name</label>
+            <input type="text" id="set_wa_concierge_name" value="${esc(s.wa_concierge_name || 'Vape Club Dubai')}">
+            <span class="adm-hint">Name displayed on the in-page WhatsApp verified chat header</span>
+          </div>
+          <div class="adm-field">
+            <label>Test Telegram Dispatch</label>
+            <button type="button" class="adm-btn adm-btn-secondary" id="btnTestTelegram" style="margin-top:24px;width:100%;">⚡ Send Test Telegram Alert</button>
+          </div>
+        </div>
+      </div>
+
       <!-- SOCIAL MEDIA & LEGAL -->
       <div class="adm-card">
         <h3><span>⚖️</span> UAE Legal Compliance &amp; Social Links</h3>
@@ -1830,6 +1870,54 @@
     document.getElementById('set_instagram').addEventListener('input', (e) => { s.instagram_url = e.target.value; markDirty('settings'); });
     document.getElementById('set_telegram').addEventListener('input', (e) => { s.telegram_url = e.target.value; markDirty('settings'); });
     document.getElementById('set_legal_warning').addEventListener('input', (e) => { s.legal_warning = e.target.value; markDirty('settings'); });
+
+    // Telegram Bot & WhatsApp Concierge Bindings
+    const tgEn = document.getElementById('set_tg_enabled');
+    if (tgEn) tgEn.addEventListener('change', (e) => { s.telegram_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
+    const tgChat = document.getElementById('set_tg_chat_id');
+    if (tgChat) tgChat.addEventListener('input', (e) => { s.telegram_chat_id = e.target.value.trim(); markDirty('settings'); });
+    const tgTok = document.getElementById('set_tg_bot_token');
+    if (tgTok) tgTok.addEventListener('input', (e) => { s.telegram_bot_token = e.target.value.trim(); markDirty('settings'); });
+    const waName = document.getElementById('set_wa_concierge_name');
+    if (waName) waName.addEventListener('input', (e) => { s.wa_concierge_name = e.target.value; markDirty('settings'); });
+
+    const btnTest = document.getElementById('btnTestTelegram');
+    if (btnTest) {
+      btnTest.addEventListener('click', async () => {
+        btnTest.disabled = true;
+        btnTest.textContent = '⏳ Testing Telegram…';
+        toast('Dispatching test telemetry to Telegram…');
+        try {
+          const res = await fetch('/api/wa-lead.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              full_phone: '+971 50 123 4567',
+              phone: '501234567',
+              country_code: '+971',
+              message: '🔔 Test WhatsApp Lead Alert from Vape Club Dubai Admin Panel!',
+              product_name: 'IQOS ILUMA i PRIME (Remix Edition)',
+              cart_total: 450,
+              cart_summary: '1x IQOS ILUMA, 2x TEREA Japan',
+              device: 'Admin Panel Test Dispatch'
+            })
+          });
+          const data = await res.json();
+          if (data && data.telegram_sent) {
+            toast('✅ Telegram test message delivered to your Telegram chat successfully!');
+          } else if (data && data.ok) {
+            toast('⚠️ Lead saved to database, but Telegram Bot did not send. Please verify Bot Token and Chat ID.', true);
+          } else {
+            toast('Failed to send test: ' + (data.error || 'Server error'), true);
+          }
+        } catch (err) {
+          toast('Network error testing Telegram: ' + err.message, true);
+        } finally {
+          btnTest.disabled = false;
+          btnTest.innerHTML = '⚡ Send Test Telegram Alert';
+        }
+      });
+    }
   }
 
   /* ============================================================
@@ -2010,6 +2098,95 @@
     });
   }
 
+  /* ============================================================
+     VIEW: CAPTURED WHATSAPP LEADS & TELEMETRY
+     ============================================================ */
+  function renderLeads() {
+    dom.viewTitle.textContent = 'WhatsApp Leads';
+    const leads = (state.data.leads && state.data.leads.leads) || [];
+
+    let html = `
+      <div class="adm-card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h3 style="margin:0 0 4px;display:flex;align-items:center;gap:8px;">
+            <span>💬</span> Captured WhatsApp Leads (${leads.length})
+          </h3>
+          <div style="font-size:12px;color:var(--adm-muted);">
+            Real-time telemetry captured when visitors open in-page WhatsApp chat
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="adm-btn adm-btn-sm" onclick="ADM.refreshLeads()">🔄 Refresh</button>
+          <button class="adm-btn adm-btn-sm adm-btn-danger" onclick="ADM.clearLeads()">🗑️ Clear All</button>
+        </div>
+      </div>
+
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Captured Time</th>
+              <th>WhatsApp Number</th>
+              <th>Inquiry / Message</th>
+              <th>Product Viewed</th>
+              <th>Cart Context</th>
+              <th>Device &amp; IP</th>
+              <th style="text-align:right">Direct WhatsApp</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${leads.length === 0 ? `
+              <tr><td colspan="7" style="text-align:center;padding:48px;color:var(--adm-muted)">
+                <div style="font-size:32px;margin-bottom:8px;">💬</div>
+                <b>No WhatsApp leads captured yet.</b>
+                <p style="font-size:12px;margin:4px 0 0;">Leads will appear here in real time when visitors interact with WhatsApp buttons.</p>
+              </td></tr>
+            ` : leads.map(l => {
+              const rawNum = l.raw_phone || (l.phone || '').replace(/\\D/g, '');
+              const waLink = `https://wa.me/${rawNum}`;
+              return `
+                <tr>
+                  <td>
+                    <b>${esc(l.formatted_time || l.timestamp || 'Recent')}</b>
+                    <div style="font-size:11px;color:var(--adm-muted)">${esc(l.id || '')}</div>
+                  </td>
+                  <td>
+                    <b style="font-size:14px;color:var(--adm-emerald)">${esc(l.phone || 'N/A')}</b>
+                    <div style="font-size:11px;color:var(--adm-muted)">Country: ${esc(l.country_code || 'UAE')}</div>
+                  </td>
+                  <td style="max-width:220px;word-break:break-word;">
+                    ${esc(l.message || 'Initiated Chat')}
+                  </td>
+                  <td>
+                    ${l.product ? `<span class="adm-badge">${esc(l.product)}</span>` : '<span style="color:var(--adm-muted)">-</span>'}
+                  </td>
+                  <td>
+                    ${(l.cart_total > 0) ? `
+                      <b style="color:var(--adm-emerald)">${esc(l.cart_total)} AED</b>
+                      <div style="font-size:11px;color:var(--adm-muted)">${esc(l.cart_summary || '')}</div>
+                    ` : '<span style="color:var(--adm-muted)">Empty Cart</span>'}
+                  </td>
+                  <td>
+                    <div>${esc(l.device || 'Mobile')}</div>
+                    <div style="font-size:11px;color:var(--adm-muted)"><code>${esc(l.ip || '')}</code></div>
+                  </td>
+                  <td style="text-align:right;white-space:nowrap;">
+                    <a href="${waLink}" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:#25D366;color:#000;font-weight:700;margin-right:4px;">
+                      💬 Chat
+                    </a>
+                    <button class="adm-btn adm-btn-sm adm-btn-danger" onclick="ADM.deleteLead('${esc(l.id)}')">✕</button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    dom.content.innerHTML = html;
+  }
+
   function renderCategories() {
     dom.viewTitle.textContent = 'Categories';
     const cats = state.data.categories.cats || {};
@@ -2124,6 +2301,7 @@
       case 'homepage': renderHomepage(); break;
       case 'seo': renderSEO(); break;
       case 'orders': renderOrders(); break;
+      case 'leads': renderLeads(); break;
       case 'settings': renderSettings(); break;
       case 'account': renderAccount(); break;
       default: renderDashboard(); break;
@@ -2188,6 +2366,48 @@
         }
       } catch (e) {
         toast('Failed to refresh orders', true);
+      }
+    },
+    deleteLead: async (id) => {
+      if (confirm(`Delete lead ${id}?`)) {
+        try {
+          const res = await api('lead_delete', { id });
+          if (res && res.ok) {
+            toast(`Lead ${id} deleted.`);
+            if (state.data.leads) {
+              state.data.leads.leads = (state.data.leads.leads || []).filter(l => l.id !== id);
+            }
+            renderLeads();
+          }
+        } catch (e) {
+          toast('Failed to delete lead', true);
+        }
+      }
+    },
+    clearLeads: async () => {
+      if (confirm('Are you sure you want to clear all captured WhatsApp leads?')) {
+        try {
+          const res = await api('leads_clear');
+          if (res && res.ok) {
+            toast('All captured leads cleared.');
+            if (state.data.leads) state.data.leads.leads = [];
+            renderLeads();
+          }
+        } catch (e) {
+          toast('Failed to clear leads', true);
+        }
+      }
+    },
+    refreshLeads: async () => {
+      try {
+        const res = await api('get');
+        if (res && res.ok && res.data && res.data.leads) {
+          state.data.leads = res.data.leads;
+          renderLeads();
+          toast('Leads refreshed.');
+        }
+      } catch (e) {
+        toast('Failed to refresh leads', true);
       }
     },
     openSectionModal

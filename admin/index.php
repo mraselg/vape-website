@@ -66,6 +66,7 @@ if ($authed) {
       <button class="adm-nav-btn" data-view="homepage"><span>🏠</span> Homepage Customizer</button>
       <button class="adm-nav-btn" data-view="seo"><span>🔍</span> SEO &amp; Schema</button>
       <button class="adm-nav-btn" data-view="orders"><span>🧾</span> Orders <em class="adm-nav-badge" id="ordersBadge" style="display:none"></em></button>
+      <button class="adm-nav-btn" data-view="leads"><span>💬</span> WhatsApp Leads <em class="adm-nav-badge" id="leadsBadge" style="display:none"></em></button>
       <button class="adm-nav-btn" data-view="settings"><span>⚙️</span> Branding &amp; Settings</button>
       <button class="adm-nav-btn" data-view="account"><span>🔐</span> Account &amp; Backup</button>
     </nav>

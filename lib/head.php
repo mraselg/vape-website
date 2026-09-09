@@ -83,6 +83,7 @@ function render_head(array $m): void
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css?v=<?= e($cssVer) ?>">
+  <link rel="stylesheet" href="/assets/css/wa-chat.css?v=<?= e($cssVer) ?>">
 <?php foreach ($jsonld as $schema): ?>
   <script type="application/ld+json"<?= ($schema['@type'] ?? '') === 'Product' ? ' id="productSchema"' : '' ?>><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
 <?php endforeach; ?>

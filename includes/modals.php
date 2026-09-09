@@ -265,7 +265,7 @@ $delivery  = (float) ($S['delivery_fee'] ?? 20);
 
     <!-- Center Raised WhatsApp Action Button (per user mockup & audio instruction) -->
     <div class="bnav-center-action">
-      <a class="bnav-fab-wa" href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello! I am browsing Vape Club Dubai.')) ?>" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+      <a class="bnav-fab-wa js-open-wa-chat" href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello! I am browsing Vape Club Dubai.')) ?>" aria-label="Chat on WhatsApp">
         <svg class="icon"><use href="#i-wa"/></svg>
       </a>
     </div>
@@ -284,4 +284,6 @@ $delivery  = (float) ($S['delivery_fee'] ?? 20);
     </button>
   </div>
 </nav>
+
+<?php require __DIR__ . '/whatsapp-chat-modal.php'; ?>
 

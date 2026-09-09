@@ -19,7 +19,7 @@ $S = $VCD_SETTINGS;
 <?php endif; ?>
     </a>
     <div class="header-actions">
-      <a class="icon-btn" <?= !empty($pdpWaHeaderId) ? 'id="pdWaHeader" ' : '' ?>href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello!')) ?>" target="_blank" rel="noopener" aria-label="WhatsApp us"><svg class="icon"><use href="#i-wa"/></svg></a>
+      <a class="icon-btn js-open-wa-chat" <?= !empty($pdpWaHeaderId) ? 'id="pdWaHeader" ' : '' ?>href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello!')) ?>" aria-label="WhatsApp us"><svg class="icon"><use href="#i-wa"/></svg></a>
       <button class="icon-btn js-open-cart" <?= !empty($pdpWaHeaderId) ? 'id="pdCartBtn" ' : '' ?>aria-label="Open cart"><svg class="icon"><use href="#i-cart"/></svg><span class="count-badge<?= !empty($pdpWaHeaderId) ? ' is-visible cart-count-text' : '' ?>" id="pdCartCount">0</span></button>
     </div>
   </div>
