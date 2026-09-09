@@ -11,8 +11,12 @@ $S = $VCD_SETTINGS;
   <div class="container header-main">
     <a class="icon-btn" href="/<?= $backAnchor ?? '' ?>" aria-label="Back"><svg class="icon"><use href="#i-chevron-left"/></svg></a>
     <a class="brand" href="/">
+<?php if (!empty($S['logo_type']) && $S['logo_type'] === 'image' && !empty($S['logo_image'])): ?>
+      <img src="<?= e($S['logo_image']) ?>" alt="<?= e($S['brand_name'] ?? 'Vape Club Dubai') ?>" class="brand-img-logo">
+<?php else: ?>
       <span class="brand-mark"><svg><use href="#i-logo"/></svg></span>
       <span class="brand-text"><strong><?= e($S['brand_name'] ?? 'VAPE CLUB') ?></strong><small><?= e($S['brand_tagline'] ?? '') ?></small></span>
+<?php endif; ?>
     </a>
     <div class="header-actions">
       <a class="icon-btn" <?= !empty($pdpWaHeaderId) ? 'id="pdWaHeader" ' : '' ?>href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello!')) ?>" target="_blank" rel="noopener" aria-label="WhatsApp us"><svg class="icon"><use href="#i-wa"/></svg></a>

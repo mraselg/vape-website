@@ -12,8 +12,12 @@ $HM = $VCD_HOME;
   <div class="container footer-grid">
     <div class="footer-col">
       <a class="brand" href="#top">
+<?php if (!empty($S['logo_type']) && $S['logo_type'] === 'image' && !empty($S['logo_image'])): ?>
+        <img src="<?= e($S['logo_image']) ?>" alt="<?= e($S['brand_name'] ?? 'Vape Club Dubai') ?>" class="brand-img-logo">
+<?php else: ?>
         <span class="brand-mark"><svg><use href="#i-logo"/></svg></span>
         <span class="brand-text"><strong><?= e($S['brand_name'] ?? 'VAPE CLUB') ?></strong><small><?= e($S['brand_tagline'] ?? '') ?></small></span>
+<?php endif; ?>
       </a>
       <p class="footer-brand-note"><?= e($S['brand_footer_note'] ?? '') ?></p>
       <div class="pay-badges" aria-label="Payment methods">

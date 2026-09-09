@@ -51,20 +51,22 @@ if ($authed) {
 </div>
 <?php else: ?>
 <!-- ============ ADMIN SPA ============ -->
+<div class="adm-backdrop" id="admBackdrop"></div>
 <div class="adm-shell">
-  <aside class="adm-side">
+  <aside class="adm-side" id="admSide">
     <div class="adm-brand">
       <span class="adm-brand-zap">⚡</span>
       <div><b>VAPE CLUB</b><small>Admin Panel</small></div>
+      <button class="adm-side-close" id="admSideClose" aria-label="Close menu">✕</button>
     </div>
     <nav class="adm-nav" id="admNav">
       <button class="adm-nav-btn is-active" data-view="dashboard"><span>📊</span> Dashboard</button>
       <button class="adm-nav-btn" data-view="products"><span>📦</span> Products</button>
       <button class="adm-nav-btn" data-view="categories"><span>🗂️</span> Categories</button>
-      <button class="adm-nav-btn" data-view="homepage"><span>🏠</span> Homepage</button>
-      <button class="adm-nav-btn" data-view="seo"><span>🔍</span> SEO Center</button>
+      <button class="adm-nav-btn" data-view="homepage"><span>🏠</span> Homepage Customizer</button>
+      <button class="adm-nav-btn" data-view="seo"><span>🔍</span> SEO &amp; Schema</button>
       <button class="adm-nav-btn" data-view="orders"><span>🧾</span> Orders <em class="adm-nav-badge" id="ordersBadge" style="display:none"></em></button>
-      <button class="adm-nav-btn" data-view="settings"><span>⚙️</span> Settings</button>
+      <button class="adm-nav-btn" data-view="settings"><span>⚙️</span> Branding &amp; Settings</button>
       <button class="adm-nav-btn" data-view="account"><span>🔐</span> Account &amp; Backup</button>
     </nav>
     <div class="adm-side-foot">
@@ -74,7 +76,10 @@ if ($authed) {
   </aside>
   <main class="adm-main">
     <header class="adm-topbar">
-      <h2 id="admViewTitle">Dashboard</h2>
+      <div class="adm-topbar-left">
+        <button class="adm-menu-toggle" id="admMenuBtn" aria-label="Toggle menu">☰</button>
+        <h2 id="admViewTitle">Dashboard</h2>
+      </div>
       <div class="adm-topbar-actions">
         <span class="adm-save-state" id="saveState"></span>
         <button class="adm-btn adm-btn-primary" id="saveBtn" style="display:none">💾 Save Changes</button>

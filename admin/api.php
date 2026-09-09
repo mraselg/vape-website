@@ -160,15 +160,19 @@ switch ($action) {
 
     case 'images': {
         $imgs = [];
-        foreach (glob(VCD_ROOT . '/assets/images/*.{jpg,jpeg,png,webp}', GLOB_BRACE) as $f) {
-            $imgs[] = 'assets/images/' . basename($f);
+        $patterns = [
+            VCD_ROOT . '/assets/images/*.{jpg,jpeg,png,webp,svg}',
+            VCD_ROOT . '/assets/images/products/*.{jpg,jpeg,png,webp,svg}',
+            VCD_ROOT . '/assets/images/hero/*.{jpg,jpeg,png,webp,svg}',
+            VCD_ROOT . '/assets/images/branding/*.{jpg,jpeg,png,webp,svg}',
+        ];
+        foreach ($patterns as $pattern) {
+            foreach (glob($pattern, GLOB_BRACE) as $f) {
+                $rel = str_replace('\\', '/', substr($f, strlen(VCD_ROOT) + 1));
+                $imgs[] = $rel;
+            }
         }
-        foreach (glob(VCD_ROOT . '/assets/images/products/*.{jpg,jpeg,png,webp}', GLOB_BRACE) as $f) {
-            $imgs[] = 'assets/images/products/' . basename($f);
-        }
-        foreach (glob(VCD_ROOT . '/assets/images/hero/*.{jpg,jpeg,png,webp}', GLOB_BRACE) as $f) {
-            $imgs[] = 'assets/images/hero/' . basename($f);
-        }
+        $imgs = array_values(array_unique($imgs));
         sort($imgs);
         out(['ok' => true, 'images' => $imgs]);
     }
@@ -178,19 +182,24 @@ switch ($action) {
             out(['ok' => false, 'error' => 'upload_failed'], 422);
         }
         $ext = strtolower(pathinfo((string) $_FILES['file']['name'], PATHINFO_EXTENSION));
-        if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
+        if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'svg'], true)) {
             out(['ok' => false, 'error' => 'bad_type'], 422);
         }
-        if ($_FILES['file']['size'] > 4 * 1024 * 1024) {
-            out(['ok' => false, 'error' => 'too_large_max_4mb'], 422);
+        if ($_FILES['file']['size'] > 6 * 1024 * 1024) {
+            out(['ok' => false, 'error' => 'too_large_max_6mb'], 422);
         }
-        $dir  = in_array(($_POST['dir'] ?? ''), ['products', 'hero'], true) ? $_POST['dir'] : 'products';
+        $dir = in_array(($_POST['dir'] ?? ''), ['products', 'hero', 'branding'], true) ? $_POST['dir'] : 'products';
+        $targetDir = VCD_ROOT . '/assets/images/' . $dir;
+        if (!is_dir($targetDir)) {
+            @mkdir($targetDir, 0775, true);
+        }
         $slug = preg_replace('/[^a-z0-9]+/', '_', strtolower(pathinfo((string) $_FILES['file']['name'], PATHINFO_FILENAME)));
-        $dest = VCD_ROOT . '/assets/images/' . $dir . '/' . $slug . '.' . $ext;
+        $filename = $slug . '_' . time() . '.' . $ext;
+        $dest = $targetDir . '/' . $filename;
         if (!move_uploaded_file($_FILES['file']['tmp_name'], $dest)) {
             out(['ok' => false, 'error' => 'move_failed'], 500);
         }
-        out(['ok' => true, 'path' => 'assets/images/' . $dir . '/' . $slug . '.' . $ext]);
+        out(['ok' => true, 'path' => 'assets/images/' . $dir . '/' . $filename]);
     }
 
     case 'backup': {

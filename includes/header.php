@@ -37,11 +37,15 @@ $announceHtml  = '<svg class="icon icon-sm" aria-hidden="true"><use href="#i-zap
     </button>
 
     <a class="brand" href="/" aria-label="<?= e(trim(($S['brand_name'] ?? '') . ' ' . ($S['brand_tagline'] ?? ''))) ?> home">
+<?php if (!empty($S['logo_type']) && $S['logo_type'] === 'image' && !empty($S['logo_image'])): ?>
+      <img src="<?= e($S['logo_image']) ?>" alt="<?= e($S['brand_name'] ?? 'Vape Club Dubai') ?>" class="brand-img-logo">
+<?php else: ?>
       <span class="brand-mark"><svg><use href="#i-logo"/></svg></span>
       <span class="brand-text">
         <strong><?= e($S['brand_name'] ?? 'VAPE CLUB') ?></strong>
         <small><?= e($S['brand_tagline'] ?? '') ?></small>
       </span>
+<?php endif; ?>
     </a>
 
     <button class="header-search js-open-search" aria-label="Search products">
@@ -60,9 +64,9 @@ $announceHtml  = '<svg class="icon icon-sm" aria-hidden="true"><use href="#i-zap
       <button class="icon-btn js-open-search hide-mobile" aria-label="Search">
         <svg class="icon"><use href="#i-search"/></svg>
       </button>
-      <button class="icon-btn js-open-cart" aria-label="Open cart">
+      <button class="icon-btn js-open-cart cart-btn" aria-label="Open cart" aria-controls="cartDrawer">
         <svg class="icon"><use href="#i-cart"/></svg>
-        <span class="count-badge cart-count" aria-hidden="true">0</span>
+        <span class="count-badge is-visible cart-count-text" id="cartCount">0</span>
       </button>
     </div>
   </div>
@@ -83,11 +87,15 @@ $announceHtml  = '<svg class="icon icon-sm" aria-hidden="true"><use href="#i-zap
 <aside class="menu-drawer" id="menuDrawer" aria-label="Navigation Menu" aria-hidden="true" data-kind="drawer">
   <div class="menu-drawer-head">
     <a class="brand" href="/" aria-label="Home">
+<?php if (!empty($S['logo_type']) && $S['logo_type'] === 'image' && !empty($S['logo_image'])): ?>
+      <img src="<?= e($S['logo_image']) ?>" alt="<?= e($S['brand_name'] ?? 'Vape Club Dubai') ?>" class="brand-img-logo">
+<?php else: ?>
       <span class="brand-mark"><svg><use href="#i-logo"/></svg></span>
       <span class="brand-text">
         <strong><?= e($S['brand_name'] ?? 'VAPE CLUB') ?></strong>
         <small><?= e(strtoupper($S['brand_tagline'] ?? 'VIP VAPE DUBAI')) ?></small>
       </span>
+<?php endif; ?>
     </a>
     <button class="icon-btn js-close-menu" id="menuClose" aria-label="Close menu"><svg class="icon"><use href="#i-close"/></svg></button>
   </div>

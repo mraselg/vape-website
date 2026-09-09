@@ -159,7 +159,7 @@ if (!empty($p['faqs']) && ($VCD_SEO['schema_faq_page'] ?? true)) {
 render_head([
     'title'       => $seoTitle,
     'description' => $seoDesc,
-    'keywords'    => $seoPage['keywords'] ?? '',
+    'keywords'    => !empty($p['seo_keywords']) ? (string) $p['seo_keywords'] : ($seoPage['keywords'] ?? ''),
     'robots'      => $seoPage['robots'] ?? 'index, follow',
     'canonical'   => site_url('/product.php?id=' . rawurlencode((string) $p['id'])),
     'og_type'     => 'product',

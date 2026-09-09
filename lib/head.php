@@ -124,24 +124,43 @@ function render_vcd_script(): void
 
 function jsonld_local_business(): array
 {
-    global $VCD_SETTINGS;
-    $brand = trim(($VCD_SETTINGS['brand_name'] ?? '') . ' ' . ($VCD_SETTINGS['brand_tagline'] ?? ''));
+    global $VCD_SETTINGS, $VCD_SEO;
+    $brand = trim(($VCD_SETTINGS['brand_name'] ?? 'VAPE CLUB') . ' ' . ($VCD_SETTINGS['brand_tagline'] ?? ''));
+    $logo = !empty($VCD_SETTINGS['logo_image']) ? site_url($VCD_SETTINGS['logo_image']) : site_url($VCD_SEO['default_og_image'] ?? 'assets/images/hero-iluma.png');
+    $socials = array_values(array_filter([
+        $VCD_SETTINGS['instagram_url'] ?? '',
+        $VCD_SETTINGS['telegram_url'] ?? '',
+        $VCD_SETTINGS['facebook_url'] ?? '',
+        $VCD_SETTINGS['tiktok_url'] ?? '',
+    ]));
     return [
         '@context' => 'https://schema.org',
         '@type'    => 'Store',
         'name'     => $brand,
+        'image'    => $logo,
+        'logo'     => $logo,
         'url'      => site_url('/'),
-        'telephone' => $VCD_SETTINGS['phone_tel'] ?? '',
-        'email'    => $VCD_SETTINGS['email'] ?? '',
+        'telephone' => $VCD_SETTINGS['phone_tel'] ?? '+971562848450',
+        'email'    => $VCD_SETTINGS['email'] ?? 'orders@vapeclubdubai.ae',
         'address'  => [
             '@type'           => 'PostalAddress',
-            'streetAddress'   => $VCD_SETTINGS['address'] ?? '',
+            'streetAddress'   => $VCD_SETTINGS['address'] ?? 'International City, Dragon Mart, Dubai',
             'addressLocality' => 'Dubai',
+            'addressRegion'   => 'Dubai',
+            'postalCode'      => '00000',
             'addressCountry'  => 'AE',
         ],
+        'geo' => [
+            '@type'     => 'GeoCoordinates',
+            'latitude'  => '25.1764',
+            'longitude' => '55.4132',
+        ],
+        'hasMap' => $VCD_SETTINGS['maps_url'] ?? 'https://maps.google.com/?q=Dragon+Mart+Dubai',
         'openingHours' => 'Mo-Su 10:00-24:00',
         'priceRange'   => 'AED',
-        'sameAs'       => array_values(array_filter([$VCD_SETTINGS['instagram_url'] ?? '', $VCD_SETTINGS['telegram_url'] ?? ''])),
+        'currenciesAccepted' => 'AED',
+        'paymentAccepted' => 'Cash, Credit Card, Apple Pay, Samsung Pay',
+        'sameAs'       => $socials,
     ];
 }
 
