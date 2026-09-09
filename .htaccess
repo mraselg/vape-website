@@ -5,7 +5,10 @@ Options -Indexes
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule ^(data|lib|includes|scratch)/ - [F,L]
-RewriteRule ^sitemap\.xml$ sitemap.php [L]
+# Canonical clean root redirect for index.php (301)
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\s+/index\.php[?\s] [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+
 # Legacy static URLs -> PHP (301)
 RewriteRule ^index\.html$ / [R=301,L]
 RewriteRule ^category\.html$ category.php [R=301,L,QSA]

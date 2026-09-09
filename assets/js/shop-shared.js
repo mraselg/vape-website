@@ -135,7 +135,28 @@ const closeCart = () => {
   const d = $('#cartDrawer');
   if (d) closeLayer(d);
 };
+const openMenu = () => {
+  const d = $('#menuDrawer');
+  if (d) openLayer(d, 'drawer');
+};
+const closeMenu = () => {
+  const d = $('#menuDrawer');
+  if (d) closeLayer(d);
+};
 const closeModal = (m) => closeLayer(m);
+
+function universalOpenSearch() {
+  if (typeof window.openSearch === 'function') {
+    window.openSearch();
+    return;
+  }
+  const modal = $('#searchModal');
+  if (modal) {
+    openLayer(modal, 'modal');
+    const input = $('#searchInput');
+    if (input) setTimeout(() => input.focus(), 250);
+  }
+}
 
 /* ---------- Cart Drawer Rendering & Animation ---------- */
 function renderCart(justId, celebrate) {
@@ -755,7 +776,22 @@ document.addEventListener('click', (e) => {
   }
 
   // 5. Drawer & Modal triggers
-  if (e.target.closest('.js-open-cart') || e.target.closest('#pdCartCount')) {
+  if (e.target.closest('#menuBtn, .js-open-menu')) {
+    e.preventDefault();
+    openMenu();
+    return;
+  }
+  if (e.target.closest('#menuClose, .js-close-menu')) {
+    e.preventDefault();
+    closeMenu();
+    return;
+  }
+  if (e.target.closest('.js-open-search')) {
+    e.preventDefault();
+    universalOpenSearch();
+    return;
+  }
+  if (e.target.closest('.js-open-cart') || e.target.closest('#pdCartCount, .bnav-cart-trigger')) {
     e.preventDefault();
     openCart();
     return;
@@ -783,6 +819,12 @@ document.addEventListener('click', (e) => {
     renderCart();
     toast('Cart cleared');
     return;
+  }
+
+  // Auto-close menu when tapping internal links (except theme toggle)
+  const mLink = e.target.closest('#menuDrawer a');
+  if (mLink) {
+    closeMenu();
   }
 });
 
@@ -833,3 +875,85 @@ document.addEventListener('keydown', (e) => {
   e.preventDefault();
   openQuickView(card.dataset.qv);
 });
+
+/* ============================================================
+   UNIVERSAL THEME SWITCHER (Side Drawer & Persistence)
+   ============================================================ */
+function initThemeSwitcher() {
+  const rootEl = document.documentElement;
+  const menuToggle = $('#menuThemeToggle');
+  const menuText = $('#menuThemeText');
+
+  let savedTheme = localStorage.getItem('vcd_theme');
+  let currentTheme = (savedTheme === 'light') ? 'light' : 'dark';
+
+  function applyTheme(theme) {
+    currentTheme = theme;
+    rootEl.dataset.theme = theme;
+    rootEl.dataset.accent = 'emerald';
+    localStorage.setItem('vcd_theme', theme);
+    localStorage.setItem('vcd_accent', 'emerald');
+
+    const isDark = theme === 'dark';
+    if (menuToggle) {
+      menuToggle.classList.toggle('is-active', isDark);
+      menuToggle.setAttribute('aria-checked', isDark ? 'true' : 'false');
+    }
+    if (menuText) {
+      menuText.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+    }
+  }
+
+  function toggle() {
+    const nextTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    toast(nextTheme === 'dark' ? '🌙 Dark Mode activated' : '☀️ Light Mode activated');
+  }
+
+  if (menuToggle && !menuToggle.dataset.bound) {
+    menuToggle.dataset.bound = '1';
+    menuToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggle();
+    });
+  }
+
+  applyTheme(currentTheme);
+}
+window.initThemeSwitcher = initThemeSwitcher;
+
+/* ============================================================
+   BOTTOM NAV ACTIVE STATE SYNC
+   ============================================================ */
+function syncBottomNavActive() {
+  const path = window.location.pathname;
+  const hash = window.location.hash;
+  const homeBtn = $('.js-bnav-home');
+  const shopBtn = $('.js-bnav-shop');
+
+  if (homeBtn && shopBtn) {
+    if (path.includes('category.php') || hash === '#shop') {
+      shopBtn.classList.add('is-active');
+      homeBtn.classList.remove('is-active');
+    } else {
+      homeBtn.classList.add('is-active');
+      shopBtn.classList.remove('is-active');
+    }
+  }
+}
+window.addEventListener('hashchange', syncBottomNavActive);
+
+// Run initial shared setups
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initThemeSwitcher();
+    syncBottomNavActive();
+    syncBadges();
+  });
+} else {
+  initThemeSwitcher();
+  syncBottomNavActive();
+  syncBadges();
+}
+

@@ -4,7 +4,7 @@
 'use strict';
 
 (function categoryPage() {
-  if (localStorage.getItem(LS_AGE) !== 'true') { location.replace('index.php'); return; }
+  if (localStorage.getItem(LS_AGE) !== 'true') { location.replace('/'); return; }
 
   const params = new URLSearchParams(location.search);
   const key = params.get('cat') || 'all';

@@ -18,6 +18,9 @@
   <symbol id="i-logo" viewBox="0 0 24 24">
     <path fill="#00E599" d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5L13 2z"/>
   </symbol>
+  <symbol id="i-home" viewBox="0 0 24 24">
+    <path d="m3 9.5 9-7 9 7V20a2 2 0 0 1-2 2h-4a1 1 0 0 1-1-1v-5h-4v5a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V9.5z"/>
+  </symbol>
   <symbol id="i-search" viewBox="0 0 24 24">
     <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
   </symbol>

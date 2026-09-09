@@ -154,7 +154,7 @@ function jsonld_website(): array
         'url'      => site_url('/'),
         'potentialAction' => [
             '@type'       => 'SearchAction',
-            'target'      => ['@type' => 'EntryPoint', 'urlTemplate' => site_url('/index.php?q={search_term_string}')],
+            'target'      => ['@type' => 'EntryPoint', 'urlTemplate' => site_url('/?q={search_term_string}')],
             'query-input' => 'required name=search_term_string',
         ],
     ];

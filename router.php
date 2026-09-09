@@ -29,6 +29,13 @@ if ($path === '/') {
     return true;
 }
 
+/* Canonical root redirection (SEO: prevent duplicate /index.php in search engines) */
+if ($path === '/index.php') {
+    $qs = (string) ($_SERVER['QUERY_STRING'] ?? '');
+    header('Location: /' . ($qs !== '' ? '?' . $qs : ''), true, 301);
+    return true;
+}
+
 /* Old .html URLs permanently redirect to the PHP versions (SEO) */
 $legacy = ['/index.html' => '/', '/category.html' => '/category.php', '/product.html' => '/product.php'];
 if (isset($legacy[$path])) {

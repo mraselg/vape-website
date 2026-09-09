@@ -67,7 +67,7 @@ if ($authed) {
       <button class="adm-nav-btn" data-view="account"><span>🔐</span> Account &amp; Backup</button>
     </nav>
     <div class="adm-side-foot">
-      <a href="../index.php" target="_blank" rel="noopener" class="adm-view-site">↗ View Live Site</a>
+      <a href="../" target="_blank" rel="noopener" class="adm-view-site">↗ View Live Site</a>
       <button class="adm-logout" id="logoutBtn">⏻ Logout</button>
     </div>
   </aside>

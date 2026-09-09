@@ -6,7 +6,7 @@
 (function productPage() {
   /* Age gate guard — home owns the gate */
   if (localStorage.getItem(LS_AGE) !== 'true') {
-    location.replace('index.php');
+    location.replace('/');
     return;
   }
 
@@ -23,7 +23,7 @@
             '<span class="eyebrow">404 — Not Found</span>' +
             '<h1>Product Not Available</h1>' +
             '<p>This item may have sold out or the link is incorrect. Browse our full catalogue instead.</p>' +
-            '<div style="margin-top:18px"><a class="btn btn-primary" href="index.php#shop"><svg class="icon"><use href="#i-box"/></svg> Browse All Products</a></div>' +
+            '<div style="margin-top:18px"><a class="btn btn-primary" href="/#shop"><svg class="icon"><use href="#i-box"/></svg> Browse All Products</a></div>' +
           '</div>' +
         '</section>';
       document.title = 'Product Not Found — Vape Club Dubai';

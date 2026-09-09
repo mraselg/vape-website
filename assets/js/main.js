@@ -217,6 +217,7 @@ function openSearch() {
   if (searchModal) openLayer(searchModal, 'modal');
   if (searchInput) setTimeout(() => searchInput.focus(), 250);
 }
+window.openSearch = openSearch;
 
 if (searchInput) searchInput.addEventListener('input', runSearch);
 if (searchClear) searchClear.addEventListener('click', () => { if (searchInput) { searchInput.value = ''; runSearch(); searchInput.focus(); } });
@@ -375,64 +376,11 @@ $$('.lang-toggle button').forEach((b) => {
   });
 });
 
-/* ---------- Dark / Light Mode Switcher (Clean Sidebar & Header Toggle) ---------- */
-(function themeSwitcher() {
-  const rootEl = document.documentElement;
-  const menuToggle = $('#menuThemeToggle');
-  const headerToggle = $('#headerThemeToggle');
-  const menuText = $('#menuThemeText');
-
-  // Default theme is ALWAYS 'dark', drop 'midnight'
-  let savedTheme = localStorage.getItem('vcd_theme');
-  let currentTheme = (savedTheme === 'light') ? 'light' : 'dark';
-
-  function applyTheme(theme) {
-    currentTheme = theme;
-    rootEl.dataset.theme = theme;
-    rootEl.dataset.accent = 'emerald';
-    localStorage.setItem('vcd_theme', theme);
-    localStorage.setItem('vcd_accent', 'emerald');
-
-    const isDark = theme === 'dark';
-    if (menuToggle) {
-      menuToggle.classList.toggle('is-active', isDark);
-      menuToggle.setAttribute('aria-checked', isDark ? 'true' : 'false');
-    }
-    if (menuText) {
-      menuText.textContent = isDark ? 'Dark Mode' : 'Light Mode';
-    }
-    if (headerToggle) {
-      headerToggle.innerHTML = isDark
-        ? '<svg class="icon"><use href="#i-sun"/></svg>'
-        : '<svg class="icon"><use href="#i-moon"/></svg>';
-      headerToggle.setAttribute('title', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
-      headerToggle.setAttribute('aria-label', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
-    }
-  }
-
-  function toggle() {
-    const nextTheme = (currentTheme === 'dark') ? 'light' : 'dark';
-    applyTheme(nextTheme);
-    toast(nextTheme === 'dark' ? '🌙 Dark Mode activated' : '☀️ Light Mode activated');
-  }
-
-  if (menuToggle) {
-    menuToggle.addEventListener('click', (e) => {
-      e.preventDefault();
-      toggle();
-    });
-  }
-
-  if (headerToggle) {
-    headerToggle.addEventListener('click', (e) => {
-      e.preventDefault();
-      toggle();
-    });
-  }
-
-  // Initial apply
-  applyTheme(currentTheme);
-})();
+/* ---------- Dark / Light Mode Switcher ---------- */
+/* Handled universally by shop-shared.js for #menuThemeToggle across all pages */
+if (typeof window.initThemeSwitcher === 'function') {
+  window.initThemeSwitcher();
+}
 
 /* Note: Checkout modal and order fulfillment are provided by shop-shared.js */
 

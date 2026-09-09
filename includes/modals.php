@@ -245,3 +245,43 @@ $delivery  = (float) ($S['delivery_fee'] ?? 20);
 
 <!-- ========== TOASTS ========== -->
 <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<!-- ========== FLOATING CURVED BOTTOM APP-BAR (Mobile Mockup UI) ========== -->
+<nav class="bottom-nav" id="bottomNav" aria-label="Mobile Navigation">
+  <div class="bottom-nav-curve-bg" aria-hidden="true">
+    <div class="bnav-notch-dome"></div>
+  </div>
+
+  <div class="bottom-nav-inner">
+    <a href="/" class="bnav-btn js-bnav-home" aria-label="Home">
+      <svg class="icon"><use href="#i-home"/></svg>
+      <span>Home</span>
+    </a>
+
+    <a href="/#shop" class="bnav-btn js-bnav-shop" aria-label="Shop Products">
+      <svg class="icon"><use href="#i-box"/></svg>
+      <span>Shop</span>
+    </a>
+
+    <!-- Center Raised WhatsApp Action Button (per user mockup & audio instruction) -->
+    <div class="bnav-center-action">
+      <a class="bnav-fab-wa" href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello! I am browsing Vape Club Dubai.')) ?>" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+        <svg class="icon"><use href="#i-wa"/></svg>
+      </a>
+    </div>
+
+    <button type="button" class="bnav-btn js-open-search" aria-label="Search Products">
+      <svg class="icon"><use href="#i-search"/></svg>
+      <span>Search</span>
+    </button>
+
+    <button type="button" class="bnav-btn js-open-cart bnav-cart-trigger" aria-label="Shopping Cart">
+      <div class="bnav-icon-wrap">
+        <svg class="icon"><use href="#i-cart"/></svg>
+        <span class="count-badge cart-count" aria-hidden="true">0</span>
+      </div>
+      <span>Cart</span>
+    </button>
+  </div>
+</nav>
+

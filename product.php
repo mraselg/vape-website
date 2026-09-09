@@ -42,7 +42,7 @@ if (!$p) {
         <span><svg class="icon icon-sm"><use href="#i-truck"/></svg> 1-2h Dubai express</span>
         <span><svg class="icon icon-sm"><use href="#i-shield"/></svg> 100% original · ESMA</span>
       </div>
-      <div style="margin-top:18px"><a class="btn btn-primary" href="index.php#shop"><svg class="icon"><use href="#i-box"/></svg> Browse All Products</a></div>
+      <div style="margin-top:18px"><a class="btn btn-primary" href="/#shop"><svg class="icon"><use href="#i-box"/></svg> Browse All Products</a></div>
     </div>
   </section>
 </main>
@@ -261,7 +261,7 @@ function pd_variants_html(array $p, array $v, string $selPack, ?string $selColor
 <?php $pdpWaHeaderId = true; require __DIR__ . '/includes/pdp-header.php'; ?>
 
 <main class="pd-wrap container">
-  <nav class="pd-crumb" id="pdCrumb" aria-label="Breadcrumb"><a href="index.php#shop"><svg class="icon icon-sm"><use href="#i-chevron-left"/></svg> Back to shop</a> <span class="crumb-sep">/</span> <a href="category.php?cat=<?= e(str_starts_with((string) ($p['cat'] ?? ''), 'terea') ? 'terea' : (string) ($p['cat'] ?? 'all')) ?>" id="crumbCatLink"><?= e($VCD_LABELS[$p['cat'] ?? ''] ?? 'Products') ?></a> <span class="crumb-sep">/</span> <span id="crumbProdName" class="crumb-curr"><?= e($p['name']) ?></span></nav>
+  <nav class="pd-crumb" id="pdCrumb" aria-label="Breadcrumb"><a href="/#shop"><svg class="icon icon-sm"><use href="#i-chevron-left"/></svg> Back to shop</a> <span class="crumb-sep">/</span> <a href="category.php?cat=<?= e(str_starts_with((string) ($p['cat'] ?? ''), 'terea') ? 'terea' : (string) ($p['cat'] ?? 'all')) ?>" id="crumbCatLink"><?= e($VCD_LABELS[$p['cat'] ?? ''] ?? 'Products') ?></a> <span class="crumb-sep">/</span> <span id="crumbProdName" class="crumb-curr"><?= e($p['name']) ?></span></nav>
 
   <!-- Product Main Purchase & Gallery Area — server rendered -->
   <div id="pdRoot"><?php

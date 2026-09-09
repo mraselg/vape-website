@@ -9,8 +9,8 @@ $S = $VCD_SETTINGS;
 ?>
 <header class="site-header">
   <div class="container header-main">
-    <a class="icon-btn" href="index.php<?= $backAnchor ?? '' ?>" aria-label="Back"><svg class="icon"><use href="#i-chevron-left"/></svg></a>
-    <a class="brand" href="index.php">
+    <a class="icon-btn" href="/<?= $backAnchor ?? '' ?>" aria-label="Back"><svg class="icon"><use href="#i-chevron-left"/></svg></a>
+    <a class="brand" href="/">
       <span class="brand-mark"><svg><use href="#i-logo"/></svg></span>
       <span class="brand-text"><strong><?= e($S['brand_name'] ?? 'VAPE CLUB') ?></strong><small><?= e($S['brand_tagline'] ?? '') ?></small></span>
     </a>
