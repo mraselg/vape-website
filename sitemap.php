@@ -2,6 +2,7 @@
 /**
  * Dynamic XML sitemap — generated live from the JSON catalog so it is
  * always in sync with the admin panel. Served at /sitemap.xml via router.
+ * Includes Google Image sitemap extensions for maximum image discovery.
  */
 declare(strict_types=1);
 
@@ -9,25 +10,76 @@ require_once __DIR__ . '/lib/bootstrap.php';
 
 header('Content-Type: application/xml; charset=utf-8');
 
+$today = date('Y-m-d');
 $urls = [];
-$urls[] = ['loc' => site_url('/'), 'changefreq' => 'daily', 'priority' => '1.0'];
 
-foreach ($VCD_CATS as $key => $cat) {
-    $urls[] = ['loc' => site_url('/category.php?cat=' . rawurlencode((string) $key)), 'changefreq' => 'weekly', 'priority' => '0.8'];
+// Homepage
+$urls[] = [
+    'loc'        => site_url('/'),
+    'lastmod'    => $today,
+    'changefreq' => 'daily',
+    'priority'   => '1.0'
+];
+
+// Guide Pages
+$guides = [
+    '/guide-terea.php' => 'TEREA UAE Flavor & Country Editions Guide — Japan, Swiss, Indonesia',
+    '/guide-iluma.php' => 'IQOS ILUMA vs ILUMA PRIME vs ONE Comparison Guide Dubai',
+];
+foreach ($guides as $path => $guideTitle) {
+    if (file_exists(__DIR__ . $path)) {
+        $urls[] = [
+            'loc'        => site_url($path),
+            'lastmod'    => $today,
+            'changefreq' => 'weekly',
+            'priority'   => '0.8',
+            'title'      => $guideTitle
+        ];
+    }
 }
 
+// Categories
+foreach ($VCD_CATS as $key => $cat) {
+    $urls[] = [
+        'loc'        => site_url('/category.php?cat=' . rawurlencode((string) $key)),
+        'lastmod'    => $today,
+        'changefreq' => 'weekly',
+        'priority'   => '0.85'
+    ];
+}
+
+// Products with images
 foreach ($VCD_PRODUCTS as $p) {
-    $urls[] = ['loc' => site_url('/product.php?id=' . rawurlencode((string) ($p['id'] ?? ''))), 'changefreq' => 'weekly', 'priority' => '0.9'];
+    $entry = [
+        'loc'        => site_url('/product.php?id=' . rawurlencode((string) ($p['id'] ?? ''))),
+        'lastmod'    => $today,
+        'changefreq' => 'weekly',
+        'priority'   => '0.9'
+    ];
+    if (!empty($p['photo'])) {
+        $entry['image'] = site_url((string) $p['photo']);
+        $entry['title'] = (string) ($p['name'] ?? 'Vape Product');
+    }
+    $urls[] = $entry;
 }
 
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <?php foreach ($urls as $u): ?>
   <url>
     <loc><?= e($u['loc']) ?></loc>
+    <lastmod><?= e($u['lastmod']) ?></lastmod>
     <changefreq><?= e($u['changefreq']) ?></changefreq>
     <priority><?= e($u['priority']) ?></priority>
+<?php if (!empty($u['image'])): ?>
+    <image:image>
+      <image:loc><?= e($u['image']) ?></image:loc>
+      <image:title><?= e($u['title'] ?? '') ?></image:title>
+    </image:image>
+<?php endif; ?>
   </url>
 <?php endforeach; ?>
 </urlset>
+

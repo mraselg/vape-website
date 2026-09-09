@@ -19,16 +19,16 @@
       "og_image": ""
     },
     "category": {
-      "title": "{category} — Buy Online in Dubai | Vape Club Dubai",
-      "description": "Shop {category} in Dubai with 1-2 hour express delivery. 100% genuine, ESMA certified stock. Cash or card on delivery across the UAE.",
-      "keywords": "",
+      "title": "{category} Dubai — Buy Online UAE | 1-2h Express Delivery | Vape Club",
+      "description": "Shop genuine {category} in Dubai with 1-2 hour express delivery. 100% authentic ESMA certified stock. Cash or card on delivery across Dubai, Sharjah, Abu Dhabi & UAE.",
+      "keywords": "{category} dubai, buy {category} uae, {category} price dubai, vape delivery dubai, iqos terea shop",
       "robots": "index, follow",
       "og_image": ""
     },
     "product": {
-      "title": "{product} — Vape Club Dubai",
-      "description": "Buy {product} in Dubai, UAE for {price} AED. 1-2 hour express delivery, 100% genuine ESMA certified stock. Cash or card on delivery.",
-      "keywords": "",
+      "title": "Buy {product} in Dubai UAE ({price} AED) — 1-2h Delivery | Vape Club",
+      "description": "Order original {product} online at Vape Club Dubai for {price} AED. 100% authentic, ESMA certified, 1-2 hour express delivery in Dubai & UAE. Cash or card on delivery.",
+      "keywords": "{product} dubai, buy {product} uae, {product} price aed, original {product}, express vape delivery dubai",
       "robots": "index, follow",
       "og_image": ""
     }

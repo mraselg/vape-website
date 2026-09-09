@@ -27,11 +27,13 @@ $HM = $VCD_HOME;
       </div>
     </div>
     <div class="footer-col">
-      <h4>Shop</h4>
+      <h4>Shop &amp; Guides</h4>
       <ul>
 <?php foreach (($HM['footer_shop_links'] ?? []) as $link): ?>
         <li><a href="<?= e($link['href'] ?? '#') ?>"><svg class="icon"><use href="#i-arrow-right"/></svg> <?= e($link['label'] ?? '') ?></a></li>
 <?php endforeach; ?>
+        <li><a href="/guide-terea.php"><svg class="icon"><use href="#i-arrow-right"/></svg> TEREA Flavor Guide</a></li>
+        <li><a href="/guide-iluma.php"><svg class="icon"><use href="#i-arrow-right"/></svg> IQOS ILUMA Comparison</a></li>
       </ul>
     </div>
     <div class="footer-col">
