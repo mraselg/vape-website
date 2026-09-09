@@ -107,10 +107,19 @@ function vipBestCardHtml(p, index) {
 }
 
 function renderSections() {
-  const bestList = PRODUCTS.filter((p) => p.best);
-  $('#bestGrid').innerHTML = bestList.map((p, idx) => vipBestCardHtml(p, idx)).join('');
-  $('#tereaGrid').innerHTML = PRODUCTS.filter((p) => p.cat.indexOf('terea-') === 0).map(cardHtml).join('');
-  $('#vapeGrid').innerHTML = PRODUCTS.filter((p) => p.cat === 'disposables').map(cardHtml).join('');
+  const bg = $('#bestGrid');
+  if (bg) {
+    const bestList = PRODUCTS.filter((p) => p.best);
+    bg.innerHTML = bestList.map((p, idx) => vipBestCardHtml(p, idx)).join('');
+  }
+  const tg = $('#tereaGrid');
+  if (tg) {
+    tg.innerHTML = PRODUCTS.filter((p) => p.cat.indexOf('terea-') === 0).map(cardHtml).join('');
+  }
+  const vg = $('#vapeGrid');
+  if (vg) {
+    vg.innerHTML = PRODUCTS.filter((p) => p.cat === 'disposables').map(cardHtml).join('');
+  }
 }
 
 function setFilter(f) {
@@ -124,6 +133,36 @@ function setFilter(f) {
   renderShop();
 }
 
+/* ---------- Scroll Reveal Observer ---------- */
+function initReveal() {
+  const els = $$('.reveal');
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) {
+    els.forEach((el) => el.classList.add('in-view'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (en.isIntersecting) {
+        en.target.classList.add('in-view');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '50px' });
+  els.forEach((el) => io.observe(el));
+
+  // Immediate visibility check for elements already near or within viewport
+  setTimeout(() => {
+    els.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 100) {
+        el.classList.add('in-view');
+      }
+    });
+  }, 50);
+}
+initReveal();
+
 /* Note: Cart state, Quick View Modal, and Drawer logic are provided by shop-shared.js */
 
 /* ---------- Search modal ---------- */
@@ -133,16 +172,19 @@ const searchClear = $('#searchClear');
 let searchChip = 'all';
 
 function buildSearchChips() {
+  const chipBox = $('#searchChips');
+  if (!chipBox) return;
   const defs = (VCD.searchChips && VCD.searchChips.length) ? VCD.searchChips
-    : [['all', 'All'], ['iluma', 'ILUMA'], ['terea-id', ' Indonesia'], ['terea-jp', ' Japan'], ['terea-ch', ' Swiss'], ['disposables', ' 10k+'], ['pod', 'Pods'], ['eliquid', 'E-Liquids']];
-  $('#searchChips').innerHTML = defs.map(([k, label]) =>
+    : [['all', 'All'], ['iluma', 'ILUMA'], ['terea-id', '🇮🇩 Indonesia'], ['terea-jp', '🇯🇵 Japan'], ['terea-ch', '🇨🇭 Swiss'], ['disposables', '🔥 10k+'], ['pod', 'Pods'], ['eliquid', 'E-Liquids']];
+  chipBox.innerHTML = defs.map(([k, label]) =>
     '<button class="chip' + (k === searchChip ? ' is-active' : '') + '" data-chip="' + k + '">' + label + '</button>'
   ).join('');
 }
 
 function runSearch() {
+  if (!searchInput) return;
   const q = searchInput.value.trim().toLowerCase();
-  searchClear.classList.toggle('is-visible', q.length > 0);
+  if (searchClear) searchClear.classList.toggle('is-visible', q.length > 0);
   const list = PRODUCTS.filter((p) => {
     const inChip = searchChip === 'all' || p.cat === searchChip;
     if (!inChip) return false;
@@ -152,6 +194,7 @@ function runSearch() {
   }).slice(0, 14);
 
   const box = $('#searchResults');
+  if (!box) return;
   if (!list.length) {
     box.innerHTML = '<div class="search-none">No match — try \u2018mint\u2019, \u2018TEREA\u2019 or \u201810000\u2019.</div>';
     return;
@@ -171,19 +214,22 @@ function runSearch() {
 function openSearch() {
   buildSearchChips();
   runSearch();
-  openLayer(searchModal, 'modal');
-  setTimeout(() => searchInput.focus(), 250);
+  if (searchModal) openLayer(searchModal, 'modal');
+  if (searchInput) setTimeout(() => searchInput.focus(), 250);
 }
 
-searchInput.addEventListener('input', runSearch);
-searchClear.addEventListener('click', () => { searchInput.value = ''; runSearch(); searchInput.focus(); });
-$('#searchChips').addEventListener('click', (e) => {
-  const chip = e.target.closest('[data-chip]');
-  if (!chip) return;
-  searchChip = chip.dataset.chip;
-  $$('#searchChips .chip').forEach((c) => c.classList.toggle('is-active', c === chip));
-  runSearch();
-});
+if (searchInput) searchInput.addEventListener('input', runSearch);
+if (searchClear) searchClear.addEventListener('click', () => { if (searchInput) { searchInput.value = ''; runSearch(); searchInput.focus(); } });
+const scBox = $('#searchChips');
+if (scBox) {
+  scBox.addEventListener('click', (e) => {
+    const chip = e.target.closest('[data-chip]');
+    if (!chip) return;
+    searchChip = chip.dataset.chip;
+    $$('#searchChips .chip').forEach((c) => c.classList.toggle('is-active', c === chip));
+    runSearch();
+  });
+}
 
 document.addEventListener('keydown', (e) => {
   const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
@@ -193,21 +239,29 @@ document.addEventListener('keydown', (e) => {
 /* ---------- Age gate ---------- */
 (function ageGate() {
   const modal = $('#ageModal');
+  if (!modal) return;
   const under = $('#ageUnderMsg');
   if (localStorage.getItem(LS_AGE) === 'true') { modal.remove(); return; }
   openLayer(modal, 'modal');
-  $('#ageYes').addEventListener('click', () => {
-    localStorage.setItem(LS_AGE, 'true');
-    closeLayer(modal);
-    setTimeout(() => modal.remove(), 500);
-  });
-  $('#ageNo').addEventListener('click', () => { under.classList.add('is-visible'); });
+  const yesBtn = $('#ageYes');
+  if (yesBtn) {
+    yesBtn.addEventListener('click', () => {
+      localStorage.setItem(LS_AGE, 'true');
+      closeLayer(modal);
+      setTimeout(() => modal.remove(), 500);
+    });
+  }
+  const noBtn = $('#ageNo');
+  if (noBtn && under) {
+    noBtn.addEventListener('click', () => { under.classList.add('is-visible'); });
+  }
 })();
 
 /* ---------- Hero carousel ---------- */
 (function carousel() {
   const slides = $$('#heroCarousel .slide');
   const dotsBox = $('#heroDots');
+  if (!slides.length || !dotsBox) return;
   let idx = 0, timer = null;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -221,6 +275,7 @@ document.addEventListener('keydown', (e) => {
   const dots = $$('#heroDots button');
 
   function go(n, user) {
+    if (!slides[idx]) return;
     slides[idx].classList.add('is-exit-left');
     slides[idx].classList.remove('is-active');
     idx = (n + slides.length) % slides.length;
@@ -228,11 +283,12 @@ document.addEventListener('keydown', (e) => {
     slides[idx].classList.remove('is-exit-left');
     slides[idx].classList.add('is-active');
     dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
-    /* restart autoplay progress animation on the active dot */
     const activeDot = dots[idx];
-    activeDot.style.animation = 'none';
-    void activeDot.offsetWidth;
-    activeDot.style.animation = '';
+    if (activeDot) {
+      activeDot.style.animation = 'none';
+      void activeDot.offsetWidth;
+      activeDot.style.animation = '';
+    }
     if (user) restart();
   }
   function restart() {
@@ -241,38 +297,43 @@ document.addEventListener('keydown', (e) => {
     timer = setInterval(() => { if (!document.hidden) go(idx + 1); }, 6000);
   }
 
-  $('#heroPrev').addEventListener('click', () => go(idx - 1, true));
-  $('#heroNext').addEventListener('click', () => go(idx + 1, true));
+  const prevBtn = $('#heroPrev');
+  if (prevBtn) prevBtn.addEventListener('click', () => go(idx - 1, true));
+  const nextBtn = $('#heroNext');
+  if (nextBtn) nextBtn.addEventListener('click', () => go(idx + 1, true));
 
-  /* finger-drag swipe: slide follows pointer, snaps back under threshold */
   const shell = $('#heroShell');
-  let startX = null, dragX = 0, dragging = false;
-  shell.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('button, a')) return;
-    startX = e.clientX; dragX = 0; dragging = true;
-    try { shell.setPointerCapture(e.pointerId); } catch (err) {}
-    slides[idx].style.transition = 'none';
-  });
-  shell.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    dragX = e.clientX - startX;
-    slides[idx].style.transform = 'translateX(' + dragX * 0.85 + 'px)';
-  });
-  function endDrag(commit) {
-    if (!dragging) return;
-    dragging = false;
-    slides[idx].style.transition = '';
-    slides[idx].style.transform = '';
-    if (commit && Math.abs(dragX) > 55) go(idx + (dragX < 0 ? 1 : -1), true);
-    else restart();
-    startX = null; dragX = 0;
+  if (shell) {
+    let startX = null, dragX = 0, dragging = false;
+    shell.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('button, a')) return;
+      startX = e.clientX; dragX = 0; dragging = true;
+      try { shell.setPointerCapture(e.pointerId); } catch (err) {}
+      if (slides[idx]) slides[idx].style.transition = 'none';
+    });
+    shell.addEventListener('pointermove', (e) => {
+      if (!dragging || !slides[idx]) return;
+      dragX = e.clientX - startX;
+      slides[idx].style.transform = 'translateX(' + dragX * 0.85 + 'px)';
+    });
+    function endDrag(commit) {
+      if (!dragging) return;
+      dragging = false;
+      if (slides[idx]) {
+        slides[idx].style.transition = '';
+        slides[idx].style.transform = '';
+      }
+      if (commit && Math.abs(dragX) > 55) go(idx + (dragX < 0 ? 1 : -1), true);
+      else restart();
+      startX = null; dragX = 0;
+    }
+    shell.addEventListener('pointerup', () => endDrag(true));
+    shell.addEventListener('pointercancel', () => endDrag(false));
+    shell.addEventListener('pointerenter', () => clearInterval(timer));
+    shell.addEventListener('pointerleave', restart);
   }
-  shell.addEventListener('pointerup', () => endDrag(true));
-  shell.addEventListener('pointercancel', () => endDrag(false));
-  shell.addEventListener('pointerenter', () => clearInterval(timer));
-  shell.addEventListener('pointerleave', restart);
 
-  dots[0].classList.add('is-active');
+  if (dots.length) dots[0].classList.add('is-active');
   restart();
 })();
 
@@ -280,35 +341,31 @@ document.addEventListener('keydown', (e) => {
 $$('.faq-item').forEach((item) => {
   const q = $('.faq-q', item);
   const a = $('.faq-a', item);
-  q.addEventListener('click', () => {
-    const open = item.classList.toggle('is-open');
-    q.setAttribute('aria-expanded', open ? 'true' : 'false');
-    a.style.maxHeight = open ? a.scrollHeight + 'px' : '0px';
-  });
-});
-
-/* ---------- Reveal on scroll ---------- */
-(function reveal() {
-  const els = $$('.reveal');
-  if (!('IntersectionObserver' in window)) { els.forEach((el) => el.classList.add('in-view')); return; }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((en) => {
-      if (en.isIntersecting) { en.target.classList.add('in-view'); io.unobserve(en.target); }
+  if (q && a) {
+    q.addEventListener('click', () => {
+      const open = item.classList.toggle('is-open');
+      q.setAttribute('aria-expanded', open ? 'true' : 'false');
+      a.style.maxHeight = open ? a.scrollHeight + 'px' : '0px';
     });
-  }, { threshold: 0.12 });
-  els.forEach((el) => io.observe(el));
-})();
+  }
+});
 
 /* ---------- Filter pills ---------- */
-$('#filterPills').addEventListener('click', (e) => {
-  const pill = e.target.closest('.pill');
-  if (pill) setFilter(pill.dataset.filter);
-});
+const filterPills = $('#filterPills');
+if (filterPills) {
+  filterPills.addEventListener('click', (e) => {
+    const pill = e.target.closest('.pill');
+    if (pill) setFilter(pill.dataset.filter);
+  });
+}
 
 /* ---------- Header shadow ---------- */
-window.addEventListener('scroll', () => {
-  $('#siteHeader').classList.toggle('is-scrolled', window.scrollY > 8);
-}, { passive: true });
+const siteHeader = $('#siteHeader');
+if (siteHeader) {
+  window.addEventListener('scroll', () => {
+    siteHeader.classList.toggle('is-scrolled', window.scrollY > 8);
+  }, { passive: true });
+}
 
 /* ---------- Language toggle (visual demo) ---------- */
 $$('.lang-toggle button').forEach((b) => {

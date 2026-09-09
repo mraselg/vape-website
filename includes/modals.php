@@ -229,5 +229,19 @@ $delivery  = (float) ($S['delivery_fee'] ?? 20);
   </div>
 </div>
 
+<!-- ========== SEARCH MODAL ========== -->
+<div class="modal search-modal" id="searchModal" role="dialog" aria-modal="true" aria-label="Search products">
+  <div class="modal-panel search-panel">
+    <div class="search-input-row">
+      <svg class="icon"><use href="#i-search"/></svg>
+      <input type="search" id="searchInput" placeholder="<?= e($HM['search']['modal_placeholder'] ?? 'Search ILUMA, TEREA, flavors, puffs…') ?>" autocomplete="off" aria-label="Search products">
+      <button class="search-clear" id="searchClear" aria-label="Clear search"><svg class="icon"><use href="#i-close"/></svg></button>
+      <button class="modal-close" style="position:static;flex:none" data-close-modal aria-label="Close search"><svg class="icon"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="search-chips" id="searchChips"></div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
 <!-- ========== TOASTS ========== -->
 <div class="toast-stack" id="toastStack" aria-live="polite"></div>
