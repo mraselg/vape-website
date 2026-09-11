@@ -55,9 +55,10 @@ $announceHtml  = '<svg class="icon icon-sm" aria-hidden="true"><use href="#i-zap
     </button>
 
     <div class="header-actions">
-      <a class="icon-btn hide-mobile" href="tel:<?= e($S['phone_tel'] ?? '') ?>" aria-label="Call <?= e($S['phone_display'] ?? '') ?>">
-        <svg class="icon"><use href="#i-phone"/></svg>
-      </a>
+      <button class="icon-btn hide-mobile js-theme-toggle" id="headerThemeToggle" type="button" aria-label="Toggle Dark and Light theme" title="Toggle theme">
+        <svg class="icon icon-moon"><use href="#i-moon"/></svg>
+        <svg class="icon icon-sun" style="display:none;"><use href="#i-sun"/></svg>
+      </button>
       <a class="icon-btn hide-mobile js-open-wa-chat" href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello!')) ?>" aria-label="WhatsApp us">
         <svg class="icon"><use href="#i-wa"/></svg>
       </a>

@@ -184,4 +184,4 @@ $waNumber = $S['wa_number'] ?? '971562848450';
 
   </div>
 </div>
-<script src="/assets/js/wa-chat.js?v=2.6" defer></script>
+<script src="/assets/js/wa-chat.js?v=<?= defined('VCD_ASSET_VER') ? VCD_ASSET_VER : '3.0' ?>" defer></script>

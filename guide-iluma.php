@@ -194,7 +194,7 @@ render_head([
     <p style="font-size: 14.5px; color: #94a3b8; max-width: 540px; margin: 0 auto 20px;">All colors in stock: Pebble Beige, Moss Green, Sunset Red, Azure Blue, and Midnight Black. Cash or Card on delivery.</p>
     <div style="display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
       <a href="/category.php?cat=iluma" class="btn btn-primary"><svg class="icon"><use href="#i-box"/></svg> Browse All ILUMA Devices</a>
-      <a href="<?= e(wa_link('Hello, I want to order an IQOS ILUMA device with 1-2 hour delivery')) ?>" class="btn btn-whatsapp js-open-wa-chat"><svg class="icon"><use href="#i-wa"/></svg> Order on WhatsApp</a>
+      <a href="<?= e(wa_link('Hello, I want to order an IQOS ILUMA device with 1-2 hour delivery')) ?>" class="btn btn-whatsapp js-open-wa-chat"><svg class="icon"><use href="#i-wa"/></svg> Order Now</a>
     </div>
   </div>
 
@@ -202,8 +202,8 @@ render_head([
 
 <?php require __DIR__ . '/includes/modals.php'; ?>
 <?php render_vcd_script(); ?>
-<script src="/assets/js/catalog.js?v=2.6"></script>
-<script src="/assets/js/shop-shared.js?v=2.6"></script>
-<script src="/assets/js/wa-chat.js?v=2.6"></script>
+<script src="/assets/js/catalog.js?v=<?= VCD_ASSET_VER ?>"></script>
+<script src="/assets/js/shop-shared.js?v=<?= VCD_ASSET_VER ?>"></script>
+<script src="/assets/js/wa-chat.js?v=<?= VCD_ASSET_VER ?>"></script>
 </body>
 </html>

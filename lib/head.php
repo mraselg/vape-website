@@ -32,7 +32,7 @@ function render_head(array $m): void
     $twSite   = (string) ($VCD_SEO['twitter_site'] ?? '');
     $theme    = (string) ($VCD_SETTINGS['theme_color'] ?? '#070A0F');
     $jsonld   = is_array($m['jsonld'] ?? null) ? $m['jsonld'] : [];
-    $cssVer   = '2.6';
+    $cssVer   = defined('VCD_ASSET_VER') ? VCD_ASSET_VER : '3.0';
     ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-theme="dark" data-accent="emerald">

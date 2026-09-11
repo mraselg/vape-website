@@ -27,7 +27,7 @@ if ($authed) {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/admin/assets/admin.css?v=2.0">
+<link rel="stylesheet" href="/admin/assets/admin.css?v=<?= VCD_ASSET_VER ?>">
 </head>
 <body class="adm-body">
 
@@ -107,7 +107,7 @@ if ($authed) {
   window.ADM_ROLE = <?= json_encode($_SESSION['admin_role'] ?? 'admin') ?>;
   window.ADM_PHONE = <?= json_encode($_SESSION['admin_phone'] ?? '') ?>;
 </script>
-<script src="/admin/assets/admin.js?v=2.2"></script>
+<script src="/admin/assets/admin.js?v=<?= VCD_ASSET_VER ?>"></script>
 <?php endif; ?>
 
 <script>

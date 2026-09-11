@@ -186,7 +186,7 @@ render_head([
     <p style="font-size: 14.5px; color: #94a3b8; max-width: 540px; margin: 0 auto 20px;">Browse our full in-stock collection of genuine Japanese, Swiss, and Indonesian TEREA cartons with instant WhatsApp order support.</p>
     <div style="display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
       <a href="/category.php?cat=terea" class="btn btn-primary"><svg class="icon"><use href="#i-cart"/></svg> Shop All TEREA Sticks</a>
-      <a href="<?= e(wa_link('Hello, I want to order TEREA sticks with 1-2 hour delivery')) ?>" class="btn btn-whatsapp js-open-wa-chat"><svg class="icon"><use href="#i-wa"/></svg> Order on WhatsApp</a>
+      <a href="<?= e(wa_link('Hello, I want to order TEREA sticks with 1-2 hour delivery')) ?>" class="btn btn-whatsapp js-open-wa-chat"><svg class="icon"><use href="#i-wa"/></svg> Order Now</a>
     </div>
   </div>
 
@@ -194,8 +194,8 @@ render_head([
 
 <?php require __DIR__ . '/includes/modals.php'; ?>
 <?php render_vcd_script(); ?>
-<script src="/assets/js/catalog.js?v=2.6"></script>
-<script src="/assets/js/shop-shared.js?v=2.6"></script>
-<script src="/assets/js/wa-chat.js?v=2.6"></script>
+<script src="/assets/js/catalog.js?v=<?= VCD_ASSET_VER ?>"></script>
+<script src="/assets/js/shop-shared.js?v=<?= VCD_ASSET_VER ?>"></script>
+<script src="/assets/js/wa-chat.js?v=<?= VCD_ASSET_VER ?>"></script>
 </body>
 </html>

@@ -868,7 +868,7 @@ const CAT_LABELS = VCD.labels || {
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const fmt = (n) => n.toLocaleString('en-US') + ' AED';
-const byId = (id) => PRODUCTS.find((p) => p.id === id);
+const byId = (id) => PRODUCTS.find((p) => p.id === id || (p.slug && p.slug === id));
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 function mediaBg(p) {

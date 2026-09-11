@@ -349,7 +349,7 @@ function openQuickView(id) {
         '<span class="qty-val" id="qvQty">1</span>' +
         '<button class="qty-btn" id="qvInc" aria-label="Increase quantity"><svg class="icon"><use href="#i-plus"/></svg></button>' +
       '</div>' +
-      '<button class="add-btn-wa" id="qvAdd"><svg class="icon"><use href="#i-wa"/></svg> Order on WhatsApp · <span id="qvTotalAed">' + p.price + ' AED</span></button>' +
+      '<button class="add-btn-wa" id="qvAdd"><svg class="icon"><use href="#i-wa"/></svg> Order Now · <span id="qvTotalAed">' + p.price + ' AED</span></button>' +
     '</div>';
 
   openLayer(modal, 'modal');
@@ -902,6 +902,18 @@ function initThemeSwitcher() {
     if (menuText) {
       menuText.textContent = isDark ? 'Dark Mode' : 'Light Mode';
     }
+
+    // Sync header desktop theme button icon
+    document.querySelectorAll('.js-theme-toggle, #headerThemeToggle').forEach(btn => {
+      const moon = btn.querySelector('.icon-moon');
+      const sun = btn.querySelector('.icon-sun');
+      if (moon && sun) {
+        sun.style.display = isDark ? 'inline-block' : 'none';
+        moon.style.display = isDark ? 'none' : 'inline-block';
+      }
+      btn.setAttribute('aria-label', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+      btn.setAttribute('title', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+    });
   }
 
   function toggle() {
@@ -918,6 +930,17 @@ function initThemeSwitcher() {
       toggle();
     });
   }
+
+  document.querySelectorAll('.js-theme-toggle, #headerThemeToggle').forEach(btn => {
+    if (!btn.dataset.bound) {
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggle();
+      });
+    }
+  });
 
   applyTheme(currentTheme);
 }

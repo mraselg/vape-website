@@ -7,6 +7,13 @@ declare(strict_types=1);
 
 define('VCD_ROOT', dirname(__DIR__));
 define('VCD_DATA', VCD_ROOT . DIRECTORY_SEPARATOR . 'data');
+define('VCD_ASSET_VER', '3.0');
+
+// Send HTTP headers to prevent aggressive browser/reverse proxy caching of dynamic HTML
+if (!headers_sent() && php_sapi_name() !== 'cli') {
+    header('Cache-Control: no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+}
 
 function vcd_load(string $name): array
 {

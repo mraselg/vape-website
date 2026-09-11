@@ -19,6 +19,10 @@ $S = $VCD_SETTINGS;
 <?php endif; ?>
     </a>
     <div class="header-actions">
+      <button class="icon-btn hide-mobile js-theme-toggle" type="button" aria-label="Toggle Dark and Light theme" title="Toggle theme">
+        <svg class="icon icon-moon"><use href="#i-moon"/></svg>
+        <svg class="icon icon-sun" style="display:none;"><use href="#i-sun"/></svg>
+      </button>
       <a class="icon-btn js-open-wa-chat" <?= !empty($pdpWaHeaderId) ? 'id="pdWaHeader" ' : '' ?>href="<?= e(wa_link($S['wa_msg_assistance'] ?? 'Hello!')) ?>" aria-label="WhatsApp us"><svg class="icon"><use href="#i-wa"/></svg></a>
       <button class="icon-btn js-open-cart" <?= !empty($pdpWaHeaderId) ? 'id="pdCartBtn" ' : '' ?>aria-label="Open cart"><svg class="icon"><use href="#i-cart"/></svg><span class="count-badge<?= !empty($pdpWaHeaderId) ? ' is-visible cart-count-text' : '' ?>" id="pdCartCount">0</span></button>
     </div>

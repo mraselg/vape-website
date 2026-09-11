@@ -11,7 +11,7 @@
   }
 
   const params = new URLSearchParams(location.search);
-  const rawId = params.get('id');
+  const rawId = params.get('id') || params.get('slug');
   /* Unknown/invalid id: stop here instead of silently showing another product.
      (product.php already answers with HTTP 404 + noindex for crawlers.) */
   if (!rawId || !byId(rawId)) {
