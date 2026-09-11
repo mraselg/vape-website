@@ -3196,10 +3196,11 @@
 
     let html = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <p style="color:var(--adm-muted);margin:0;">Google UAE Search ranking, SERP snippets, structured data schemas and webmaster verification.</p>
+        <p style="color:var(--adm-muted);margin:0;">Google UAE Search ranking, SERP snippets, structured data schemas, Meta Pixel, GA4, and webmaster verification.</p>
         <button type="button" class="adm-btn adm-btn-primary" id="btnSeoSaveTop">💾 Save SEO Settings</button>
       </div>
 
+      <!-- 1. PRODUCTION URL & SCHEMAS -->
       <div class="adm-card is-highlight">
         <h3><span>🔍</span> Production URL &amp; Google Structured Data Schemas</h3>
         <p class="adm-card-sub">Zero SEO gaps: Canonical URLs, JSON-LD rich snippets and Google Star Ratings</p>
@@ -3242,18 +3243,56 @@
         </div>
       </div>
 
-      <!-- WEBMASTER VERIFICATION & HEAD SCRIPTS -->
-      <div class="adm-card">
-        <h3><span>🛡️</span> Google Search Console &amp; Webmaster Verification</h3>
-        <p class="adm-card-sub">Add Google Search Console HTML verification tag, Google Analytics 4 (GA4), or Meta Pixel</p>
+      <!-- 2. ANALYTICS, FACEBOOK PIXEL & WEBMASTER VERIFICATION -->
+      <div class="adm-card is-highlight">
+        <h3><span>📊</span> Web Analytics, Tracking Pixels &amp; Webmaster Verification</h3>
+        <p class="adm-card-sub">Integrate Google Search Console, Meta / Facebook Pixel, Google Analytics 4, Tag Manager, and TikTok Pixel</p>
+
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Google Search Console Verification Tag or Code</label>
+            <input type="text" id="seo_g_code" value="${esc(seo.google_verification_code || '')}" placeholder='e.g. 4d7b1e8f2a9c3b or <meta name="google-site-verification" content="..." />'>
+            <span class="adm-hint">Generates &lt;meta name="google-site-verification"&gt; in &lt;head&gt; automatically</span>
+          </div>
+          <div class="adm-field">
+            <label>Meta / Facebook Pixel ID</label>
+            <input type="text" id="seo_fb_pixel" value="${esc(seo.facebook_pixel_id || '')}" placeholder="e.g. 123456789012345">
+            <span class="adm-hint">Automatically injects official Facebook Pixel SDK and tracks PageView</span>
+          </div>
+        </div>
+
+        <div class="adm-grid3" style="margin-top:12px;">
+          <div class="adm-field">
+            <label>Google Analytics 4 (GA4) Measurement ID</label>
+            <input type="text" id="seo_ga4" value="${esc(seo.ga4_id || '')}" placeholder="e.g. G-XXXXXXXXXX">
+            <span class="adm-hint">Loads official gtag.js container</span>
+          </div>
+          <div class="adm-field">
+            <label>Google Tag Manager (GTM) ID</label>
+            <input type="text" id="seo_gtm" value="${esc(seo.gtm_id || '')}" placeholder="e.g. GTM-XXXXXXX">
+            <span class="adm-hint">Injects head and noscript body tags</span>
+          </div>
+          <div class="adm-field">
+            <label>TikTok Pixel ID (Optional)</label>
+            <input type="text" id="seo_tt_pixel" value="${esc(seo.tiktok_pixel_id || '')}" placeholder="e.g. CXXXXXXXXXXXXXXXXX">
+            <span class="adm-hint">TikTok Analytics SDK integration</span>
+          </div>
+        </div>
+
+        <div class="adm-field" style="margin-top:14px;">
+          <label>Custom Header Code &amp; SEO Meta Tags (Injected before &lt;/head&gt;)</label>
+          <textarea id="seo_extra_head" rows="3" style="font-family:monospace;font-size:12px;" placeholder='<meta name="custom-meta" content="..." />&#10;<script>/* Custom tracking script */</script>'>${esc(seo.extra_head_code || '')}</textarea>
+          <span class="adm-hint">Custom HTML, third-party verification meta tags, or CSS injected directly into the &lt;head&gt; of all pages.</span>
+        </div>
+
         <div class="adm-field">
-          <label>Webmaster Verification Code / Extra Head Scripts (&lt;meta&gt; or &lt;script&gt;)</label>
-          <textarea id="seo_extra_head" rows="4" style="font-family:monospace;font-size:12.5px;" placeholder='<meta name="google-site-verification" content="your_verification_token" />'>${esc(seo.extra_head_code || '')}</textarea>
-          <span class="adm-hint">This code is injected directly before &lt;/head&gt; on every page of the website.</span>
+          <label>Custom Body Tracking &amp; Conversion Scripts (Injected before &lt;/body&gt;)</label>
+          <textarea id="seo_extra_body" rows="3" style="font-family:monospace;font-size:12px;" placeholder='<script>/* Custom conversion tracker, live chat widget (Tawk.to, Crisp), etc. */</script>'>${esc(seo.extra_body_code || '')}</textarea>
+          <span class="adm-hint">Scripts executed right before &lt;/body&gt; closing tag (e.g. live chat widgets, event tracking).</span>
         </div>
       </div>
 
-      <!-- SOCIAL MEDIA PREVIEW TAGS (OPEN GRAPH & TWITTER) -->
+      <!-- 3. SOCIAL MEDIA PREVIEWS (OPEN GRAPH & TWITTER) -->
       <div class="adm-card">
         <h3><span>📱</span> Open Graph &amp; Twitter Card Previews</h3>
         <p class="adm-card-sub">Controls how links appear when shared on WhatsApp, iMessage, Facebook, and Twitter/X</p>
@@ -3276,7 +3315,7 @@
         </div>
       </div>
 
-      <!-- HOMEPAGE SEO -->
+      <!-- 4. HOMEPAGE SEO & SERP PREVIEW -->
       <div class="adm-card is-highlight">
         <h3><span>🏠</span> Homepage SEO &amp; Google Search Snippet</h3>
         <p class="adm-card-sub">Exact preview of how Vape Club Dubai appears in Google search results across the UAE</p>
@@ -3316,7 +3355,7 @@
         </div>
       </div>
 
-      <!-- CATEGORY PAGES DYNAMIC SEO TEMPLATE -->
+      <!-- 5. CATEGORY PAGES DYNAMIC SEO TEMPLATE -->
       <div class="adm-card">
         <h3><span>📂</span> Category Pages Dynamic SEO Template</h3>
         <p class="adm-card-sub">Pattern applied to all category pages. Variable <code>{category}</code> is dynamically replaced by the category title.</p>
@@ -3340,7 +3379,7 @@
         </div>
       </div>
 
-      <!-- PRODUCT PAGES DYNAMIC SEO TEMPLATE -->
+      <!-- 6. PRODUCT PAGES DYNAMIC SEO TEMPLATE -->
       <div class="adm-card">
         <h3><span>🏷️</span> Product Detail Pages (PDP) Dynamic SEO Template</h3>
         <p class="adm-card-sub">Fallback pattern applied when a product has no custom SEO title. Variables <code>{product}</code> and <code>{price}</code> are automatically replaced.</p>
@@ -3407,7 +3446,13 @@
 
     bind('seo_site_url', seo, 'site_url');
     bind('seo_geo_region', seo, 'geo_region');
+    bind('seo_g_code', seo, 'google_verification_code');
+    bind('seo_fb_pixel', seo, 'facebook_pixel_id');
+    bind('seo_ga4', seo, 'ga4_id');
+    bind('seo_gtm', seo, 'gtm_id');
+    bind('seo_tt_pixel', seo, 'tiktok_pixel_id');
     bind('seo_extra_head', seo, 'extra_head_code');
+    bind('seo_extra_body', seo, 'extra_body_code');
     bind('seo_tw_site', seo, 'twitter_site');
     bind('seo_home_kw', seo.pages.home, 'keywords');
     bind('seo_home_robots', seo.pages.home, 'robots');

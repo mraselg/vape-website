@@ -9,7 +9,13 @@
   "schema_product": true,
   "schema_breadcrumb": true,
   "schema_website_search": true,
+  "google_verification_code": "",
+  "ga4_id": "",
+  "gtm_id": "",
+  "facebook_pixel_id": "",
+  "tiktok_pixel_id": "",
   "extra_head_code": "",
+  "extra_body_code": "",
   "pages": {
     "home": {
       "title": "Vape Club Dubai — IQOS UAE | TEREA & Disposable Vapes | 1-2 Hour Delivery Dubai",
