@@ -718,8 +718,8 @@
                 '<span class="card-price">' + r.price + '<small> AED</small></span>' +
                 (r.old ? '<span class="card-old">' + r.old + ' AED</span>' : '') +
               '</div>' +
-              '<button class="add-btn" data-add="' + r.id + '" aria-label="Order on WhatsApp">' +
-                '<svg class="icon"><use href="#i-wa"/></svg> Order on WhatsApp' +
+              '<button class="add-btn" data-add="' + r.id + '" aria-label="Order Now">' +
+                '<svg class="icon"><use href="#i-wa"/></svg> Order Now' +
               '</button>' +
             '</div>' +
           '</div>' +

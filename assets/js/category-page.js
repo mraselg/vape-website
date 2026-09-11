@@ -70,7 +70,7 @@
             (p.old ? '<span class="card-old">' + p.old + ' AED</span>' : '') +
           '</div>' +
           '<div class="card-actions">' +
-            '<button class="add-btn" data-add="' + p.id + '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order on WhatsApp</button>' +
+            '<button class="add-btn" data-add="' + p.id + '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order Now</button>' +
           '</div>' +
         '</div>' +
       '</article>'

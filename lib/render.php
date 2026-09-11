@@ -100,7 +100,7 @@ function card_html(array $p): string
         . '<h3 class="card-name" title="' . e($p['name'] ?? '') . '">' . e($p['name'] ?? '') . '</h3>'
         . '<div class="card-price-row">' . $price . '</div>'
         . '<div class="card-actions">'
-        . '<button class="add-btn" data-add="' . e($p['id'] ?? '') . '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order on WhatsApp</button>'
+        . '<button class="add-btn" data-add="' . e($p['id'] ?? '') . '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order Now</button>'
         . '</div>'
         . '</div>'
         . '</article>';
@@ -130,7 +130,7 @@ function vip_card_html(array $p, int $index): string
         . (!empty($p['old']) ? '<span class="vip-old">' . e($p['old']) . ' AED</span>' : '')
         . '</div></div>'
         . '<div class="vip-card-actions">'
-        . '<button class="vip-add-btn" data-add="' . e($p['id'] ?? '') . '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order on WhatsApp</button>'
+        . '<button class="vip-add-btn" data-add="' . e($p['id'] ?? '') . '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order Now</button>'
         . '</div>'
         . '</div>'
         . '</article>';
@@ -156,7 +156,7 @@ function cat_card_html(array $p): string
         . (!empty($p['old']) ? '<span class="card-old">' . e($p['old']) . ' AED</span>' : '')
         . '</div>'
         . '<div class="card-actions">'
-        . '<button class="add-btn" data-add="' . e($p['id'] ?? '') . '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order on WhatsApp</button>'
+        . '<button class="add-btn" data-add="' . e($p['id'] ?? '') . '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order Now</button>'
         . '</div>'
         . '</div>'
         . '</article>';
@@ -182,7 +182,7 @@ function rel_card_html(array $p): string
         . '<span class="card-price">' . e($p['price'] ?? 0) . '<small> AED</small></span>'
         . (!empty($p['old']) ? '<span class="card-old">' . e($p['old']) . ' AED</span>' : '')
         . '</div>'
-        . '<button class="add-btn" data-add="' . e($p['id'] ?? '') . '" aria-label="Order on WhatsApp"><svg class="icon"><use href="#i-wa"/></svg> Order on WhatsApp</button>'
+        . '<button class="add-btn" data-add="' . e($p['id'] ?? '') . '" aria-label="Order Now"><svg class="icon"><use href="#i-wa"/></svg> Order Now</button>'
         . '</div>'
         . '</div>'
         . '</article>';
