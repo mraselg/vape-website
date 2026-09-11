@@ -9,7 +9,8 @@
     "show_language_toggle": true,
     "flash_deal": {
         "enabled": true,
-        "text": "FLASH DEAL — Free TEREA pack with every ILUMA device · Today only",
+        "badge": "FLASH DEAL",
+        "text": "Free TEREA pack with every ILUMA device · Today only",
         "cta_label": "Shop now",
         "cta_href": "#shop"
     },

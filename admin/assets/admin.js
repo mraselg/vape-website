@@ -1169,8 +1169,8 @@
             <div class="adm-mirror-sec" data-sec="flash" title="Click to edit flash deal">
               <span class="adm-sec-edit-badge">✏️ Edit Flash Deal</span>
               <div class="adm-mirror-flash">
-                <span class="adm-mirror-flash-chip">FLASH DEAL</span>
-                <span>${esc(home.flash_deal.text)}</span>
+                <span class="adm-mirror-flash-chip">${esc(home.flash_deal.badge || 'FLASH DEAL')}</span>
+                <span>${esc((home.flash_deal.text || '').replace(new RegExp('^' + (home.flash_deal.badge || 'FLASH DEAL') + '\\s*[—–\\-:]\\s*', 'i'), ''))}</span>
                 <span style="color:var(--adm-amber);text-decoration:underline;">${esc(home.flash_deal.cta_label || 'Shop now')} →</span>
               </div>
             </div>
@@ -1493,14 +1493,23 @@
 
         <!-- 2. FLASH DEAL -->
         <div class="adm-card">
-          <h3><span>⚡</span> 2. Flash Deal Strip</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <h3 style="margin:0;"><span>⚡</span> 2. Flash Deal Strip</h3>
+            <button type="button" class="adm-btn adm-btn-sm" id="btnClassicFdModal">⚡ Open Live Modal Editor →</button>
+          </div>
           <label class="adm-check" style="margin-bottom:12px;">
             <input type="checkbox" id="classic_fd_enabled" ${home.flash_deal && home.flash_deal.enabled ? 'checked' : ''}>
             <span>Enable Glowing Flash Deal Strip</span>
           </label>
-          <div class="adm-field">
-            <label>Flash Deal Text</label>
-            <input type="text" id="classic_fd_text" value="${esc(home.flash_deal ? home.flash_deal.text : '')}">
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Deal Badge / Tag</label>
+              <input type="text" id="classic_fd_badge" value="${esc(home.flash_deal ? (home.flash_deal.badge || 'FLASH DEAL') : 'FLASH DEAL')}">
+            </div>
+            <div class="adm-field">
+              <label>Deal Offer / Announcement Description</label>
+              <input type="text" id="classic_fd_text" value="${esc(home.flash_deal ? home.flash_deal.text : '')}">
+            </div>
           </div>
           <div class="adm-grid2">
             <div class="adm-field">
@@ -1838,9 +1847,12 @@
 
       if (!home.flash_deal) home.flash_deal = {};
       bindCheck('classic_fd_enabled', home.flash_deal, 'enabled');
+      bind('classic_fd_badge', home.flash_deal, 'badge');
       bind('classic_fd_text', home.flash_deal, 'text');
       bind('classic_fd_cta_label', home.flash_deal, 'cta_label');
       bind('classic_fd_cta_href', home.flash_deal, 'cta_href');
+      const btnClassicFdModal = dom.content.querySelector('#btnClassicFdModal');
+      if (btnClassicFdModal) btnClassicFdModal.addEventListener('click', () => openSectionModal('flash'));
 
       if (!home.pop_categories) home.pop_categories = {};
       bind('classic_pop_word', home.pop_categories, 'pop_word');
@@ -2042,42 +2054,129 @@
       }
 
       case 'flash': {
-        titleEl.innerHTML = '⚡ Edit Flash Deal Strip';
+        titleEl.innerHTML = '⚡ Edit Glowing Flash Deal Strip';
         if (!home.flash_deal) home.flash_deal = {};
+        const fd = home.flash_deal;
+        if (!fd.badge) fd.badge = 'FLASH DEAL';
+
         bodyEl.innerHTML = `
           <label class="adm-check" style="margin-bottom:14px;">
-            <input type="checkbox" id="m_fd_enabled" ${home.flash_deal.enabled ? 'checked' : ''}>
+            <input type="checkbox" id="m_fd_enabled" ${fd.enabled ? 'checked' : ''}>
             <span>Enable Glowing Flash Deal Strip</span>
           </label>
-          <div class="adm-field">
-            <label>Promotional Announcement Text</label>
-            <input type="text" id="m_fd_text" value="${esc(home.flash_deal.text || '')}">
+
+          <!-- Storefront-Matching Live Preview -->
+          <div class="adm-field" style="margin-bottom:16px;">
+            <label style="font-size:12px;color:var(--adm-muted);">Live Storefront Preview</label>
+            <div id="m_fd_preview_box" style="display:${fd.enabled ? 'flex' : 'none'};align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid rgba(245,158,11,0.5);background:linear-gradient(90deg,rgba(245,158,11,0.15),rgba(239,68,68,0.1));font-size:12px;font-weight:600;color:var(--adm-ink);overflow:hidden;">
+              <span style="color:var(--adm-amber);font-size:15px;">⚡</span>
+              <span id="m_fd_preview_badge" style="color:var(--adm-amber);font-weight:800;letter-spacing:0.07em;">${esc(fd.badge || 'FLASH DEAL')}</span>
+              <span style="color:var(--adm-muted);">&mdash;</span>
+              <span id="m_fd_preview_text" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(fd.text || 'Free TEREA pack with every ILUMA device · Today only')}</span>
+              <span id="m_fd_preview_cta" style="color:var(--adm-amber);font-weight:700;text-decoration:underline;cursor:pointer;">${esc(fd.cta_label || 'Shop now')} &rarr;</span>
+            </div>
+            <div id="m_fd_preview_disabled" style="display:${fd.enabled ? 'none' : 'block'};padding:12px;border-radius:8px;border:1px dashed var(--adm-line);background:rgba(255,255,255,0.02);color:var(--adm-muted);text-align:center;font-size:12px;">
+              ⚡ Flash Deal Strip is currently disabled. Check the box above to activate it.
+            </div>
           </div>
+
+          <!-- Quick 1-Click Presets -->
+          <div class="adm-field" style="margin-bottom:16px;">
+            <label style="font-size:12px;color:var(--adm-muted);">⚡ 1-Click Dubai Flash Deal Presets</label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <button type="button" class="adm-btn adm-btn-sm" id="fd_preset_1">🎁 Free TEREA Pack</button>
+              <button type="button" class="adm-btn adm-btn-sm" id="fd_preset_2">🔥 15% OFF All Kits</button>
+              <button type="button" class="adm-btn adm-btn-sm" id="fd_preset_3">🚚 Free 1-2H UAE Delivery</button>
+              <button type="button" class="adm-btn adm-btn-sm" id="fd_preset_4">💨 Buy 2 Disposables Get 1 Free</button>
+            </div>
+          </div>
+
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Deal Badge / Tag</label>
+              <input type="text" id="m_fd_badge" value="${esc(fd.badge || 'FLASH DEAL')}" placeholder="e.g. FLASH DEAL, LIMITED OFFER">
+            </div>
+            <div class="adm-field">
+              <label>Deal Offer / Announcement Description</label>
+              <input type="text" id="m_fd_text" value="${esc(fd.text || '')}" placeholder="e.g. Free TEREA pack with every ILUMA device · Today only">
+            </div>
+          </div>
+
           <div class="adm-grid2">
             <div class="adm-field">
               <label>CTA Button Text</label>
-              <input type="text" id="m_fd_cta_label" value="${esc(home.flash_deal.cta_label || 'Shop now')}">
+              <input type="text" id="m_fd_cta_label" value="${esc(fd.cta_label || 'Shop now')}" placeholder="Shop now">
             </div>
             <div class="adm-field">
               <label>CTA Destination Link</label>
-              <input type="text" id="m_fd_cta_href" value="${esc(home.flash_deal.cta_href || '#shop')}">
+              <input type="text" id="m_fd_cta_href" value="${esc(fd.cta_href || '#shop')}" placeholder="#shop or /category.php?cat=iluma">
             </div>
           </div>
         `;
+
+        const updatePreview = () => {
+          const prevBox = bodyEl.querySelector('#m_fd_preview_box');
+          const prevDis = bodyEl.querySelector('#m_fd_preview_disabled');
+          const isEn = !!fd.enabled;
+          if (prevBox) prevBox.style.display = isEn ? 'flex' : 'none';
+          if (prevDis) prevDis.style.display = isEn ? 'none' : 'block';
+          const bEl = bodyEl.querySelector('#m_fd_preview_badge');
+          if (bEl) bEl.textContent = fd.badge || 'FLASH DEAL';
+          const tEl = bodyEl.querySelector('#m_fd_preview_text');
+          if (tEl) tEl.textContent = fd.text || '';
+          const cEl = bodyEl.querySelector('#m_fd_preview_cta');
+          if (cEl) cEl.textContent = (fd.cta_label || 'Shop now') + ' →';
+        };
+
+        const setValues = (badge, text, cta, href) => {
+          fd.badge = badge;
+          fd.text = text;
+          fd.cta_label = cta;
+          fd.cta_href = href;
+          bodyEl.querySelector('#m_fd_badge').value = badge;
+          bodyEl.querySelector('#m_fd_text').value = text;
+          bodyEl.querySelector('#m_fd_cta_label').value = cta;
+          bodyEl.querySelector('#m_fd_cta_href').value = href;
+          updatePreview();
+          markDirty('home');
+        };
+
+        bodyEl.querySelector('#fd_preset_1').addEventListener('click', () => {
+          setValues('FLASH DEAL', 'Free TEREA pack with every ILUMA device · Today only', 'Claim Offer', '#shop');
+        });
+        bodyEl.querySelector('#fd_preset_2').addEventListener('click', () => {
+          setValues('LIMITED OFFER', 'Instant 15% OFF on all IQOS ILUMA Prime kits', 'Shop Now', '/category.php?cat=iluma');
+        });
+        bodyEl.querySelector('#fd_preset_3').addEventListener('click', () => {
+          setValues('EXPRESS PROMO', 'Free 1-2H VIP Courier Delivery in Dubai & Sharjah', 'Order Now', '#shop');
+        });
+        bodyEl.querySelector('#fd_preset_4').addEventListener('click', () => {
+          setValues('VIP BUNDLE', 'Buy Any 2 Mega Disposables & Get 1 Free E-liquid', 'View Bundles', '#disposables');
+        });
+
         bodyEl.querySelector('#m_fd_enabled').addEventListener('change', (e) => {
-          home.flash_deal.enabled = e.target.checked;
+          fd.enabled = e.target.checked;
+          updatePreview();
+          markDirty('home');
+        });
+        bodyEl.querySelector('#m_fd_badge').addEventListener('input', (e) => {
+          fd.badge = e.target.value;
+          updatePreview();
           markDirty('home');
         });
         bodyEl.querySelector('#m_fd_text').addEventListener('input', (e) => {
-          home.flash_deal.text = e.target.value;
+          fd.text = e.target.value;
+          updatePreview();
           markDirty('home');
         });
         bodyEl.querySelector('#m_fd_cta_label').addEventListener('input', (e) => {
-          home.flash_deal.cta_label = e.target.value;
+          fd.cta_label = e.target.value;
+          updatePreview();
           markDirty('home');
         });
         bodyEl.querySelector('#m_fd_cta_href').addEventListener('input', (e) => {
-          home.flash_deal.cta_href = e.target.value;
+          fd.cta_href = e.target.value;
+          updatePreview();
           markDirty('home');
         });
         break;

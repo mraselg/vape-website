@@ -56,10 +56,31 @@ $vip       = $HM['vip_section'] ?? [];
 <main id="top">
   <!-- ========== HERO ========== -->
   <section class="hero container" aria-label="Featured offers">
-<?php if ($flash['enabled'] ?? false): ?>
+<?php 
+if (!empty($flash['enabled'])): 
+    $rawText = trim((string) ($flash['text'] ?? ''));
+    $badge   = trim((string) ($flash['badge'] ?? ''));
+    $desc    = $rawText;
+
+    if ($badge === '') {
+        // Safe UTF-8 split on em-dash, en-dash, hyphen, or colon
+        if (preg_match('/^([^\—\–\-\:\·]+)\s*[\—\–\-\:]\s*(.+)$/u', $rawText, $m)) {
+            $badge = trim($m[1]);
+            $desc  = trim($m[2]);
+        } else {
+            $badge = 'FLASH DEAL';
+            $desc  = $rawText;
+        }
+    } else {
+        // Strip duplicate badge prefix from description if present
+        if (preg_match('/^' . preg_quote($badge, '/') . '\s*[\—\–\-\:]\s*(.+)$/u', $rawText, $m)) {
+            $desc = trim($m[1]);
+        }
+    }
+?>
     <div class="flash-strip" role="note">
       <svg class="icon"><use href="#i-zap"/></svg>
-      <span class="flash-text"><strong><?= e(strtok((string) ($flash['text'] ?? ''), '—')) ?></strong> — <?= e(trim(substr((string) ($flash['text'] ?? ''), strlen((string) strtok((string) ($flash['text'] ?? ''), '—')) + 1))) ?></span>
+      <span class="flash-text"><strong><?= e($badge) ?></strong> &mdash; <?= e($desc) ?></span>
       <a href="<?= e($flash['cta_href'] ?? '#shop') ?>"><?= e($flash['cta_label'] ?? 'Shop now') ?></a>
     </div>
 <?php endif; ?>
