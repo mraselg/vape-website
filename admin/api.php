@@ -142,7 +142,7 @@ if (!authed()) {
 renew();
 
 /* CSRF on all mutating actions */
-$mutating = !in_array($action, ['get', 'images', 'backup'], true);
+$mutating = !in_array($action, ['get', 'images', 'backup', 'get_cache_info'], true);
 if ($mutating) {
     $token = (string) ($_SERVER['HTTP_X_CSRF'] ?? ($body['csrf'] ?? ''));
     if ($token === '' || $token !== ($_SESSION['csrf'] ?? '')) {
@@ -657,6 +657,62 @@ switch ($action) {
             }
         }
         out(['ok' => true, 'restored' => $done]);
+    }
+
+    case 'get_cache_info': {
+        $meta = vcd_load('cache_meta');
+        $ver = !empty($meta['asset_ver']) ? (string) $meta['asset_ver'] : (defined('VCD_ASSET_VER') ? VCD_ASSET_VER : '3.4');
+        $time = !empty($meta['last_cleared_at']) ? date('d M Y, h:i A', strtotime((string)$meta['last_cleared_at'])) : 'Never';
+        $user = (string) ($meta['last_cleared_by'] ?? 'admin');
+        out([
+            'ok' => true,
+            'version' => $ver,
+            'last_cleared' => $time,
+            'cleared_by' => $user
+        ]);
+    }
+
+    case 'clear_cache': {
+        require_role(['admin', 'editor']);
+        $meta = vcd_load('cache_meta');
+        $prevVer = (string) ($meta['asset_ver'] ?? (defined('VCD_ASSET_VER') ? VCD_ASSET_VER : '3.4'));
+
+        // Increment asset version e.g. 3.4 -> 3.5 or 3.5.1 -> 3.5.2
+        $parts = explode('.', $prevVer);
+        if (count($parts) >= 2 && is_numeric(end($parts))) {
+            $parts[count($parts) - 1] = (string) ((int)end($parts) + 1);
+            $newVer = implode('.', $parts);
+        } else {
+            $newVer = '3.5';
+        }
+
+        $meta['asset_ver'] = $newVer;
+        $meta['last_cleared_at'] = date('c');
+        $meta['last_cleared_by'] = $_SESSION['admin_user'] ?? 'admin';
+        vcd_save('cache_meta', $meta);
+
+        // Reset PHP OPcache if active
+        if (function_exists('opcache_reset')) {
+            @opcache_reset();
+        }
+
+        // Reset visitor telemetry cache
+        if (file_exists(VCD_DATA . DIRECTORY_SEPARATOR . 'visitor_cache.json')) {
+            @file_put_contents(VCD_DATA . DIRECTORY_SEPARATOR . 'visitor_cache.json', json_encode(new stdClass()));
+        }
+
+        // Send cache-busting headers
+        header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        out([
+            'ok' => true,
+            'version' => $newVer,
+            'cleared_at' => date('d M Y, h:i A'),
+            'cleared_by' => $meta['last_cleared_by'],
+            'message' => 'Website cache purged successfully! Asset version updated to v' . $newVer . '.'
+        ]);
     }
 
     default:

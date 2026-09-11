@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 define('VCD_ROOT', dirname(__DIR__));
 define('VCD_DATA', VCD_ROOT . DIRECTORY_SEPARATOR . 'data');
-define('VCD_ASSET_VER', '3.4');
-
 // Send HTTP headers to prevent aggressive browser/reverse proxy caching of dynamic HTML
 if (!headers_sent() && php_sapi_name() !== 'cli') {
     header('Cache-Control: no-cache, must-revalidate, max-age=0');
@@ -37,6 +35,18 @@ function vcd_save(string $name, array $data): bool
         return false;
     }
     return file_put_contents($file, $json, LOCK_EX) !== false;
+}
+
+function vcd_get_asset_ver(): string
+{
+    static $v = null;
+    if ($v !== null) return $v;
+    $meta = vcd_load('cache_meta');
+    $v = !empty($meta['asset_ver']) ? (string) $meta['asset_ver'] : '3.4';
+    return $v;
+}
+if (!defined('VCD_ASSET_VER')) {
+    define('VCD_ASSET_VER', vcd_get_asset_ver());
 }
 
 /* ---------- Global data (loaded once per request) ---------- */

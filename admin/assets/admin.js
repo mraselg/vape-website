@@ -5463,12 +5463,58 @@
   function renderAccount() {
     dom.viewTitle.textContent = 'Account & Backup';
     let html = `
-      <div class="adm-card">
-        <h3><span>💾</span> Full Store Data Backup</h3>
-        <p class="adm-card-sub">Export all catalog, homepage customizer, and SEO settings as JSON</p>
-        <button class="adm-btn adm-btn-primary" onclick="window.location.href='/admin/api.php?action=backup'">
-          📥 Download JSON Backup
-        </button>
+      <div class="adm-card" style="border-left: 4px solid var(--adm-emerald);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:6px;">
+          <div>
+            <h3 style="margin:0;display:flex;align-items:center;gap:8px;">
+              <span>💾</span> Full Store Data Backup (ডাটা ব্যাকআপ)
+            </h3>
+            <p class="adm-card-sub" style="margin:6px 0 0;">
+              ক্যাটালগের সমস্ত প্রোডাক্ট, ক্যাটাগরি, হোমপেজ কাস্টমাইজার সেটিংস, এসইও মেটা ও অর্ডার ডাটা একটি JSON ফাইলে সেভ করুন।
+            </p>
+          </div>
+          <button class="adm-btn adm-btn-primary" onclick="window.location.href='/admin/api.php?action=backup'">
+            📥 Download JSON Backup
+          </button>
+        </div>
+      </div>
+
+      <div class="adm-card" style="border-left: 4px solid var(--adm-blue);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:14px;">
+          <div>
+            <h3 style="margin:0;display:flex;align-items:center;gap:8px;">
+              <span>🧹</span> Website Cache &amp; Browser Asset Reset (ক্যাশ রিসেট)
+            </h3>
+            <p class="adm-card-sub" style="margin:6px 0 0;line-height:1.6;">
+              ওয়েবসাইট ফাস্ট লোডিং এর জন্য ব্রাউজার বা মোবাইলে পুরোনো ফাইল ক্যাশ হয়ে থাকলে এই বাটনে ক্লিক করুন। এটি ইনস্ট্যান্ট ক্যাশ-বাস্টিং ভার্সন আপডেট করবে এবং সার্ভার ও ব্রাউজারের পুরোনো ক্যাশ পরিষ্কার করবে।
+            </p>
+          </div>
+          <button class="adm-btn adm-btn-gold" id="btnFlushCache" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;">
+            <span id="flushIcon">🧹</span> Flush Cache &amp; Reset Browser Assets
+          </button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;background:rgba(255,255,255,0.03);border:1px solid var(--adm-line);padding:14px;border-radius:10px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--adm-muted);letter-spacing:0.06em;">Active Asset Version</div>
+            <div style="font-size:16px;font-weight:800;color:#38bdf8;margin-top:2px;" id="cacheVerText">Loading...</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--adm-muted);letter-spacing:0.06em;">Last Purged Time</div>
+            <div style="font-size:14px;font-weight:600;color:var(--adm-text);margin-top:2px;" id="cacheTimeText">Loading...</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--adm-muted);letter-spacing:0.06em;">Status &amp; Scope</div>
+            <div style="font-size:13px;font-weight:600;color:var(--adm-emerald);margin-top:2px;">⚡ Zero Downtime · Auto-Sync</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--adm-muted);">
+          <span>💡 যেকোনো ডিজাইন বা টেক্সট আপডেটের পর মোবাইলে সরাসরি দেখতে একবার ক্যাশ ফ্ল্যাশ করুন।</span>
+          <a href="/TELEGRAM_BOT_GUIDE.md" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:rgba(0,136,204,0.15);color:#38bdf8;border-color:rgba(0,136,204,0.3);">
+            📖 View Telegram &amp; System Guide (.md) ↗
+          </a>
+        </div>
       </div>
 
       <div class="adm-card">
@@ -5489,6 +5535,43 @@
     `;
 
     dom.content.innerHTML = html;
+
+    // Load cache info asynchronously
+    api('get_cache_info').then(res => {
+      if (res && res.ok) {
+        const verEl = document.getElementById('cacheVerText');
+        const timeEl = document.getElementById('cacheTimeText');
+        if (verEl) verEl.textContent = 'v' + res.version;
+        if (timeEl) timeEl.textContent = res.last_cleared;
+      }
+    }).catch(() => {});
+
+    // Bind Flush Cache button
+    const btnFlush = document.getElementById('btnFlushCache');
+    if (btnFlush) {
+      btnFlush.addEventListener('click', async () => {
+        const icon = document.getElementById('flushIcon');
+        btnFlush.disabled = true;
+        if (icon) icon.textContent = '⏳';
+        try {
+          const res = await api('clear_cache');
+          if (res && res.ok) {
+            toast('✅ ' + (res.message || 'Cache flushed successfully!'));
+            const verEl = document.getElementById('cacheVerText');
+            const timeEl = document.getElementById('cacheTimeText');
+            if (verEl) verEl.textContent = 'v' + res.version;
+            if (timeEl) timeEl.textContent = res.cleared_at;
+          } else {
+            toast('Failed to flush cache: ' + (res.error || 'Server error'), true);
+          }
+        } catch (ex) {
+          toast('Error clearing cache.', true);
+        } finally {
+          btnFlush.disabled = false;
+          if (icon) icon.textContent = '🧹';
+        }
+      });
+    }
 
     document.getElementById('btnChangePw').addEventListener('click', async () => {
       const cur = document.getElementById('pw_cur').value;
