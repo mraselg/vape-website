@@ -1318,3 +1318,34 @@ button, input, select, textarea { font-family: inherit; }
   color: #34d399;
 }
 
+/* Luxury button variants */
+.adm-btn-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+.adm-btn-danger:hover {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.adm-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--adm-text);
+  border: 1px solid var(--adm-line2);
+}
+.adm-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--adm-emerald);
+}
+
+/* Category & customizer list cards */
+.cat-img-box {
+  margin-top: 4px;
+}
+.tile-img-wrap {
+  margin-top: 4px;
+}
+
+

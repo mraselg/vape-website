@@ -1,98 +1,98 @@
 {
-  "cats": {
-    "iluma": {
-      "title": "Heating Device",
-      "sub": "Best heating kit in Dubai",
-      "desc": "Bladeless Smartcore induction devices — ILUMA i PRIME, ILUMA i and ILUMA i ONE. No blade, no cleaning — pure taste from TEREA sticks with up to 3 consecutive uses.",
-      "photo": "assets/images/hero-iluma.webp",
-      "theme": "art-purple",
-      "art": "device"
+    "cats": {
+        "iluma": {
+            "title": "Heating Device",
+            "sub": "Best heating kit in Dubai",
+            "desc": "Bladeless Smartcore induction devices — ILUMA i PRIME, ILUMA i and ILUMA i ONE. No blade, no cleaning — pure taste from TEREA sticks with up to 3 consecutive uses.",
+            "photo": "assets/images/hero-iluma.webp",
+            "theme": "art-purple",
+            "art": "device"
+        },
+        "pod": {
+            "title": "Pod Kit",
+            "sub": "Best pod kit in Dubai",
+            "desc": "Rechargeable pod systems by Uwell, Vaporesso & SMOK — pocket-friendly MTL/RDL setups with 2ml GCC-legal pods and all-day batteries.",
+            "photo": "assets/images/cat-pod.jpg",
+            "theme": "art-navy",
+            "art": "pod"
+        },
+        "disposables": {
+            "title": "Disposable",
+            "sub": "Dubai best disposables",
+            "desc": "Mega-puff disposables up to 12,000 puffs — Vozol, Tugboat, Fummo & Pod Salt. Mesh coil, Type-C charging and ice-cold flavors that never fade.",
+            "photo": "assets/images/hero-vape.png",
+            "theme": "art-rose",
+            "art": "vape"
+        },
+        "eliquid": {
+            "title": "Saltnic Juice",
+            "sub": "Saltnic vape juice in Dubai",
+            "desc": "Premium 20–50mg salt nic e-liquids — Nasty Juice, Pod Salt and more. Smooth throat hit in ESMA-compliant bottles, 10–60ml.",
+            "photo": "assets/images/cat-juice.jpg",
+            "theme": "art-purple",
+            "art": "juice"
+        },
+        "terea": {
+            "title": "TEREA Sticks",
+            "sub": "TEREA by country in Dubai",
+            "desc": "Authentic sealed TEREA packs flown in weekly from Indonesia, Japan, Switzerland, Kazakhstan and Italy — batch-code verifiable.",
+            "photo": "assets/images/hero-terea.png",
+            "theme": "art-gold",
+            "art": "pack"
+        },
+        "terea-id": {
+            "title": "TEREA Indonesia",
+            "sub": "Indonesian TEREA in Dubai",
+            "desc": "Fruity & cooling Indonesian-market TEREA sticks — sealed packs flown in weekly with verifiable batch codes.",
+            "photo": "assets/images/hero-terea.png",
+            "theme": "art-emerald",
+            "art": "pack"
+        },
+        "terea-jp": {
+            "title": "TEREA Japan",
+            "sub": "Japanese TEREA in Dubai",
+            "desc": "Smooth & rich Japanese-market TEREA sticks — sealed Japan packs with verified batch codes and weekly restock.",
+            "photo": "assets/images/hero-terea.png",
+            "theme": "art-navy",
+            "art": "pack"
+        },
+        "terea-ch": {
+            "title": "TEREA Swiss",
+            "sub": "Swiss TEREA in Dubai",
+            "desc": "Refined & balanced Swiss-market TEREA sticks — factory-sealed European stock for IQOS ILUMA devices.",
+            "photo": "assets/images/hero-terea.png",
+            "theme": "art-gold",
+            "art": "pack"
+        },
+        "terea-kz": {
+            "title": "TEREA Kazakhstan",
+            "sub": "Kazakh TEREA in Dubai",
+            "desc": "Bold classic blends from the Kazakhstan market — authentic sealed packs for IQOS ILUMA.",
+            "photo": "assets/images/hero-terea.png",
+            "theme": "art-rose",
+            "art": "pack"
+        },
+        "terea-it": {
+            "title": "TEREA Italy",
+            "sub": "Italian TEREA in Dubai",
+            "desc": "Aromatic Italian-market TEREA sticks — sealed European packs with verified batch codes.",
+            "photo": "assets/images/hero-terea.png",
+            "theme": "art-amber",
+            "art": "pack"
+        }
     },
-    "pod": {
-      "title": "Pod Kit",
-      "sub": "Best pod kit in Dubai",
-      "desc": "Rechargeable pod systems by Uwell, Vaporesso & SMOK — pocket-friendly MTL/RDL setups with 2ml GCC-legal pods and all-day batteries.",
-      "photo": "assets/images/cat-pod.jpg",
-      "theme": "art-navy",
-      "art": "pod"
-    },
-    "disposables": {
-      "title": "Disposable",
-      "sub": "Dubai best disposables",
-      "desc": "Mega-puff disposables up to 12,000 puffs — Vozol, Tugboat, Fummo & Pod Salt. Mesh coil, Type-C charging and ice-cold flavors that never fade.",
-      "photo": "assets/images/hero-vape.png",
-      "theme": "art-rose",
-      "art": "vape"
-    },
-    "eliquid": {
-      "title": "Saltnic Juice",
-      "sub": "Saltnic vape juice in Dubai",
-      "desc": "Premium 20–50mg salt nic e-liquids — Nasty Juice, Pod Salt and more. Smooth throat hit in ESMA-compliant bottles, 10–60ml.",
-      "photo": "assets/images/cat-juice.jpg",
-      "theme": "art-purple",
-      "art": "juice"
-    },
-    "terea": {
-      "title": "TEREA Sticks",
-      "sub": "TEREA by country in Dubai",
-      "desc": "Authentic sealed TEREA packs flown in weekly from Indonesia, Japan, Switzerland, Kazakhstan and Italy — batch-code verifiable.",
-      "photo": "assets/images/hero-terea.png",
-      "theme": "art-gold",
-      "art": "pack"
-    },
-    "terea-id": {
-      "title": "TEREA Indonesia",
-      "sub": "Indonesian TEREA in Dubai",
-      "desc": "Fruity & cooling Indonesian-market TEREA sticks — sealed packs flown in weekly with verifiable batch codes.",
-      "photo": "assets/images/hero-terea.png",
-      "theme": "art-emerald",
-      "art": "pack"
-    },
-    "terea-jp": {
-      "title": "TEREA Japan",
-      "sub": "Japanese TEREA in Dubai",
-      "desc": "Smooth & rich Japanese-market TEREA sticks — sealed Japan packs with verified batch codes and weekly restock.",
-      "photo": "assets/images/hero-terea.png",
-      "theme": "art-navy",
-      "art": "pack"
-    },
-    "terea-ch": {
-      "title": "TEREA Swiss",
-      "sub": "Swiss TEREA in Dubai",
-      "desc": "Refined & balanced Swiss-market TEREA sticks — factory-sealed European stock for IQOS ILUMA devices.",
-      "photo": "assets/images/hero-terea.png",
-      "theme": "art-gold",
-      "art": "pack"
-    },
-    "terea-kz": {
-      "title": "TEREA Kazakhstan",
-      "sub": "Kazakh TEREA in Dubai",
-      "desc": "Bold classic blends from the Kazakhstan market — authentic sealed packs for IQOS ILUMA.",
-      "photo": "assets/images/hero-terea.png",
-      "theme": "art-rose",
-      "art": "pack"
-    },
-    "terea-it": {
-      "title": "TEREA Italy",
-      "sub": "Italian TEREA in Dubai",
-      "desc": "Aromatic Italian-market TEREA sticks — sealed European packs with verified batch codes.",
-      "photo": "assets/images/hero-terea.png",
-      "theme": "art-amber",
-      "art": "pack"
+    "labels": {
+        "all": "All Products",
+        "iluma": "IQOS ILUMA",
+        "terea-id": "TEREA Indonesia",
+        "terea-jp": "TEREA Japan",
+        "terea-ch": "TEREA Swiss",
+        "terea": "TEREA Sticks",
+        "terea-kz": "TEREA Kazakhstan",
+        "terea-it": "TEREA Italy",
+        "disposables": "Disposables 10k+",
+        "pod": "Pod Systems",
+        "eliquid": "E-Liquids",
+        "bestsellers": "Best Sellers"
     }
-  },
-  "labels": {
-    "all": "All Products",
-    "iluma": "IQOS ILUMA",
-    "terea-id": "TEREA Indonesia",
-    "terea-jp": "TEREA Japan",
-    "terea-ch": "TEREA Swiss",
-    "terea": "TEREA Sticks",
-    "terea-kz": "TEREA Kazakhstan",
-    "terea-it": "TEREA Italy",
-    "disposables": "Disposables 10k+",
-    "pod": "Pod Systems",
-    "eliquid": "E-Liquids",
-    "bestsellers": "Best Sellers"
-  }
 }

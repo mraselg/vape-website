@@ -49,6 +49,9 @@ function render_head(array $m): void
   <meta name="geo.region" content="<?= e($VCD_SEO['geo_region'] ?? 'AE-DU') ?>">
   <meta name="geo.placename" content="Dubai">
   <link rel="canonical" id="canonicalUrl" href="<?= e($canon) ?>">
+  <link rel="alternate" hreflang="en-ae" href="<?= e($canon) ?>">
+  <link rel="alternate" hreflang="ar-ae" href="<?= e($canon) ?>">
+  <link rel="alternate" hreflang="x-default" href="<?= e($canon) ?>">
   <meta name="theme-color" content="<?= e($theme) ?>">
 
   <!-- Open Graph -->
@@ -134,7 +137,7 @@ function jsonld_local_business(): array
         $VCD_SETTINGS['facebook_url'] ?? '',
         $VCD_SETTINGS['tiktok_url'] ?? '',
     ]));
-    return [
+    $res = [
         '@context' => 'https://schema.org',
         '@type'    => 'Store',
         'name'     => $brand,
@@ -163,6 +166,16 @@ function jsonld_local_business(): array
         'paymentAccepted' => 'Cash, Credit Card, Apple Pay, Samsung Pay',
         'sameAs'       => $socials,
     ];
+    if (!empty($VCD_SETTINGS['rating_value']) && !empty($VCD_SETTINGS['rating_count'])) {
+        $res['aggregateRating'] = [
+            '@type'       => 'AggregateRating',
+            'ratingValue' => (string) $VCD_SETTINGS['rating_value'],
+            'reviewCount' => (int) $VCD_SETTINGS['rating_count'],
+            'bestRating'  => '5',
+            'worstRating' => '1',
+        ];
+    }
+    return $res;
 }
 
 function jsonld_website(): array

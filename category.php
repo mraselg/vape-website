@@ -31,7 +31,16 @@ if ($VCD_SEO['schema_breadcrumb'] ?? true) {
     ]);
 }
 if ($VCD_SEO['schema_product'] ?? true) {
-    $jsonld[] = jsonld_item_list($list, $pageLabel);
+    $itemList = jsonld_item_list($list, $pageLabel);
+    $jsonld[] = $itemList;
+    $jsonld[] = [
+        '@context'    => 'https://schema.org',
+        '@type'       => 'CollectionPage',
+        'name'        => $title,
+        'description' => $desc,
+        'url'         => site_url('/category.php?cat=' . rawurlencode($key)),
+        'mainEntity'  => $itemList,
+    ];
 }
 
 render_head([

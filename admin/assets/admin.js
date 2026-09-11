@@ -1040,6 +1040,7 @@
       }
 
       markDirty('products');
+      saveAll();
       state.editingProductIndex = null;
       renderProducts();
     };
@@ -1058,7 +1059,7 @@
   /* ============================================================
      VIEW: HOMEPAGE & FRONTEND-MIRROR VISUAL CUSTOMIZER
      ============================================================ */
-  function renderHomepage() {
+    function renderHomepage() {
     dom.viewTitle.textContent = 'Homepage Customizer';
     const home = state.data.home;
     const settings = state.data.settings;
@@ -1116,7 +1117,7 @@
                 ${logoHtml}
               </div>
               <div class="adm-mirror-search">
-                🔍 Search products, ILUMA, TEREA…
+                🔍 ${esc((home.search && home.search.placeholder) || 'Search products, ILUMA, TEREA…')}
               </div>
               <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--adm-emerald)">
                 <span>💬 WhatsApp</span>
@@ -1214,7 +1215,58 @@
             </div>
           </div>
 
-          <!-- 7. TRUST BENEFITS -->
+          <!-- 7. SHOP / THE COLLECTION -->
+          <div class="adm-mirror-sec" data-sec="shop" title="Click to edit collection header">
+            <span class="adm-sec-edit-badge">✏️ Edit Collection Header</span>
+            <div style="padding:24px 20px;background:rgba(255,255,255,0.01);border-top:1px solid var(--adm-line);">
+              <span class="adm-mirror-hero-pill" style="font-size:11px;">${esc((home.shop_section && home.shop_section.eyebrow) || 'The Collection')}</span>
+              <div style="font-size:20px;font-weight:800;color:#fff;">${esc((home.shop_section && home.shop_section.title) || 'New Arrivals & UAE Favorites')}</div>
+              <p style="font-size:12.5px;color:var(--adm-muted);margin:6px 0 0;">${esc((home.shop_section && home.shop_section.desc) || '')}</p>
+            </div>
+          </div>
+
+          <!-- 8. TEREA BY ORIGIN -->
+          <div class="adm-mirror-sec" data-sec="terea" title="Click to edit TEREA by Origin">
+            <span class="adm-sec-edit-badge">✏️ Edit TEREA by Origin</span>
+            <div style="padding:24px 20px;background:radial-gradient(circle at 10% 50%, rgba(245,158,11,0.08), transparent 50%);border-top:1px solid var(--adm-line);">
+              <span class="adm-mirror-hero-pill" style="font-size:11px;color:var(--adm-amber);border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.1);">${esc((home.terea_section && home.terea_section.eyebrow) || 'TEREA by Origin')}</span>
+              <div style="font-size:20px;font-weight:800;color:#fff;">${esc((home.terea_section && home.terea_section.title) || 'Choose Your Country Blend')}</div>
+              <p style="font-size:12.5px;color:var(--adm-muted);margin:6px 0 10px;">${esc((home.terea_section && home.terea_section.desc) || '')}</p>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                ${((home.terea_section && home.terea_section.legend) || []).map(l => `<span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:6px;font-size:11.5px;">${esc(l)}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- 9. DISPOSABLES SHOWCASE -->
+          <div class="adm-mirror-sec" data-sec="disposables" title="Click to edit Disposables section">
+            <span class="adm-sec-edit-badge">✏️ Edit Disposables Showcase</span>
+            <div style="padding:24px 20px;background:rgba(239,68,68,0.04);border-top:1px solid var(--adm-line);">
+              <span class="adm-mirror-hero-pill" style="font-size:11px;color:var(--adm-red);border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.1);">${esc((home.disposables_section && home.disposables_section.eyebrow) || 'High Puff')}</span>
+              <div style="font-size:20px;font-weight:800;color:#fff;">${esc((home.disposables_section && home.disposables_section.title) || 'Disposable Vapes Showcase')}</div>
+              <p style="font-size:12.5px;color:var(--adm-muted);margin:6px 0 0;">${esc((home.disposables_section && home.disposables_section.desc) || '')}</p>
+            </div>
+          </div>
+
+          <!-- 10. REVIEWS & TESTIMONIALS -->
+          <div class="adm-mirror-sec" data-sec="reviews" title="Click to edit customer reviews">
+            <span class="adm-sec-edit-badge">✏️ Edit Customer Reviews</span>
+            <div style="padding:24px 20px;border-top:1px solid var(--adm-line);">
+              <span class="adm-mirror-hero-pill" style="font-size:11px;">${esc((home.reviews_section && home.reviews_section.eyebrow) || 'Verified Buyers')}</span>
+              <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:12px;">${esc((home.reviews_section && home.reviews_section.title) || 'Loved Across the Emirates')}</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+                ${(home.reviews || []).slice(0, 3).map(r => `
+                  <div style="background:var(--adm-panel2);border:1px solid var(--adm-line);border-radius:12px;padding:14px;">
+                    <div style="color:var(--adm-amber);font-size:12px;margin-bottom:4px;">${'★'.repeat(r.stars || 5)}</div>
+                    <p style="font-size:12px;color:var(--adm-text);margin:0 0 8px;line-height:1.4;">${esc(r.text)}</p>
+                    <div style="font-size:11px;font-weight:700;">${esc(r.name)} <span style="color:var(--adm-muted);font-weight:400;">· ${esc(r.location)}</span></div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- 11. TRUST BENEFITS -->
           <div class="adm-mirror-sec" data-sec="benefits" title="Click to edit benefits">
             <span class="adm-sec-edit-badge">✏️ Edit Trust Benefits</span>
             <div class="adm-mirror-benefits">
@@ -1230,11 +1282,12 @@
             </div>
           </div>
 
-          <!-- 8. FAQS -->
+          <!-- 12. FAQS -->
           <div class="adm-mirror-sec" data-sec="faqs" title="Click to edit FAQs">
             <span class="adm-sec-edit-badge">✏️ Edit FAQs</span>
-            <div style="padding:24px 20px;">
-              <div style="font-size:18px;font-weight:800;margin-bottom:14px;">Frequently Asked Questions</div>
+            <div style="padding:24px 20px;border-top:1px solid var(--adm-line);">
+              <span class="adm-mirror-hero-pill" style="font-size:11px;">${esc((home.faq_section && home.faq_section.eyebrow) || 'Good to Know')}</span>
+              <div style="font-size:18px;font-weight:800;margin-bottom:14px;">${esc((home.faq_section && home.faq_section.title) || 'Delivery &amp; Ordering FAQ')}</div>
               ${(home.faqs || []).slice(0, 3).map(f => `
                 <div class="adm-mirror-faq-item">
                   <span>${esc(f.q)}</span>
@@ -1244,17 +1297,59 @@
             </div>
           </div>
 
-          <!-- 9. CTA BANNER -->
+          <!-- 13. CTA BANNER -->
           <div class="adm-mirror-sec" data-sec="cta" title="Click to edit CTA banner">
             <span class="adm-sec-edit-badge">✏️ Edit CTA Banner</span>
             <div class="adm-mirror-cta">
-              <div style="font-size:20px;font-weight:800;color:#fff;">${esc((home.cta_banner && home.cta_banner.title) || 'Need Instant Recommendations?')}</div>
-              <p style="font-size:13px;color:var(--adm-muted);margin:8px 0 16px;">${esc((home.cta_banner && home.cta_banner.sub) || 'Chat with our Dubai vape sommelier')}</p>
-              <button class="adm-btn adm-btn-primary" style="pointer-events:none;">💬 Order on WhatsApp</button>
+              <span class="adm-mirror-hero-pill" style="font-size:11px;margin-bottom:8px;">${esc((home.cta_section && home.cta_section.eyebrow) || '24/7 Dubai Assistance')}</span>
+              <div style="font-size:20px;font-weight:800;color:#fff;">${esc((home.cta_section && home.cta_section.title_pre) || '')}<span style="color:var(--adm-emerald)">${esc((home.cta_section && home.cta_section.title_highlight) || '')}</span></div>
+              <p style="font-size:13px;color:var(--adm-muted);margin:8px 0 16px;">${esc((home.cta_section && home.cta_section.text) || '')}</p>
+              <button class="adm-btn adm-btn-primary" style="pointer-events:none;">💬 ${esc((home.cta_section && home.cta_section.button_label) || 'Chat with an Expert')}</button>
             </div>
           </div>
 
-          <!-- 10. FOOTER -->
+          <!-- 14. 18+ AGE GATE -->
+          <div class="adm-mirror-sec" data-sec="age_gate" title="Click to edit 18+ Age Verification">
+            <span class="adm-sec-edit-badge">✏️ Edit 18+ Age Verification</span>
+            <div style="padding:16px 20px;background:rgba(239,68,68,0.06);border-top:1px solid rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:20px;">🔞</span>
+                <div>
+                  <b>18+ Age Verification Popup: ${home.age_gate && home.age_gate.enabled ? '<span style="color:var(--adm-emerald)">Active</span>' : '<span style="color:var(--adm-muted)">Disabled</span>'}</b>
+                  <small style="display:block;color:var(--adm-muted);">${esc((home.age_gate && home.age_gate.title) || 'Are you 18 or older?')}</small>
+                </div>
+              </div>
+              <span class="adm-btn adm-btn-sm" style="pointer-events:none;">Configure Age Gate</span>
+            </div>
+          </div>
+
+          <!-- 15. CHECKOUT & WHATSAPP BANNER -->
+          <div class="adm-mirror-sec" data-sec="checkout" title="Click to edit Checkout Experience">
+            <span class="adm-sec-edit-badge">✏️ Edit Checkout &amp; WhatsApp Banner</span>
+            <div style="padding:16px 20px;background:rgba(0,229,153,0.05);border-top:1px solid rgba(0,229,153,0.2);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:20px;">⚡</span>
+                <div>
+                  <b>Checkout Banner: ${esc((home.checkout && home.checkout.wa_banner_title) || 'Order Directly via WhatsApp')}</b>
+                  <small style="display:block;color:var(--adm-muted);">${esc((home.checkout && home.checkout.title) || 'Complete Your Order')} · Emirates delivery</small>
+                </div>
+              </div>
+              <span class="adm-btn adm-btn-sm" style="pointer-events:none;">Configure Checkout</span>
+            </div>
+          </div>
+
+          <!-- 16. SEARCH PLACEHOLDERS -->
+          <div class="adm-mirror-sec" data-sec="search" title="Click to edit Search Placeholders">
+            <span class="adm-sec-edit-badge">✏️ Edit Search Placeholders</span>
+            <div style="padding:14px 20px;background:rgba(255,255,255,0.02);border-top:1px solid var(--adm-line);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+              <div>
+                <b>🔍 Search Bar Placeholder:</b> <code>${esc((home.search && home.search.placeholder) || 'Search IQOS, TEREA, flavors…')}</code>
+              </div>
+              <span class="adm-btn adm-btn-sm" style="pointer-events:none;">Configure Search</span>
+            </div>
+          </div>
+
+          <!-- 17. FOOTER -->
           <div class="adm-mirror-sec" data-sec="footer" title="Click to edit footer &amp; legal">
             <span class="adm-sec-edit-badge">✏️ Edit Footer</span>
             <div class="adm-mirror-footer">
@@ -1273,7 +1368,7 @@
               </div>
               <div>
                 <b>UAE Legal</b>
-                <div style="margin-top:6px;font-size:11px;">18+ Warning: Nicotine is addictive. ESMA certified.</div>
+                <div style="margin-top:6px;font-size:11px;">${esc(settings.legal_warning || '18+ Warning: Nicotine is addictive. ESMA certified.')}</div>
               </div>
             </div>
           </div>
@@ -1281,10 +1376,16 @@
         </div>
       `;
     } else {
-      // Classic Form View
+      // Complete Classic Form View (All 17 Sections)
       html += `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <p style="color:var(--adm-muted);margin:0;">Edit any storefront section directly using standard form fields.</p>
+          <button type="button" class="adm-btn adm-btn-primary" id="btnClassicSaveTop">💾 Save All Changes</button>
+        </div>
+
+        <!-- 1. ANNOUNCEMENT -->
         <div class="adm-card">
-          <h3><span>📢</span> Top Announcement Ticker Bar</h3>
+          <h3><span>📢</span> 1. Top Announcement Ticker Bar</h3>
           <div class="adm-field">
             <label>Announcement Messages</label>
             <div id="classic_announce_items"></div>
@@ -1292,21 +1393,286 @@
           <div class="adm-grid2">
             <div class="adm-field">
               <label>Currency Chip Label</label>
-              <input type="text" id="classic_currency_chip" value="${esc(home.currency_chip || 'AED د.إ')}">
+              <input type="text" id="classic_curr_chip" value="${esc(home.currency_chip || 'AED د.إ')}">
+            </div>
+            <div class="adm-field">
+              <label>Language Toggle</label>
+              <label class="adm-check" style="margin-top:10px;">
+                <input type="checkbox" id="classic_lang_toggle" ${home.show_language_toggle ? 'checked' : ''}>
+                <span>Display EN / AR Switcher</span>
+              </label>
             </div>
           </div>
         </div>
 
+        <!-- 2. FLASH DEAL -->
         <div class="adm-card">
-          <h3><span>⚡</span> Flash Deal Strip</h3>
-          <label class="adm-check">
+          <h3><span>⚡</span> 2. Flash Deal Strip</h3>
+          <label class="adm-check" style="margin-bottom:12px;">
             <input type="checkbox" id="classic_fd_enabled" ${home.flash_deal && home.flash_deal.enabled ? 'checked' : ''}>
-            <span>Enable Flash Deal Strip</span>
+            <span>Enable Glowing Flash Deal Strip</span>
           </label>
           <div class="adm-field">
-            <label>Flash Deal Promotional Text</label>
+            <label>Flash Deal Text</label>
             <input type="text" id="classic_fd_text" value="${esc(home.flash_deal ? home.flash_deal.text : '')}">
           </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>CTA Button Label</label>
+              <input type="text" id="classic_fd_cta_label" value="${esc(home.flash_deal ? home.flash_deal.cta_label : 'Shop now')}">
+            </div>
+            <div class="adm-field">
+              <label>CTA Target URL / Anchor</label>
+              <input type="text" id="classic_fd_cta_href" value="${esc(home.flash_deal ? home.flash_deal.cta_href : '#shop')}">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. POPULAR CATEGORIES -->
+        <div class="adm-card">
+          <h3><span>📂</span> 3. Popular Categories Section</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Highlight Word (Green)</label>
+              <input type="text" id="classic_pop_word" value="${esc((home.pop_categories && home.pop_categories.pop_word) || 'Popular')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="classic_pop_title" value="${esc((home.pop_categories && home.pop_categories.title) || 'Categories')}">
+            </div>
+          </div>
+          <div class="adm-grid3">
+            <div class="adm-field">
+              <label>"More Categories" Count</label>
+              <input type="text" id="classic_pop_more_cnt" value="${esc((home.pop_categories && home.pop_categories.more_count) || '+9')}">
+            </div>
+            <div class="adm-field">
+              <label>"More Categories" Title</label>
+              <input type="text" id="classic_pop_more_title" value="${esc((home.pop_categories && home.pop_categories.more_title) || 'MORE CATEGORIES')}">
+            </div>
+            <div class="adm-field">
+              <label>"More Categories" Subtitle</label>
+              <input type="text" id="classic_pop_more_sub" value="${esc((home.pop_categories && home.pop_categories.more_sub) || 'Tap to view all')}">
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. VIP BESTSELLERS -->
+        <div class="adm-card">
+          <h3><span>👑</span> 4. VIP Bestsellers Showcase</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Badge Ribbon Text</label>
+              <input type="text" id="classic_vip_badge" value="${esc((home.vip_section && home.vip_section.badge) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Pulse Demand Text</label>
+              <input type="text" id="classic_vip_pulse" value="${esc((home.vip_section && home.vip_section.pulse) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Section Title</label>
+            <input type="text" id="classic_vip_title" value="${esc((home.vip_section && home.vip_section.title) || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Description</label>
+            <textarea id="classic_vip_desc" rows="2">${esc((home.vip_section && home.vip_section.desc) || '')}</textarea>
+          </div>
+        </div>
+
+        <!-- 5. SHOP COLLECTION -->
+        <div class="adm-card">
+          <h3><span>🛍️</span> 5. The Collection / New Arrivals Section</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="classic_shop_eyebrow" value="${esc((home.shop_section && home.shop_section.eyebrow) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="classic_shop_title" value="${esc((home.shop_section && home.shop_section.title) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Description</label>
+            <textarea id="classic_shop_desc" rows="2">${esc((home.shop_section && home.shop_section.desc) || '')}</textarea>
+          </div>
+        </div>
+
+        <!-- 6. TEREA BY ORIGIN -->
+        <div class="adm-card">
+          <h3><span>🎌</span> 6. TEREA by Origin Section</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="classic_terea_eyebrow" value="${esc((home.terea_section && home.terea_section.eyebrow) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="classic_terea_title" value="${esc((home.terea_section && home.terea_section.title) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Description</label>
+            <textarea id="classic_terea_desc" rows="2">${esc((home.terea_section && home.terea_section.desc) || '')}</textarea>
+          </div>
+          <div class="adm-field">
+            <label>Origin Country Badges / Legend</label>
+            <div id="classic_terea_legend"></div>
+          </div>
+        </div>
+
+        <!-- 7. DISPOSABLES SHOWCASE -->
+        <div class="adm-card">
+          <h3><span>💨</span> 7. Disposable Vapes Showcase</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="classic_disp_eyebrow" value="${esc((home.disposables_section && home.disposables_section.eyebrow) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="classic_disp_title" value="${esc((home.disposables_section && home.disposables_section.title) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Description</label>
+            <textarea id="classic_disp_desc" rows="2">${esc((home.disposables_section && home.disposables_section.desc) || '')}</textarea>
+          </div>
+        </div>
+
+        <!-- 8. REVIEWS & TESTIMONIALS -->
+        <div class="adm-card">
+          <h3><span>⭐</span> 8. Customer Reviews &amp; Testimonials Section</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="classic_rev_eyebrow" value="${esc((home.reviews_section && home.reviews_section.eyebrow) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="classic_rev_title" value="${esc((home.reviews_section && home.reviews_section.title) || '')}">
+            </div>
+          </div>
+          <p style="font-size:12px;color:var(--adm-muted);">Manage full testimonials (reviews) via the Visual Customizer click or modal.</p>
+        </div>
+
+        <!-- 9. CTA BANNER -->
+        <div class="adm-card">
+          <h3><span>💬</span> 9. Call-To-Action (CTA) Concierge Banner</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="classic_cta_eyebrow" value="${esc((home.cta_section && home.cta_section.eyebrow) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Button Label</label>
+              <input type="text" id="classic_cta_btn" value="${esc((home.cta_section && home.cta_section.button_label) || '')}">
+            </div>
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Title Prefix</label>
+              <input type="text" id="classic_cta_pre" value="${esc((home.cta_section && home.cta_section.title_pre) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Title Highlight (Green)</label>
+              <input type="text" id="classic_cta_hl" value="${esc((home.cta_section && home.cta_section.title_highlight) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Subtext Description</label>
+            <textarea id="classic_cta_text" rows="2">${esc((home.cta_section && home.cta_section.text) || '')}</textarea>
+          </div>
+        </div>
+
+        <!-- 10. 18+ AGE GATE -->
+        <div class="adm-card">
+          <h3><span>🔞</span> 10. 18+ Age Verification Modal</h3>
+          <label class="adm-check" style="margin-bottom:12px;">
+            <input type="checkbox" id="classic_ag_en" ${home.age_gate && home.age_gate.enabled ? 'checked' : ''}>
+            <span>Enable 18+ Age Verification Popup</span>
+          </label>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Modal Title</label>
+              <input type="text" id="classic_ag_title" value="${esc((home.age_gate && home.age_gate.title) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Compliance Footnote</label>
+              <input type="text" id="classic_ag_note" value="${esc((home.age_gate && home.age_gate.note) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Warning Text</label>
+            <textarea id="classic_ag_text" rows="2">${esc((home.age_gate && home.age_gate.text) || '')}</textarea>
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Yes Button (18+)</label>
+              <input type="text" id="classic_ag_yes" value="${esc((home.age_gate && home.age_gate.yes_label) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>No Button (Under 18)</label>
+              <input type="text" id="classic_ag_no" value="${esc((home.age_gate && home.age_gate.no_label) || '')}">
+            </div>
+          </div>
+        </div>
+
+        <!-- 11. CHECKOUT & WHATSAPP BANNER -->
+        <div class="adm-card">
+          <h3><span>⚡</span> 11. Express Checkout &amp; WhatsApp Direct</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Checkout Eyebrow</label>
+              <input type="text" id="classic_chk_eyebrow" value="${esc((home.checkout && home.checkout.eyebrow) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Checkout Heading</label>
+              <input type="text" id="classic_chk_title" value="${esc((home.checkout && home.checkout.title) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Checkout Subtitle</label>
+            <input type="text" id="classic_chk_sub" value="${esc((home.checkout && home.checkout.sub) || '')}">
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>WhatsApp Banner Badge</label>
+              <input type="text" id="classic_chk_wa_badge" value="${esc((home.checkout && home.checkout.wa_banner_badge) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>WhatsApp Banner Title</label>
+              <input type="text" id="classic_chk_wa_title" value="${esc((home.checkout && home.checkout.wa_banner_title) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>WhatsApp Banner Description</label>
+            <textarea id="classic_chk_wa_text" rows="2">${esc((home.checkout && home.checkout.wa_banner_text) || '')}</textarea>
+          </div>
+        </div>
+
+        <!-- 12. SEARCH PLACEHOLDERS -->
+        <div class="adm-card">
+          <h3><span>🔍</span> 12. Search Bar Text &amp; Placeholders</h3>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Desktop Search Placeholder</label>
+              <input type="text" id="classic_srch_ph" value="${esc((home.search && home.search.placeholder) || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Mobile Modal Search Placeholder</label>
+              <input type="text" id="classic_srch_modal_ph" value="${esc((home.search && home.search.modal_placeholder) || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Empty Results Message</label>
+            <input type="text" id="classic_srch_empty" value="${esc((home.search && home.search.empty_text) || '')}">
+          </div>
+        </div>
+
+        <div style="text-align:right;margin-top:20px;">
+          <button type="button" class="adm-btn adm-btn-primary adm-btn-lg" id="btnClassicSaveBottom">💾 Save All Changes</button>
         </div>
       `;
     }
@@ -1321,7 +1687,7 @@
           </div>
           <div class="adm-modal-body" id="admSecModalBody"></div>
           <div class="adm-modal-foot">
-            <button type="button" class="adm-btn adm-btn-primary" id="admSecModalDone">✓ Done Editing</button>
+            <button type="button" class="adm-btn adm-btn-primary" id="admSecModalDone">✓ Done Editing &amp; Save</button>
           </div>
         </div>
       </div>
@@ -1356,40 +1722,129 @@
         });
       });
     } else {
-      // Classic bindings
+      // Classic form bindings
+      const bind = (id, obj, prop, isNum = false) => {
+        const el = dom.content.querySelector('#' + id);
+        if (el) el.addEventListener('input', (e) => {
+          obj[prop] = isNum ? (parseFloat(e.target.value) || 0) : e.target.value;
+          markDirty('home');
+        });
+      };
+      const bindCheck = (id, obj, prop) => {
+        const el = dom.content.querySelector('#' + id);
+        if (el) el.addEventListener('change', (e) => {
+          obj[prop] = e.target.checked;
+          markDirty('home');
+        });
+      };
+
       dom.content.querySelector('#classic_announce_items').appendChild(
         renderStringListEditor(home.announce_items || [], (items) => {
           home.announce_items = items;
           markDirty('home');
         }, 'Ticker message', '+ Add Announcement')
       );
-      dom.content.querySelector('#classic_currency_chip').addEventListener('input', (e) => {
-        home.currency_chip = e.target.value;
-        markDirty('home');
-      });
-      dom.content.querySelector('#classic_fd_enabled').addEventListener('change', (e) => {
-        if (!home.flash_deal) home.flash_deal = {};
-        home.flash_deal.enabled = e.target.checked;
-        markDirty('home');
-      });
-      dom.content.querySelector('#classic_fd_text').addEventListener('input', (e) => {
-        if (!home.flash_deal) home.flash_deal = {};
-        home.flash_deal.text = e.target.value;
-        markDirty('home');
-      });
+      bind('classic_curr_chip', home, 'currency_chip');
+      bindCheck('classic_lang_toggle', home, 'show_language_toggle');
+
+      if (!home.flash_deal) home.flash_deal = {};
+      bindCheck('classic_fd_enabled', home.flash_deal, 'enabled');
+      bind('classic_fd_text', home.flash_deal, 'text');
+      bind('classic_fd_cta_label', home.flash_deal, 'cta_label');
+      bind('classic_fd_cta_href', home.flash_deal, 'cta_href');
+
+      if (!home.pop_categories) home.pop_categories = {};
+      bind('classic_pop_word', home.pop_categories, 'pop_word');
+      bind('classic_pop_title', home.pop_categories, 'title');
+      bind('classic_pop_more_cnt', home.pop_categories, 'more_count');
+      bind('classic_pop_more_title', home.pop_categories, 'more_title');
+      bind('classic_pop_more_sub', home.pop_categories, 'more_sub');
+
+      if (!home.vip_section) home.vip_section = {};
+      bind('classic_vip_badge', home.vip_section, 'badge');
+      bind('classic_vip_pulse', home.vip_section, 'pulse');
+      bind('classic_vip_title', home.vip_section, 'title');
+      bind('classic_vip_desc', home.vip_section, 'desc');
+
+      if (!home.shop_section) home.shop_section = {};
+      bind('classic_shop_eyebrow', home.shop_section, 'eyebrow');
+      bind('classic_shop_title', home.shop_section, 'title');
+      bind('classic_shop_desc', home.shop_section, 'desc');
+
+      if (!home.terea_section) home.terea_section = {};
+      bind('classic_terea_eyebrow', home.terea_section, 'eyebrow');
+      bind('classic_terea_title', home.terea_section, 'title');
+      bind('classic_terea_desc', home.terea_section, 'desc');
+      const tereaLegendEl = dom.content.querySelector('#classic_terea_legend');
+      if (tereaLegendEl) {
+        tereaLegendEl.appendChild(
+          renderStringListEditor(home.terea_section.legend || [], (items) => {
+            home.terea_section.legend = items;
+            markDirty('home');
+          }, 'Country Origin (e.g. 🇮🇩 Indonesia)', '+ Add Origin')
+        );
+      }
+
+      if (!home.disposables_section) home.disposables_section = {};
+      bind('classic_disp_eyebrow', home.disposables_section, 'eyebrow');
+      bind('classic_disp_title', home.disposables_section, 'title');
+      bind('classic_disp_desc', home.disposables_section, 'desc');
+
+      if (!home.reviews_section) home.reviews_section = {};
+      bind('classic_rev_eyebrow', home.reviews_section, 'eyebrow');
+      bind('classic_rev_title', home.reviews_section, 'title');
+
+      if (!home.cta_section) home.cta_section = {};
+      bind('classic_cta_eyebrow', home.cta_section, 'eyebrow');
+      bind('classic_cta_pre', home.cta_section, 'title_pre');
+      bind('classic_cta_hl', home.cta_section, 'title_highlight');
+      bind('classic_cta_text', home.cta_section, 'text');
+      bind('classic_cta_btn', home.cta_section, 'button_label');
+
+      if (!home.age_gate) home.age_gate = {};
+      bindCheck('classic_ag_en', home.age_gate, 'enabled');
+      bind('classic_ag_title', home.age_gate, 'title');
+      bind('classic_ag_note', home.age_gate, 'note');
+      bind('classic_ag_text', home.age_gate, 'text');
+      bind('classic_ag_yes', home.age_gate, 'yes_label');
+      bind('classic_ag_no', home.age_gate, 'no_label');
+
+      if (!home.checkout) home.checkout = {};
+      bind('classic_chk_eyebrow', home.checkout, 'eyebrow');
+      bind('classic_chk_title', home.checkout, 'title');
+      bind('classic_chk_sub', home.checkout, 'sub');
+      bind('classic_chk_wa_badge', home.checkout, 'wa_banner_badge');
+      bind('classic_chk_wa_title', home.checkout, 'wa_banner_title');
+      bind('classic_chk_wa_text', home.checkout, 'wa_banner_text');
+
+      if (!home.search) home.search = {};
+      bind('classic_srch_ph', home.search, 'placeholder');
+      bind('classic_srch_modal_ph', home.search, 'modal_placeholder');
+      bind('classic_srch_empty', home.search, 'empty_text');
+
+      const classicSaveHandler = () => {
+        saveAll();
+      };
+      const btnTop = document.getElementById('btnClassicSaveTop');
+      const btnBtm = document.getElementById('btnClassicSaveBottom');
+      if (btnTop) btnTop.addEventListener('click', classicSaveHandler);
+      if (btnBtm) btnBtm.addEventListener('click', classicSaveHandler);
     }
 
     // Modal Close Handlers
     const modal = document.getElementById('admSecModal');
     const closeModal = () => {
       modal.classList.remove('is-open');
+      if (state.dirty.size > 0) {
+        saveAll();
+      }
       renderHomepage();
     };
     document.getElementById('admSecModalClose').addEventListener('click', closeModal);
     document.getElementById('admSecModalDone').addEventListener('click', closeModal);
   }
 
-  /* ---------- SECTION EDIT MODAL ---------- */
+  /* ---------- SECTION EDIT MODAL (ALL SECTIONS FULLY EDITABLE) ---------- */
   function openSectionModal(secKey) {
     const modal = document.getElementById('admSecModal');
     const titleEl = document.getElementById('admSecModalTitle');
@@ -1536,7 +1991,7 @@
         const slides = home.hero_slides || [];
         const s = slides[state.activeHeroSlide] || slides[0] || {};
         bodyEl.innerHTML = `
-          <div style="display:flex;gap:6px;margin-bottom:16px;">
+          <div style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;">
             ${slides.map((sl, i) => `
               <button type="button" class="adm-btn adm-btn-sm ${i === state.activeHeroSlide ? 'adm-btn-primary' : ''}" id="btnPickSlide_${i}">
                 Slide ${i + 1}: ${esc(sl.title_grad || 'Offer')}
@@ -1579,6 +2034,16 @@
               <input type="text" id="m_hero_save" value="${esc(s.save || '')}">
             </div>
           </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>CTA Button Label</label>
+              <input type="text" id="m_hero_cta_label" value="${esc(s.cta_label || 'Add to Cart')}">
+            </div>
+            <div class="adm-field">
+              <label>CTA Link / Target</label>
+              <input type="text" id="m_hero_cta_href" value="${esc(s.cta_href || '#shop')}">
+            </div>
+          </div>
           <div class="adm-field">
             <label>Slide Image</label>
             <div id="m_hero_img_picker"></div>
@@ -1598,12 +2063,382 @@
         bodyEl.querySelector('#m_hero_price').addEventListener('input', (e) => { s.price = e.target.value; markDirty('home'); });
         bodyEl.querySelector('#m_hero_old').addEventListener('input', (e) => { s.old = e.target.value; markDirty('home'); });
         bodyEl.querySelector('#m_hero_save').addEventListener('input', (e) => { s.save = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_hero_cta_label').addEventListener('input', (e) => { s.cta_label = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_hero_cta_href').addEventListener('input', (e) => { s.cta_href = e.target.value; markDirty('home'); });
         bodyEl.querySelector('#m_hero_img_picker').appendChild(
           renderImgPicker('m_hero_img_input', s.image || '', (path) => {
             s.image = path;
             markDirty('home');
           }, 'hero')
         );
+        break;
+      }
+
+      case 'cats': {
+        titleEl.innerHTML = '📂 Edit Popular Categories Showcase';
+        if (!home.pop_categories) home.pop_categories = {};
+        const pc = home.pop_categories;
+        if (!pc.tiles) pc.tiles = [];
+
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Highlight Word (Green)</label>
+              <input type="text" id="m_cats_word" value="${esc(pc.pop_word || 'Popular')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="m_cats_title" value="${esc(pc.title || 'Categories')}">
+            </div>
+          </div>
+          <div class="adm-grid3">
+            <div class="adm-field">
+              <label>"More Categories" Count</label>
+              <input type="text" id="m_cats_more_cnt" value="${esc(pc.more_count || '+9')}">
+            </div>
+            <div class="adm-field">
+              <label>"More Categories" Title</label>
+              <input type="text" id="m_cats_more_title" value="${esc(pc.more_title || 'MORE CATEGORIES')}">
+            </div>
+            <div class="adm-field">
+              <label>"More Categories" Subtitle</label>
+              <input type="text" id="m_cats_more_sub" value="${esc(pc.more_sub || 'Tap to view all')}">
+            </div>
+          </div>
+          <div class="adm-field" style="margin-top:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <label style="margin:0;">Category Showcase Tiles (${pc.tiles.length})</label>
+              <button type="button" class="adm-btn adm-btn-sm" id="btnAddCatTile">➕ Add Tile</button>
+            </div>
+            <div id="m_cats_tiles_list" style="display:flex;flex-direction:column;gap:12px;"></div>
+          </div>
+        `;
+
+        bodyEl.querySelector('#m_cats_word').addEventListener('input', (e) => { pc.pop_word = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_cats_title').addEventListener('input', (e) => { pc.title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_cats_more_cnt').addEventListener('input', (e) => { pc.more_count = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_cats_more_title').addEventListener('input', (e) => { pc.more_title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_cats_more_sub').addEventListener('input', (e) => { pc.more_sub = e.target.value; markDirty('home'); });
+
+        const renderTiles = () => {
+          const list = bodyEl.querySelector('#m_cats_tiles_list');
+          list.innerHTML = '';
+          const catKeys = Object.keys((state.data.categories && state.data.categories.cats) || {});
+
+          pc.tiles.forEach((tile, idx) => {
+            const card = document.createElement('div');
+            card.className = 'adm-card';
+            card.style.padding = '12px';
+            card.style.background = 'var(--adm-panel2)';
+            card.innerHTML = `
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <b>Tile #${idx + 1}: ${esc(tile.title || 'Category')}</b>
+                <button type="button" class="adm-btn adm-btn-sm adm-btn-danger btn-del-tile">✕ Remove</button>
+              </div>
+              <div class="adm-grid2">
+                <div class="adm-field">
+                  <label>Title</label>
+                  <input type="text" class="tile-title" value="${esc(tile.title || '')}">
+                </div>
+                <div class="adm-field">
+                  <label>Subtitle</label>
+                  <input type="text" class="tile-sub" value="${esc(tile.sub || '')}">
+                </div>
+              </div>
+              <div class="adm-grid2">
+                <div class="adm-field">
+                  <label>Target Category</label>
+                  <select class="tile-cat">
+                    ${catKeys.map(k => `<option value="${esc(k)}" ${tile.cat === k ? 'selected' : ''}>${esc(k)}</option>`).join('')}
+                  </select>
+                </div>
+                <div class="adm-field">
+                  <label>Background Image</label>
+                  <div class="tile-img-wrap"></div>
+                </div>
+              </div>
+            `;
+            card.querySelector('.tile-title').addEventListener('input', (e) => { tile.title = e.target.value; markDirty('home'); });
+            card.querySelector('.tile-sub').addEventListener('input', (e) => { tile.sub = e.target.value; markDirty('home'); });
+            card.querySelector('.tile-cat').addEventListener('change', (e) => { tile.cat = e.target.value; markDirty('home'); });
+            card.querySelector('.tile-img-wrap').appendChild(
+              renderImgPicker(`m_tile_bg_${idx}`, tile.bg || '', (path) => {
+                tile.bg = path;
+                markDirty('home');
+              }, 'categories')
+            );
+            card.querySelector('.btn-del-tile').addEventListener('click', () => {
+              pc.tiles.splice(idx, 1);
+              markDirty('home');
+              renderTiles();
+            });
+            list.appendChild(card);
+          });
+        };
+
+        renderTiles();
+        bodyEl.querySelector('#btnAddCatTile').addEventListener('click', () => {
+          pc.tiles.push({ cat: 'iluma', title: 'NEW CATEGORY', sub: 'Best in Dubai', bg: 'assets/images/hero-iluma.webp' });
+          markDirty('home');
+          renderTiles();
+        });
+        break;
+      }
+
+      case 'vip': {
+        titleEl.innerHTML = '👑 Edit VIP Bestsellers Showcase';
+        if (!home.vip_section) home.vip_section = {};
+        const vip = home.vip_section;
+        if (!vip.features) vip.features = [];
+
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Ribbon Badge Text</label>
+              <input type="text" id="m_vip_badge" value="${esc(vip.badge || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Pulse Demand Badge</label>
+              <input type="text" id="m_vip_pulse" value="${esc(vip.pulse || 'High Demand Today')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Section Title</label>
+            <input type="text" id="m_vip_title" value="${esc(vip.title || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Description Paragraph</label>
+            <textarea id="m_vip_desc" rows="3">${esc(vip.desc || '')}</textarea>
+          </div>
+          <div class="adm-field" style="margin-top:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <label style="margin:0;">Guarantee Features List (${vip.features.length})</label>
+              <button type="button" class="adm-btn adm-btn-sm" id="btnAddVipFeat">➕ Add Feature</button>
+            </div>
+            <div id="m_vip_feat_list" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+        `;
+
+        bodyEl.querySelector('#m_vip_badge').addEventListener('input', (e) => { vip.badge = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_vip_pulse').addEventListener('input', (e) => { vip.pulse = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_vip_title').addEventListener('input', (e) => { vip.title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_vip_desc').addEventListener('input', (e) => { vip.desc = e.target.value; markDirty('home'); });
+
+        const renderFeats = () => {
+          const list = bodyEl.querySelector('#m_vip_feat_list');
+          list.innerHTML = '';
+          vip.features.forEach((feat, idx) => {
+            const card = document.createElement('div');
+            card.className = 'adm-card';
+            card.style.padding = '10px 14px';
+            card.style.background = 'var(--adm-panel2)';
+            card.style.display = 'flex';
+            card.style.gap = '10px';
+            card.style.alignItems = 'center';
+            card.innerHTML = `
+              <select class="feat-icon" style="width:130px;">
+                <option value="i-zap" ${feat.icon === 'i-zap' ? 'selected' : ''}>⚡ Fast (i-zap)</option>
+                <option value="i-shield" ${feat.icon === 'i-shield' ? 'selected' : ''}>🛡️ Genuine (i-shield)</option>
+                <option value="i-star" ${feat.icon === 'i-star' ? 'selected' : ''}>⭐ Rating (i-star)</option>
+                <option value="i-truck" ${feat.icon === 'i-truck' ? 'selected' : ''}>🚚 Delivery (i-truck)</option>
+                <option value="i-clock" ${feat.icon === 'i-clock' ? 'selected' : ''}>⏱️ Clock (i-clock)</option>
+                <option value="i-check" ${feat.icon === 'i-check' ? 'selected' : ''}>✓ Check (i-check)</option>
+              </select>
+              <input type="text" class="feat-text" style="flex:1;" value="${esc(feat.text || '')}" placeholder="Feature description">
+              <button type="button" class="adm-btn adm-btn-sm adm-btn-danger btn-del-feat">✕</button>
+            `;
+            card.querySelector('.feat-icon').addEventListener('change', (e) => { feat.icon = e.target.value; markDirty('home'); });
+            card.querySelector('.feat-text').addEventListener('input', (e) => { feat.text = e.target.value; markDirty('home'); });
+            card.querySelector('.btn-del-feat').addEventListener('click', () => {
+              vip.features.splice(idx, 1);
+              markDirty('home');
+              renderFeats();
+            });
+            list.appendChild(card);
+          });
+        };
+
+        renderFeats();
+        bodyEl.querySelector('#btnAddVipFeat').addEventListener('click', () => {
+          vip.features.push({ icon: 'i-check', text: 'New Guarantee' });
+          markDirty('home');
+          renderFeats();
+        });
+        break;
+      }
+
+      case 'shop': {
+        titleEl.innerHTML = '🛍️ Edit Collection Header';
+        if (!home.shop_section) home.shop_section = {};
+        const shop = home.shop_section;
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="m_shop_eyebrow" value="${esc(shop.eyebrow || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="m_shop_title" value="${esc(shop.title || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Description Paragraph</label>
+            <textarea id="m_shop_desc" rows="3">${esc(shop.desc || '')}</textarea>
+          </div>
+        `;
+        bodyEl.querySelector('#m_shop_eyebrow').addEventListener('input', (e) => { shop.eyebrow = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_shop_title').addEventListener('input', (e) => { shop.title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_shop_desc').addEventListener('input', (e) => { shop.desc = e.target.value; markDirty('home'); });
+        break;
+      }
+
+      case 'terea': {
+        titleEl.innerHTML = '🎌 Edit TEREA by Origin Section';
+        if (!home.terea_section) home.terea_section = {};
+        const terea = home.terea_section;
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="m_terea_eyebrow" value="${esc(terea.eyebrow || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="m_terea_title" value="${esc(terea.title || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Description Paragraph</label>
+            <textarea id="m_terea_desc" rows="3">${esc(terea.desc || '')}</textarea>
+          </div>
+          <div class="adm-field">
+            <label>Origin Country Badges / Legend</label>
+            <div id="m_terea_legend_box"></div>
+          </div>
+        `;
+        bodyEl.querySelector('#m_terea_eyebrow').addEventListener('input', (e) => { terea.eyebrow = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_terea_title').addEventListener('input', (e) => { terea.title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_terea_desc').addEventListener('input', (e) => { terea.desc = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_terea_legend_box').appendChild(
+          renderStringListEditor(terea.legend || [], (items) => {
+            terea.legend = items;
+            markDirty('home');
+          }, 'e.g. 🇮🇩 Indonesia — fruity & cooling', '+ Add Origin Country')
+        );
+        break;
+      }
+
+      case 'disposables': {
+        titleEl.innerHTML = '💨 Edit Disposable Vapes Showcase';
+        if (!home.disposables_section) home.disposables_section = {};
+        const disp = home.disposables_section;
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="m_disp_eyebrow" value="${esc(disp.eyebrow || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="m_disp_title" value="${esc(disp.title || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Description Paragraph</label>
+            <textarea id="m_disp_desc" rows="3">${esc(disp.desc || '')}</textarea>
+          </div>
+        `;
+        bodyEl.querySelector('#m_disp_eyebrow').addEventListener('input', (e) => { disp.eyebrow = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_disp_title').addEventListener('input', (e) => { disp.title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_disp_desc').addEventListener('input', (e) => { disp.desc = e.target.value; markDirty('home'); });
+        break;
+      }
+
+      case 'reviews': {
+        titleEl.innerHTML = '⭐ Edit Customer Reviews &amp; Testimonials';
+        if (!home.reviews_section) home.reviews_section = {};
+        if (!home.reviews) home.reviews = [];
+        const revSec = home.reviews_section;
+
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="m_rev_eyebrow" value="${esc(revSec.eyebrow || 'Verified Buyers')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="m_rev_title" value="${esc(revSec.title || 'Loved Across the Emirates')}">
+            </div>
+          </div>
+          <div class="adm-field" style="margin-top:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <label style="margin:0;">Customer Testimonials (${home.reviews.length})</label>
+              <button type="button" class="adm-btn adm-btn-sm" id="btnAddReview">➕ Add Review</button>
+            </div>
+            <div id="m_reviews_list" style="display:flex;flex-direction:column;gap:12px;"></div>
+          </div>
+        `;
+
+        bodyEl.querySelector('#m_rev_eyebrow').addEventListener('input', (e) => { revSec.eyebrow = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_rev_title').addEventListener('input', (e) => { revSec.title = e.target.value; markDirty('home'); });
+
+        const renderReviews = () => {
+          const list = bodyEl.querySelector('#m_reviews_list');
+          list.innerHTML = '';
+          home.reviews.forEach((rev, idx) => {
+            const card = document.createElement('div');
+            card.className = 'adm-card';
+            card.style.padding = '12px';
+            card.style.background = 'var(--adm-panel2)';
+            card.innerHTML = `
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <b>Review #${idx + 1}: ${esc(rev.name || 'Customer')}</b>
+                <button type="button" class="adm-btn adm-btn-sm adm-btn-danger btn-del-rev">✕ Remove</button>
+              </div>
+              <div class="adm-grid3">
+                <div class="adm-field">
+                  <label>Customer Name</label>
+                  <input type="text" class="rev-name" value="${esc(rev.name || '')}">
+                </div>
+                <div class="adm-field">
+                  <label>Location (e.g. Dubai Marina)</label>
+                  <input type="text" class="rev-loc" value="${esc(rev.location || '')}">
+                </div>
+                <div class="adm-field">
+                  <label>Rating (Stars)</label>
+                  <select class="rev-stars">
+                    <option value="5" ${rev.stars === 5 ? 'selected' : ''}>★★★★★ (5 Stars)</option>
+                    <option value="4" ${rev.stars === 4 ? 'selected' : ''}>★★★★☆ (4 Stars)</option>
+                    <option value="3" ${rev.stars === 3 ? 'selected' : ''}>★★★☆☆ (3 Stars)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="adm-field">
+                <label>Review Content</label>
+                <textarea class="rev-text" rows="2">${esc(rev.text || '')}</textarea>
+              </div>
+            `;
+            card.querySelector('.rev-name').addEventListener('input', (e) => { rev.name = e.target.value; markDirty('home'); });
+            card.querySelector('.rev-loc').addEventListener('input', (e) => { rev.location = e.target.value; markDirty('home'); });
+            card.querySelector('.rev-stars').addEventListener('change', (e) => { rev.stars = parseInt(e.target.value, 10); markDirty('home'); });
+            card.querySelector('.rev-text').addEventListener('input', (e) => { rev.text = e.target.value; markDirty('home'); });
+            card.querySelector('.btn-del-rev').addEventListener('click', () => {
+              home.reviews.splice(idx, 1);
+              markDirty('home');
+              renderReviews();
+            });
+            list.appendChild(card);
+          });
+        };
+
+        renderReviews();
+        bodyEl.querySelector('#btnAddReview').addEventListener('click', () => {
+          home.reviews.push({ name: 'Rashid M.', location: 'Downtown Dubai', stars: 5, text: 'Excellent service and 1-hour fast delivery in Dubai.', avatar: 'R', avatar_class: 'av-emerald' });
+          markDirty('home');
+          renderReviews();
+        });
         break;
       }
 
@@ -1643,6 +2478,296 @@
         break;
       }
 
+      case 'faqs': {
+        titleEl.innerHTML = '❓ Edit Frequently Asked Questions';
+        if (!home.faq_section) home.faq_section = {};
+        if (!home.faqs) home.faqs = [];
+        const faqSec = home.faq_section;
+
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="m_faq_eyebrow" value="${esc(faqSec.eyebrow || 'Good to Know')}">
+            </div>
+            <div class="adm-field">
+              <label>Section Heading</label>
+              <input type="text" id="m_faq_title" value="${esc(faqSec.title || 'Delivery &amp; Ordering FAQ')}">
+            </div>
+          </div>
+          <div class="adm-field" style="margin-top:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <label style="margin:0;">FAQ Questions (${home.faqs.length})</label>
+              <button type="button" class="adm-btn adm-btn-sm" id="btnAddFaq">➕ Add FAQ Question</button>
+            </div>
+            <div id="m_faqs_list" style="display:flex;flex-direction:column;gap:12px;"></div>
+          </div>
+        `;
+
+        bodyEl.querySelector('#m_faq_eyebrow').addEventListener('input', (e) => { faqSec.eyebrow = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_faq_title').addEventListener('input', (e) => { faqSec.title = e.target.value; markDirty('home'); });
+
+        const renderFaqs = () => {
+          const list = bodyEl.querySelector('#m_faqs_list');
+          list.innerHTML = '';
+          home.faqs.forEach((faq, idx) => {
+            const card = document.createElement('div');
+            card.className = 'adm-card';
+            card.style.padding = '12px';
+            card.style.background = 'var(--adm-panel2)';
+            card.innerHTML = `
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <b>FAQ #${idx + 1}</b>
+                <button type="button" class="adm-btn adm-btn-sm adm-btn-danger btn-del-faq">✕ Remove</button>
+              </div>
+              <div class="adm-field">
+                <label>Question</label>
+                <input type="text" class="faq-q" value="${esc(faq.q || '')}">
+              </div>
+              <div class="adm-field">
+                <label>Answer (HTML allowed, e.g. &lt;b&gt;bold text&lt;/b&gt;)</label>
+                <textarea class="faq-a" rows="3">${esc(faq.a || '')}</textarea>
+              </div>
+            `;
+            card.querySelector('.faq-q').addEventListener('input', (e) => { faq.q = e.target.value; markDirty('home'); });
+            card.querySelector('.faq-a').addEventListener('input', (e) => { faq.a = e.target.value; markDirty('home'); });
+            card.querySelector('.btn-del-faq').addEventListener('click', () => {
+              home.faqs.splice(idx, 1);
+              markDirty('home');
+              renderFaqs();
+            });
+            list.appendChild(card);
+          });
+        };
+
+        renderFaqs();
+        bodyEl.querySelector('#btnAddFaq').addEventListener('click', () => {
+          home.faqs.push({ q: 'New question title?', a: 'Answer description with <b>bold</b> highlights.' });
+          markDirty('home');
+          renderFaqs();
+        });
+        break;
+      }
+
+      case 'cta': {
+        titleEl.innerHTML = '💬 Edit Call-To-Action (CTA) Concierge Banner';
+        if (!home.cta_section) home.cta_section = {};
+        const cta = home.cta_section;
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Eyebrow Pill</label>
+              <input type="text" id="m_cta_eyebrow" value="${esc(cta.eyebrow || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Button Label</label>
+              <input type="text" id="m_cta_btn" value="${esc(cta.button_label || '')}">
+            </div>
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Title Prefix</label>
+              <input type="text" id="m_cta_pre" value="${esc(cta.title_pre || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Title Highlight (Green)</label>
+              <input type="text" id="m_cta_hl" value="${esc(cta.title_highlight || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Subtext Description</label>
+            <textarea id="m_cta_text" rows="3">${esc(cta.text || '')}</textarea>
+          </div>
+        `;
+        bodyEl.querySelector('#m_cta_eyebrow').addEventListener('input', (e) => { cta.eyebrow = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_cta_btn').addEventListener('input', (e) => { cta.button_label = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_cta_pre').addEventListener('input', (e) => { cta.title_pre = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_cta_hl').addEventListener('input', (e) => { cta.title_highlight = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_cta_text').addEventListener('input', (e) => { cta.text = e.target.value; markDirty('home'); });
+        break;
+      }
+
+      case 'age_gate': {
+        titleEl.innerHTML = '🔞 Edit 18+ Age Verification Modal';
+        if (!home.age_gate) home.age_gate = {};
+        const ag = home.age_gate;
+        bodyEl.innerHTML = `
+          <label class="adm-check" style="margin-bottom:14px;">
+            <input type="checkbox" id="m_ag_en" ${ag.enabled ? 'checked' : ''}>
+            <span>Enable 18+ Age Verification Popup</span>
+          </label>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Modal Title</label>
+              <input type="text" id="m_ag_title" value="${esc(ag.title || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Compliance Footnote</label>
+              <input type="text" id="m_ag_note" value="${esc(ag.note || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Warning Message</label>
+            <textarea id="m_ag_text" rows="2">${esc(ag.text || '')}</textarea>
+          </div>
+          <div class="adm-field">
+            <label>Under-18 Rejection Message</label>
+            <textarea id="m_ag_under" rows="2">${esc(ag.under_msg || '')}</textarea>
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Yes Button Label</label>
+              <input type="text" id="m_ag_yes" value="${esc(ag.yes_label || '')}">
+            </div>
+            <div class="adm-field">
+              <label>No Button Label</label>
+              <input type="text" id="m_ag_no" value="${esc(ag.no_label || '')}">
+            </div>
+          </div>
+        `;
+        bodyEl.querySelector('#m_ag_en').addEventListener('change', (e) => { ag.enabled = e.target.checked; markDirty('home'); });
+        bodyEl.querySelector('#m_ag_title').addEventListener('input', (e) => { ag.title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_ag_note').addEventListener('input', (e) => { ag.note = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_ag_text').addEventListener('input', (e) => { ag.text = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_ag_under').addEventListener('input', (e) => { ag.under_msg = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_ag_yes').addEventListener('input', (e) => { ag.yes_label = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_ag_no').addEventListener('input', (e) => { ag.no_label = e.target.value; markDirty('home'); });
+        break;
+      }
+
+      case 'checkout': {
+        titleEl.innerHTML = '⚡ Edit Express Checkout &amp; WhatsApp Direct';
+        if (!home.checkout) home.checkout = {};
+        const chk = home.checkout;
+        bodyEl.innerHTML = `
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Checkout Eyebrow</label>
+              <input type="text" id="m_chk_eyebrow" value="${esc(chk.eyebrow || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Checkout Heading</label>
+              <input type="text" id="m_chk_title" value="${esc(chk.title || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Checkout Subtitle</label>
+            <input type="text" id="m_chk_sub" value="${esc(chk.sub || '')}">
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>WhatsApp Banner Badge</label>
+              <input type="text" id="m_chk_wa_badge" value="${esc(chk.wa_banner_badge || '')}">
+            </div>
+            <div class="adm-field">
+              <label>WhatsApp Banner Title</label>
+              <input type="text" id="m_chk_wa_title" value="${esc(chk.wa_banner_title || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>WhatsApp Banner Text</label>
+            <textarea id="m_chk_wa_text" rows="2">${esc(chk.wa_banner_text || '')}</textarea>
+          </div>
+          <div class="adm-field">
+            <label>Age Confirmation Checkbox Label</label>
+            <textarea id="m_chk_age_confirm" rows="2">${esc(chk.age_confirm_text || '')}</textarea>
+          </div>
+        `;
+        bodyEl.querySelector('#m_chk_eyebrow').addEventListener('input', (e) => { chk.eyebrow = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_chk_title').addEventListener('input', (e) => { chk.title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_chk_sub').addEventListener('input', (e) => { chk.sub = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_chk_wa_badge').addEventListener('input', (e) => { chk.wa_banner_badge = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_chk_wa_title').addEventListener('input', (e) => { chk.wa_banner_title = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_chk_wa_text').addEventListener('input', (e) => { chk.wa_banner_text = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_chk_age_confirm').addEventListener('input', (e) => { chk.age_confirm_text = e.target.value; markDirty('home'); });
+        break;
+      }
+
+      case 'search': {
+        titleEl.innerHTML = '🔍 Edit Search Bar Placeholders';
+        if (!home.search) home.search = {};
+        const srch = home.search;
+        bodyEl.innerHTML = `
+          <div class="adm-field">
+            <label>Desktop Search Input Placeholder</label>
+            <input type="text" id="m_srch_ph" value="${esc(srch.placeholder || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Mobile Search Modal Placeholder</label>
+            <input type="text" id="m_srch_modal_ph" value="${esc(srch.modal_placeholder || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Empty Search Results Message</label>
+            <input type="text" id="m_srch_empty" value="${esc(srch.empty_text || '')}">
+          </div>
+        `;
+        bodyEl.querySelector('#m_srch_ph').addEventListener('input', (e) => { srch.placeholder = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_srch_modal_ph').addEventListener('input', (e) => { srch.modal_placeholder = e.target.value; markDirty('home'); });
+        bodyEl.querySelector('#m_srch_empty').addEventListener('input', (e) => { srch.empty_text = e.target.value; markDirty('home'); });
+        break;
+      }
+
+      case 'footer': {
+        titleEl.innerHTML = '🦶 Edit Footer &amp; Store Contact';
+        bodyEl.innerHTML = `
+          <div class="adm-field">
+            <label>Footer Brand Note</label>
+            <textarea id="m_foot_note" rows="2">${esc(settings.brand_footer_note || '')}</textarea>
+          </div>
+          <div class="adm-grid3">
+            <div class="adm-field">
+              <label>Phone (Display)</label>
+              <input type="text" id="m_foot_phone" value="${esc(settings.phone_display || '')}">
+            </div>
+            <div class="adm-field">
+              <label>WhatsApp Number</label>
+              <input type="text" id="m_foot_wa" value="${esc(settings.wa_number || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Support Email</label>
+              <input type="email" id="m_foot_email" value="${esc(settings.email || '')}">
+            </div>
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Address</label>
+              <input type="text" id="m_foot_address" value="${esc(settings.address || '')}">
+            </div>
+            <div class="adm-field">
+              <label>Google Maps Link</label>
+              <input type="url" id="m_foot_maps" value="${esc(settings.maps_url || '')}">
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Showroom Hours Lines</label>
+            <div id="m_foot_hours_box"></div>
+          </div>
+          <div class="adm-field">
+            <label>Copyright Notice</label>
+            <input type="text" id="m_foot_copy" value="${esc(settings.copyright || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Legal 18+ Warning</label>
+            <textarea id="m_foot_legal" rows="2">${esc(settings.legal_warning || '')}</textarea>
+          </div>
+        `;
+        bodyEl.querySelector('#m_foot_note').addEventListener('input', (e) => { settings.brand_footer_note = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_foot_phone').addEventListener('input', (e) => { settings.phone_display = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_foot_wa').addEventListener('input', (e) => { settings.wa_number = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_foot_email').addEventListener('input', (e) => { settings.email = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_foot_address').addEventListener('input', (e) => { settings.address = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_foot_maps').addEventListener('input', (e) => { settings.maps_url = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_foot_copy').addEventListener('input', (e) => { settings.copyright = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_foot_legal').addEventListener('input', (e) => { settings.legal_warning = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_foot_hours_box').appendChild(
+          renderStringListEditor(settings.hours || [], (items) => {
+            settings.hours = items;
+            markDirty('settings');
+          }, 'Hours line (e.g. Daily 10:00 AM – 12:00 AM)', '+ Add Hours Line')
+        );
+        break;
+      }
+
       default: {
         titleEl.innerHTML = '✏️ Edit Section';
         bodyEl.innerHTML = `<p>Section settings can be modified here.</p>`;
@@ -1656,11 +2781,16 @@
   /* ============================================================
      VIEW: SETTINGS & LOGO STUDIO
      ============================================================ */
-  function renderSettings() {
+    function renderSettings() {
     dom.viewTitle.textContent = 'Branding & Settings';
     const s = state.data.settings;
 
     let html = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <p style="color:var(--adm-muted);margin:0;">Store branding, customer contact channels, showroom hours, payment badges and compliance.</p>
+        <button type="button" class="adm-btn adm-btn-primary" id="btnSettingsSaveTop">💾 Save Settings</button>
+      </div>
+
       <!-- BRANDING & LOGO STUDIO -->
       <div class="adm-card is-highlight">
         <h3><span>🎨</span> Storefront Logo &amp; Branding Studio</h3>
@@ -1723,7 +2853,7 @@
         </div>
       </div>
 
-      <!-- CONTACT & WHATSAPP SETTINGS -->
+      <!-- CONTACT & EXPRESS DELIVERY -->
       <div class="adm-card">
         <h3><span>📞</span> Customer Contact &amp; Express Delivery</h3>
         <p class="adm-card-sub">WhatsApp hotline, phone numbers, delivery fee rules and Dubai warehouse address</p>
@@ -1772,9 +2902,98 @@
         </div>
       </div>
 
-      <!-- TELEGRAM BOT LEAD TELEMETRY & IN-PAGE WHATSAPP CONCIERGE -->
+      <!-- SOCIAL MEDIA CHANNELS -->
+      <div class="adm-card">
+        <h3><span>🌐</span> Official Social Media Channels</h3>
+        <p class="adm-card-sub">Used in Google Knowledge Graph, SEO LocalBusiness schema and footer links</p>
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Instagram URL</label>
+            <input type="url" id="set_instagram" value="${esc(s.instagram_url || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Telegram Channel / Contact URL</label>
+            <input type="url" id="set_telegram" value="${esc(s.telegram_url || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Facebook Page URL</label>
+            <input type="url" id="set_facebook" value="${esc(s.facebook_url || '')}">
+          </div>
+          <div class="adm-field">
+            <label>TikTok Profile URL</label>
+            <input type="url" id="set_tiktok" value="${esc(s.tiktok_url || '')}">
+          </div>
+        </div>
+      </div>
+
+      <!-- STORE REVIEWS & RATING BADGE -->
+      <div class="adm-card">
+        <h3><span>⭐</span> Storefront Customer Rating &amp; Schema Trust</h3>
+        <p class="adm-card-sub">Values displayed on the trust badge and injected into Google Store AggregateRating schema</p>
+        <div class="adm-grid3">
+          <div class="adm-field">
+            <label>Rating Value (Out of 5.0)</label>
+            <input type="text" id="set_rating_val" value="${esc(s.rating_value || '4.9')}">
+          </div>
+          <div class="adm-field">
+            <label>Total Reviews Count</label>
+            <input type="text" id="set_rating_cnt" value="${esc(s.rating_count || '214')}">
+          </div>
+          <div class="adm-field">
+            <label>Show Rating Badge on Store</label>
+            <label class="adm-check" style="margin-top:10px;">
+              <input type="checkbox" id="set_show_rating" ${s.show_rating !== false ? 'checked' : ''}>
+              <span>Display ★ Rating Pill</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHOWROOM HOURS & PAYMENT BADGES -->
+      <div class="adm-card">
+        <h3><span>🕒</span> Showroom Hours &amp; Payment Badges</h3>
+        <p class="adm-card-sub">Showroom operating hours and accepted payment badges rendered on storefront</p>
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Showroom Hours Lines</label>
+            <div id="set_hours_box"></div>
+          </div>
+          <div class="adm-field">
+            <label>Accepted Payment Methods</label>
+            <div id="set_payments_box"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHATSAPP CONCIERGE & MESSAGE TEMPLATES -->
+      <div class="adm-card">
+        <h3><span>💬</span> In-Page WhatsApp Concierge Templates</h3>
+        <p class="adm-card-sub">Pre-filled messages when customers click chat or order buttons</p>
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Concierge Display Name</label>
+            <input type="text" id="set_wa_concierge_name" value="${esc(s.wa_concierge_name || 'Vape Club Dubai Concierge')}">
+          </div>
+          <div class="adm-field">
+            <label>General Assistance Template</label>
+            <input type="text" id="set_wa_msg_assist" value="${esc(s.wa_msg_assistance || 'Hello Vape Club Dubai! I need assistance.')}">
+          </div>
+        </div>
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Direct Order Message Template</label>
+            <input type="text" id="set_wa_msg_order" value="${esc(s.wa_msg_order || 'Hello Vape Club Dubai! I want to order.')}">
+          </div>
+          <div class="adm-field">
+            <label>Product Question Template</label>
+            <input type="text" id="set_wa_msg_q" value="${esc(s.wa_msg_question || 'Hello Vape Club Dubai! I have a question about a product.')}">
+          </div>
+        </div>
+      </div>
+
+      <!-- TELEGRAM BOT LEAD TELEMETRY -->
       <div class="adm-card is-highlight">
-        <h3><span>🤖</span> Telegram Bot Lead Telemetry &amp; In-Page WhatsApp Concierge</h3>
+        <h3><span>🤖</span> Telegram Bot Lead Telemetry &amp; Alerts</h3>
         <p class="adm-card-sub">Instant background notifications to Telegram whenever a customer enters their WhatsApp number</p>
 
         <div class="adm-grid2">
@@ -1800,38 +3019,34 @@
         </div>
 
         <div class="adm-grid2" style="margin-top:10px;">
+          <div></div>
           <div class="adm-field">
-            <label>In-Page WhatsApp Concierge Name</label>
-            <input type="text" id="set_wa_concierge_name" value="${esc(s.wa_concierge_name || 'Vape Club Dubai')}">
-            <span class="adm-hint">Name displayed on the in-page WhatsApp verified chat header</span>
-          </div>
-          <div class="adm-field">
-            <label>Test Telegram Dispatch</label>
-            <button type="button" class="adm-btn adm-btn-secondary" id="btnTestTelegram" style="margin-top:24px;width:100%;">⚡ Send Test Telegram Alert</button>
+            <button type="button" class="adm-btn adm-btn-secondary" id="btnTestTelegram" style="width:100%;">⚡ Send Test Telegram Alert</button>
           </div>
         </div>
       </div>
 
-      <!-- SOCIAL MEDIA & LEGAL -->
+      <!-- LEGAL & FOOTER NOTE -->
       <div class="adm-card">
-        <h3><span>⚖️</span> UAE Legal Compliance &amp; Social Links</h3>
-        <p class="adm-card-sub">Mandatory 18+ nicotine health warning and official social channels</p>
+        <h3><span>⚖️</span> UAE Legal Compliance, Copyright &amp; Footer Note</h3>
+        <p class="adm-card-sub">Mandatory 18+ nicotine health warning and copyright text</p>
 
-        <div class="adm-grid2">
-          <div class="adm-field">
-            <label>Instagram URL</label>
-            <input type="url" id="set_instagram" value="${esc(s.instagram_url || '')}">
-          </div>
-          <div class="adm-field">
-            <label>Telegram URL</label>
-            <input type="url" id="set_telegram" value="${esc(s.telegram_url || '')}">
-          </div>
+        <div class="adm-field">
+          <label>Footer Brand Summary Note</label>
+          <textarea id="set_foot_note" rows="2">${esc(s.brand_footer_note || '')}</textarea>
         </div>
-
+        <div class="adm-field">
+          <label>Copyright Notice</label>
+          <input type="text" id="set_copyright" value="${esc(s.copyright || '© 2026 Vape Club Dubai')}">
+        </div>
         <div class="adm-field">
           <label>UAE 18+ Nicotine Health Warning Notice</label>
           <textarea id="set_legal_warning" rows="3">${esc(s.legal_warning || '')}</textarea>
         </div>
+      </div>
+
+      <div style="text-align:right;margin-top:20px;">
+        <button type="button" class="adm-btn adm-btn-primary adm-btn-lg" id="btnSettingsSaveBottom">💾 Save All Settings</button>
       </div>
     `;
 
@@ -1856,31 +3071,69 @@
       }, 'branding')
     );
 
-    document.getElementById('set_brand_name').addEventListener('input', (e) => { s.brand_name = e.target.value; markDirty('settings'); });
-    document.getElementById('set_brand_tagline').addEventListener('input', (e) => { s.brand_tagline = e.target.value; markDirty('settings'); });
-    document.getElementById('set_order_prefix').addEventListener('input', (e) => { s.order_prefix = e.target.value; markDirty('settings'); });
-    document.getElementById('set_wa_number').addEventListener('input', (e) => { s.wa_number = e.target.value.trim(); markDirty('settings'); });
-    document.getElementById('set_phone_display').addEventListener('input', (e) => { s.phone_display = e.target.value; markDirty('settings'); });
-    document.getElementById('set_email').addEventListener('input', (e) => { s.email = e.target.value.trim(); markDirty('settings'); });
-    document.getElementById('set_free_ship').addEventListener('input', (e) => { s.free_ship_threshold = parseFloat(e.target.value) || 450; markDirty('settings'); });
-    document.getElementById('set_del_fee').addEventListener('input', (e) => { s.delivery_fee = parseFloat(e.target.value) || 20; markDirty('settings'); });
-    document.getElementById('set_del_time').addEventListener('input', (e) => { s.delivery_time = e.target.value; markDirty('settings'); });
-    document.getElementById('set_address').addEventListener('input', (e) => { s.address = e.target.value; markDirty('settings'); });
-    document.getElementById('set_maps_url').addEventListener('input', (e) => { s.maps_url = e.target.value; markDirty('settings'); });
-    document.getElementById('set_instagram').addEventListener('input', (e) => { s.instagram_url = e.target.value; markDirty('settings'); });
-    document.getElementById('set_telegram').addEventListener('input', (e) => { s.telegram_url = e.target.value; markDirty('settings'); });
-    document.getElementById('set_legal_warning').addEventListener('input', (e) => { s.legal_warning = e.target.value; markDirty('settings'); });
+    const bind = (id, prop, isNum = false) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', (e) => {
+        s[prop] = isNum ? (parseFloat(e.target.value) || 0) : e.target.value;
+        markDirty('settings');
+      });
+    };
+    const bindCheck = (id, prop) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', (e) => {
+        s[prop] = e.target.checked;
+        markDirty('settings');
+      });
+    };
 
-    // Telegram Bot & WhatsApp Concierge Bindings
+    bind('set_brand_name', 'brand_name');
+    bind('set_brand_tagline', 'brand_tagline');
+    bind('set_order_prefix', 'order_prefix');
+    bind('set_wa_number', 'wa_number');
+    bind('set_phone_display', 'phone_display');
+    bind('set_email', 'email');
+    bind('set_free_ship', 'free_ship_threshold', true);
+    bind('set_del_fee', 'delivery_fee', true);
+    bind('set_del_time', 'delivery_time');
+    bind('set_address', 'address');
+    bind('set_maps_url', 'maps_url');
+    bind('set_instagram', 'instagram_url');
+    bind('set_telegram', 'telegram_url');
+    bind('set_facebook', 'facebook_url');
+    bind('set_tiktok', 'tiktok_url');
+    bind('set_rating_val', 'rating_value');
+    bind('set_rating_cnt', 'rating_count');
+    bindCheck('set_show_rating', 'show_rating');
+    bind('set_wa_concierge_name', 'wa_concierge_name');
+    bind('set_wa_msg_assist', 'wa_msg_assistance');
+    bind('set_wa_msg_order', 'wa_msg_order');
+    bind('set_wa_msg_q', 'wa_msg_question');
+    bind('set_tg_chat_id', 'telegram_chat_id');
+    bind('set_tg_bot_token', 'telegram_bot_token');
+    bind('set_foot_note', 'brand_footer_note');
+    bind('set_copyright', 'copyright');
+    bind('set_legal_warning', 'legal_warning');
+
     const tgEn = document.getElementById('set_tg_enabled');
     if (tgEn) tgEn.addEventListener('change', (e) => { s.telegram_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
-    const tgChat = document.getElementById('set_tg_chat_id');
-    if (tgChat) tgChat.addEventListener('input', (e) => { s.telegram_chat_id = e.target.value.trim(); markDirty('settings'); });
-    const tgTok = document.getElementById('set_tg_bot_token');
-    if (tgTok) tgTok.addEventListener('input', (e) => { s.telegram_bot_token = e.target.value.trim(); markDirty('settings'); });
-    const waName = document.getElementById('set_wa_concierge_name');
-    if (waName) waName.addEventListener('input', (e) => { s.wa_concierge_name = e.target.value; markDirty('settings'); });
 
+    // Hours list
+    document.getElementById('set_hours_box').appendChild(
+      renderStringListEditor(s.hours || [], (items) => {
+        s.hours = items;
+        markDirty('settings');
+      }, 'Hours line (e.g. Daily 10:00 AM – 12:00 AM)', '+ Add Hours Line')
+    );
+
+    // Payments list
+    document.getElementById('set_payments_box').appendChild(
+      renderStringListEditor(s.payment_badges || [], (items) => {
+        s.payment_badges = items;
+        markDirty('settings');
+      }, 'Payment method (e.g. COD, VISA, APPLE PAY)', '+ Add Payment Badge')
+    );
+
+    // Test Telegram button
     const btnTest = document.getElementById('btnTestTelegram');
     if (btnTest) {
       btnTest.addEventListener('click', async () => {
@@ -1918,47 +3171,115 @@
         }
       });
     }
+
+    const saveSettingsHandler = () => {
+      saveAll();
+    };
+    const btnTop = document.getElementById('btnSettingsSaveTop');
+    const btnBtm = document.getElementById('btnSettingsSaveBottom');
+    if (btnTop) btnTop.addEventListener('click', saveSettingsHandler);
+    if (btnBtm) btnBtm.addEventListener('click', saveSettingsHandler);
   }
 
   /* ============================================================
      VIEW: SEO & SCHEMA ENGINE
      ============================================================ */
-  function renderSEO() {
+    function renderSEO() {
     dom.viewTitle.textContent = 'SEO & Schema Engine';
     const seo = state.data.seo;
     const settings = state.data.settings;
 
-    let html = `
-      <div class="adm-card is-highlight">
-        <h3><span>🔍</span> Maximum Google SEO &amp; Rich Snippets</h3>
-        <p class="adm-card-sub">Zero SEO gaps: Meta titles, meta descriptions, sitemaps, robots.txt, and structured data schemas</p>
+    if (!seo.pages) seo.pages = {};
+    if (!seo.pages.home) seo.pages.home = {};
+    if (!seo.pages.category) seo.pages.category = {};
+    if (!seo.pages.product) seo.pages.product = {};
 
-        <div class="adm-field">
-          <label>Canonical Production URL</label>
-          <input type="url" id="seo_site_url" value="${esc(seo.site_url || 'https://iqosai.com')}">
+    let html = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <p style="color:var(--adm-muted);margin:0;">Google UAE Search ranking, SERP snippets, structured data schemas and webmaster verification.</p>
+        <button type="button" class="adm-btn adm-btn-primary" id="btnSeoSaveTop">💾 Save SEO Settings</button>
+      </div>
+
+      <div class="adm-card is-highlight">
+        <h3><span>🔍</span> Production URL &amp; Google Structured Data Schemas</h3>
+        <p class="adm-card-sub">Zero SEO gaps: Canonical URLs, JSON-LD rich snippets and Google Star Ratings</p>
+
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Canonical Production URL</label>
+            <input type="url" id="seo_site_url" value="${esc(seo.site_url || 'https://iqosai.com')}">
+          </div>
+          <div class="adm-field">
+            <label>Geo Region (ISO 3166-2 UAE)</label>
+            <input type="text" id="seo_geo_region" value="${esc(seo.geo_region || 'AE-DU')}">
+          </div>
         </div>
 
         <div class="adm-card" style="background:var(--adm-panel2);margin-top:14px;">
-          <h4>Structured Data Schemas (JSON-LD)</h4>
+          <h4>Structured Data Schemas (JSON-LD Google Rich Results)</h4>
           <div class="adm-grid2" style="margin-top:10px;">
             <label class="adm-check">
-              <input type="checkbox" id="sc_prod" ${seo.schema_product ? 'checked' : ''}>
-              <span>Product Schema (AggregateRating + Offers)</span>
+              <input type="checkbox" id="sc_prod" ${seo.schema_product !== false ? 'checked' : ''}>
+              <span>Product Schema (AggregateRating + Offers + Verified Review)</span>
             </label>
             <label class="adm-check">
-              <input type="checkbox" id="sc_local" ${seo.schema_local_business ? 'checked' : ''}>
-              <span>LocalBusiness / Store Schema (Dubai Map)</span>
+              <input type="checkbox" id="sc_local" ${seo.schema_local_business !== false ? 'checked' : ''}>
+              <span>Store / LocalBusiness Schema (Dubai Coordinates + Rating Stars)</span>
             </label>
             <label class="adm-check">
-              <input type="checkbox" id="sc_faq" ${seo.schema_faq_page ? 'checked' : ''}>
-              <span>FAQPage Schema (Google Accordion)</span>
+              <input type="checkbox" id="sc_faq" ${seo.schema_faq_page !== false ? 'checked' : ''}>
+              <span>FAQPage Schema (Google Search Expandable Accordions)</span>
             </label>
             <label class="adm-check">
-              <input type="checkbox" id="sc_bread" ${seo.schema_breadcrumb ? 'checked' : ''}>
-              <span>BreadcrumbList Schema</span>
+              <input type="checkbox" id="sc_bread" ${seo.schema_breadcrumb !== false ? 'checked' : ''}>
+              <span>BreadcrumbList Schema (Google Category Hierarchy)</span>
+            </label>
+            <label class="adm-check">
+              <input type="checkbox" id="sc_search" ${seo.schema_website_search !== false ? 'checked' : ''}>
+              <span>WebSite SearchAction Schema (Google Sitelinks Searchbox)</span>
             </label>
           </div>
         </div>
+      </div>
+
+      <!-- WEBMASTER VERIFICATION & HEAD SCRIPTS -->
+      <div class="adm-card">
+        <h3><span>🛡️</span> Google Search Console &amp; Webmaster Verification</h3>
+        <p class="adm-card-sub">Add Google Search Console HTML verification tag, Google Analytics 4 (GA4), or Meta Pixel</p>
+        <div class="adm-field">
+          <label>Webmaster Verification Code / Extra Head Scripts (&lt;meta&gt; or &lt;script&gt;)</label>
+          <textarea id="seo_extra_head" rows="4" style="font-family:monospace;font-size:12.5px;" placeholder='<meta name="google-site-verification" content="your_verification_token" />'>${esc(seo.extra_head_code || '')}</textarea>
+          <span class="adm-hint">This code is injected directly before &lt;/head&gt; on every page of the website.</span>
+        </div>
+      </div>
+
+      <!-- SOCIAL MEDIA PREVIEW TAGS (OPEN GRAPH & TWITTER) -->
+      <div class="adm-card">
+        <h3><span>📱</span> Open Graph &amp; Twitter Card Previews</h3>
+        <p class="adm-card-sub">Controls how links appear when shared on WhatsApp, iMessage, Facebook, and Twitter/X</p>
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Twitter / X Site Handle</label>
+            <input type="text" id="seo_tw_site" value="${esc(seo.twitter_site || '')}" placeholder="@vapeclubdubai">
+          </div>
+          <div class="adm-field">
+            <label>Twitter Card Display Type</label>
+            <select id="seo_tw_card">
+              <option value="summary_large_image" ${seo.twitter_card === 'summary_large_image' ? 'selected' : ''}>Large Image Summary Card (Recommended)</option>
+              <option value="summary" ${seo.twitter_card === 'summary' ? 'selected' : ''}>Standard Compact Summary Card</option>
+            </select>
+          </div>
+        </div>
+        <div class="adm-field">
+          <label>Default Social Share Image (OpenGraph 1200x630)</label>
+          <div id="seo_og_img_picker"></div>
+        </div>
+      </div>
+
+      <!-- HOMEPAGE SEO -->
+      <div class="adm-card is-highlight">
+        <h3><span>🏠</span> Homepage SEO &amp; Google Search Snippet</h3>
+        <p class="adm-card-sub">Exact preview of how Vape Club Dubai appears in Google search results across the UAE</p>
 
         <!-- Google SERP Snippet Preview for Homepage -->
         <div class="adm-serp-preview">
@@ -1968,25 +3289,83 @@
           </div>
           <div class="adm-serp-url-row">
             <span class="adm-serp-fav">⚡</span>
-            <span class="adm-serp-site">iqosai.com</span>
+            <span class="adm-serp-site">${esc(seo.site_url ? seo.site_url.replace(/^https?:\/\//, '') : 'iqosai.com')}</span>
           </div>
-          <div class="adm-serp-title" id="homeSerpTitle">${esc(seo.pages.home.title)}</div>
-          <div class="adm-serp-desc" id="homeSerpDesc">${esc(seo.pages.home.description)}</div>
-          <div class="adm-serp-rating">★★★★★ <span>4.9 (214 reviews) · Dubai Express</span></div>
+          <div class="adm-serp-title" id="homeSerpTitle">${esc(seo.pages.home.title || '')}</div>
+          <div class="adm-serp-desc" id="homeSerpDesc">${esc(seo.pages.home.description || '')}</div>
+          <div class="adm-serp-rating">★★★★★ <span>${esc(settings.rating_value || '4.9')} (${esc(settings.rating_count || '214')} reviews) · Dubai Express</span></div>
         </div>
 
         <div class="adm-field" style="margin-top:18px;">
           <label>Homepage SEO Title</label>
-          <input type="text" id="seo_home_title" value="${esc(seo.pages.home.title)}">
+          <input type="text" id="seo_home_title" value="${esc(seo.pages.home.title || '')}">
         </div>
         <div class="adm-field">
           <label>Homepage Meta Description</label>
-          <textarea id="seo_home_desc" rows="3">${esc(seo.pages.home.description)}</textarea>
+          <textarea id="seo_home_desc" rows="3">${esc(seo.pages.home.description || '')}</textarea>
+        </div>
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Homepage Focus Keywords</label>
+            <input type="text" id="seo_home_kw" value="${esc(seo.pages.home.keywords || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Robots Indexing Directive</label>
+            <input type="text" id="seo_home_robots" value="${esc(seo.pages.home.robots || 'index, follow')}">
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORY PAGES DYNAMIC SEO TEMPLATE -->
+      <div class="adm-card">
+        <h3><span>📂</span> Category Pages Dynamic SEO Template</h3>
+        <p class="adm-card-sub">Pattern applied to all category pages. Variable <code>{category}</code> is dynamically replaced by the category title.</p>
+        <div class="adm-field">
+          <label>Category Meta Title Pattern</label>
+          <input type="text" id="seo_cat_title" value="${esc(seo.pages.category.title || '')}">
         </div>
         <div class="adm-field">
-          <label>Homepage Focus Keywords</label>
-          <input type="text" id="seo_home_kw" value="${esc(seo.pages.home.keywords)}">
+          <label>Category Meta Description Pattern</label>
+          <textarea id="seo_cat_desc" rows="2">${esc(seo.pages.category.description || '')}</textarea>
         </div>
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Category Focus Keywords Pattern</label>
+            <input type="text" id="seo_cat_kw" value="${esc(seo.pages.category.keywords || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Category Robots Directive</label>
+            <input type="text" id="seo_cat_robots" value="${esc(seo.pages.category.robots || 'index, follow')}">
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT PAGES DYNAMIC SEO TEMPLATE -->
+      <div class="adm-card">
+        <h3><span>🏷️</span> Product Detail Pages (PDP) Dynamic SEO Template</h3>
+        <p class="adm-card-sub">Fallback pattern applied when a product has no custom SEO title. Variables <code>{product}</code> and <code>{price}</code> are automatically replaced.</p>
+        <div class="adm-field">
+          <label>Product Meta Title Pattern</label>
+          <input type="text" id="seo_prod_title" value="${esc(seo.pages.product.title || '')}">
+        </div>
+        <div class="adm-field">
+          <label>Product Meta Description Pattern</label>
+          <textarea id="seo_prod_desc" rows="2">${esc(seo.pages.product.description || '')}</textarea>
+        </div>
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Product Focus Keywords Pattern</label>
+            <input type="text" id="seo_prod_kw" value="${esc(seo.pages.product.keywords || '')}">
+          </div>
+          <div class="adm-field">
+            <label>Product Robots Directive</label>
+            <input type="text" id="seo_prod_robots" value="${esc(seo.pages.product.robots || 'index, follow')}">
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:right;margin-top:20px;">
+        <button type="button" class="adm-btn adm-btn-primary adm-btn-lg" id="btnSeoSaveBottom">💾 Save All SEO Settings</button>
       </div>
     `;
 
@@ -2011,12 +3390,60 @@
       markDirty('seo');
     });
 
-    document.getElementById('seo_site_url').addEventListener('input', (e) => { seo.site_url = e.target.value.trim(); markDirty('seo'); });
-    document.getElementById('seo_home_kw').addEventListener('input', (e) => { seo.pages.home.keywords = e.target.value; markDirty('seo'); });
-    document.getElementById('sc_prod').addEventListener('change', (e) => { seo.schema_product = e.target.checked; markDirty('seo'); });
-    document.getElementById('sc_local').addEventListener('change', (e) => { seo.schema_local_business = e.target.checked; markDirty('seo'); });
-    document.getElementById('sc_faq').addEventListener('change', (e) => { seo.schema_faq_page = e.target.checked; markDirty('seo'); });
-    document.getElementById('sc_bread').addEventListener('change', (e) => { seo.schema_breadcrumb = e.target.checked; markDirty('seo'); });
+    const bind = (id, obj, prop) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', (e) => {
+        obj[prop] = e.target.value;
+        markDirty('seo');
+      });
+    };
+    const bindCheck = (id, obj, prop) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', (e) => {
+        obj[prop] = e.target.checked;
+        markDirty('seo');
+      });
+    };
+
+    bind('seo_site_url', seo, 'site_url');
+    bind('seo_geo_region', seo, 'geo_region');
+    bind('seo_extra_head', seo, 'extra_head_code');
+    bind('seo_tw_site', seo, 'twitter_site');
+    bind('seo_home_kw', seo.pages.home, 'keywords');
+    bind('seo_home_robots', seo.pages.home, 'robots');
+    bind('seo_cat_title', seo.pages.category, 'title');
+    bind('seo_cat_desc', seo.pages.category, 'description');
+    bind('seo_cat_kw', seo.pages.category, 'keywords');
+    bind('seo_cat_robots', seo.pages.category, 'robots');
+    bind('seo_prod_title', seo.pages.product, 'title');
+    bind('seo_prod_desc', seo.pages.product, 'description');
+    bind('seo_prod_kw', seo.pages.product, 'keywords');
+    bind('seo_prod_robots', seo.pages.product, 'robots');
+
+    const twCardSel = document.getElementById('seo_tw_card');
+    if (twCardSel) twCardSel.addEventListener('change', (e) => { seo.twitter_card = e.target.value; markDirty('seo'); });
+
+    bindCheck('sc_prod', seo, 'schema_product');
+    bindCheck('sc_local', seo, 'schema_local_business');
+    bindCheck('sc_faq', seo, 'schema_faq_page');
+    bindCheck('sc_bread', seo, 'schema_breadcrumb');
+    bindCheck('sc_search', seo, 'schema_website_search');
+
+    // OG Image Picker
+    document.getElementById('seo_og_img_picker').appendChild(
+      renderImgPicker('seo_og_img_input', seo.default_og_image || '', (path) => {
+        seo.default_og_image = path;
+        markDirty('seo');
+      }, 'branding')
+    );
+
+    const saveSeoHandler = () => {
+      saveAll();
+    };
+    const btnTop = document.getElementById('btnSeoSaveTop');
+    const btnBtm = document.getElementById('btnSeoSaveBottom');
+    if (btnTop) btnTop.addEventListener('click', saveSeoHandler);
+    if (btnBtm) btnBtm.addEventListener('click', saveSeoHandler);
   }
 
   /* ============================================================
@@ -2187,38 +3614,316 @@
     dom.content.innerHTML = html;
   }
 
-  function renderCategories() {
-    dom.viewTitle.textContent = 'Categories';
-    const cats = state.data.categories.cats || {};
-    const labels = state.data.categories.labels || {};
+    function renderCategories() {
+    dom.viewTitle.textContent = 'Categories Studio';
+    if (!state.data.categories) state.data.categories = {};
+    if (!state.data.categories.cats) state.data.categories.cats = {};
+    if (!state.data.categories.labels) state.data.categories.labels = {};
+
+    const cats = state.data.categories.cats;
+    const labels = state.data.categories.labels;
+    const prods = (state.data.products && state.data.products.products) || state.data.products || [];
+
+    const themes = [
+      ['art-emerald', 'Dubai Emerald (Green)'],
+      ['art-purple', 'Electric Purple'],
+      ['art-navy', 'Deep Navy (Blue)'],
+      ['art-gold', 'Champagne Gold'],
+      ['art-rose', 'Crimson Rose (Red)'],
+      ['art-amber', 'Warm Amber (Orange)'],
+      ['art-cyan', 'Ice Cyan'],
+      ['art-slate', 'Sleek Slate']
+    ];
+
+    const arts = [
+      ['pack', 'TEREA Pack (art-pack)'],
+      ['device', 'IQOS Device (art-device)'],
+      ['pod', 'Pod System (art-pod)'],
+      ['vape', 'Disposable Vape (art-vape)'],
+      ['juice', 'Saltnic Juice (art-juice)'],
+      ['box', 'Accessory Box (art-box)']
+    ];
 
     let html = `
-      <div class="adm-card">
-        <h3><span>🗂️</span> Store Categories</h3>
-        <p class="adm-card-sub">Manage active categories and navigation labels</p>
-        <div class="adm-grid2">
-          ${Object.keys(cats).map(slug => `
-            <div class="adm-card" style="background:var(--adm-panel2);padding:14px;">
-              <b>${esc(labels[slug] || slug)}</b>
-              <div style="font-size:12px;color:var(--adm-muted);margin:4px 0 10px;">Slug: <code>${esc(slug)}</code></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h3 style="margin:0;font-size:18px;">🗂️ Store Categories &amp; Navigation (${Object.keys(cats).length})</h3>
+          <p style="color:var(--adm-muted);font-size:13px;margin:4px 0 0;">Create, edit, or remove catalog categories, hero cards, and navigation labels.</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button type="button" class="adm-btn" id="btnOpenAddCatModal">➕ Add New Category</button>
+          <button type="button" class="adm-btn adm-btn-primary" id="btnSaveCatsTop">💾 Save All Categories</button>
+        </div>
+      </div>
+
+      <div class="adm-grid2" style="gap:20px;">
+        ${Object.keys(cats).map(slug => {
+          const c = cats[slug] || {};
+          const prodCount = prods.filter(p => p.cat === slug).length;
+          const displayLabel = labels[slug] || c.title || slug;
+          return `
+            <div class="adm-card" style="background:var(--adm-panel2);padding:18px;position:relative;" data-cat-slug="${esc(slug)}">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px;">
+                <div>
+                  <b style="font-size:16px;">${esc(displayLabel)}</b>
+                  <div style="margin-top:4px;">
+                    <span class="adm-pill cat" style="font-family:monospace;">${esc(slug)}</span>
+                    <span style="font-size:12px;color:var(--adm-muted);margin-left:6px;">📦 ${prodCount} products</span>
+                  </div>
+                </div>
+                <button type="button" class="adm-btn adm-btn-sm adm-btn-danger btn-del-cat" data-slug="${esc(slug)}">✕ Delete</button>
+              </div>
+
+              <div class="adm-grid2">
+                <div class="adm-field">
+                  <label>Title</label>
+                  <input type="text" class="cat-in-title" data-slug="${esc(slug)}" value="${esc(c.title || '')}">
+                </div>
+                <div class="adm-field">
+                  <label>Subtitle</label>
+                  <input type="text" class="cat-in-sub" data-slug="${esc(slug)}" value="${esc(c.sub || '')}">
+                </div>
+              </div>
+
               <div class="adm-field">
-                <label>Display Label</label>
-                <input type="text" class="cat-label-input" data-slug="${esc(slug)}" value="${esc(labels[slug] || slug)}">
+                <label>Navigation Display Label</label>
+                <input type="text" class="cat-in-label" data-slug="${esc(slug)}" value="${esc(displayLabel)}">
+              </div>
+
+              <div class="adm-field">
+                <label>Description Paragraph</label>
+                <textarea class="cat-in-desc" data-slug="${esc(slug)}" rows="2">${esc(c.desc || '')}</textarea>
+              </div>
+
+              <div class="adm-grid2">
+                <div class="adm-field">
+                  <label>Card Theme Accent</label>
+                  <select class="cat-in-theme" data-slug="${esc(slug)}">
+                    ${themes.map(([thKey, thLabel]) => `<option value="${esc(thKey)}" ${c.theme === thKey ? 'selected' : ''}>${esc(thLabel)}</option>`).join('')}
+                  </select>
+                </div>
+                <div class="adm-field">
+                  <label>Fallback Vector Art Icon</label>
+                  <select class="cat-in-art" data-slug="${esc(slug)}">
+                    ${arts.map(([artKey, artLabel]) => `<option value="${esc(artKey)}" ${c.art === artKey ? 'selected' : ''}>${esc(artLabel)}</option>`).join('')}
+                  </select>
+                </div>
+              </div>
+
+              <div class="adm-field">
+                <label>Category Hero Photo</label>
+                <div class="cat-img-box" data-slug="${esc(slug)}"></div>
               </div>
             </div>
-          `).join('')}
+          `;
+        }).join('')}
+      </div>
+
+      <div style="text-align:right;margin-top:24px;">
+        <button type="button" class="adm-btn adm-btn-primary adm-btn-lg" id="btnSaveCatsBottom">💾 Save All Categories</button>
+      </div>
+
+      <!-- Add Category Modal -->
+      <div class="adm-modal-overlay" id="admAddCatModal">
+        <div class="adm-modal-box">
+          <div class="adm-modal-head">
+            <h3>➕ Add New Store Category</h3>
+            <button type="button" class="adm-modal-close" id="btnAddCatClose">✕</button>
+          </div>
+          <div class="adm-modal-body">
+            <div class="adm-grid2">
+              <div class="adm-field">
+                <label>Category Slug (Lowercase URL identifier)</label>
+                <input type="text" id="new_cat_slug" placeholder="e.g. vape-kits">
+              </div>
+              <div class="adm-field">
+                <label>Navigation Display Label</label>
+                <input type="text" id="new_cat_label" placeholder="e.g. Vape Kits">
+              </div>
+            </div>
+            <div class="adm-grid2">
+              <div class="adm-field">
+                <label>Category Title</label>
+                <input type="text" id="new_cat_title" placeholder="e.g. Vape Starter Kits">
+              </div>
+              <div class="adm-field">
+                <label>Category Subtitle</label>
+                <input type="text" id="new_cat_sub" placeholder="e.g. Best starter kits in Dubai">
+              </div>
+            </div>
+            <div class="adm-field">
+              <label>Description</label>
+              <textarea id="new_cat_desc" rows="2" placeholder="Brief description for category page and SEO..."></textarea>
+            </div>
+            <div class="adm-grid2">
+              <div class="adm-field">
+                <label>Theme Color</label>
+                <select id="new_cat_theme">
+                  ${themes.map(([thKey, thLabel]) => `<option value="${esc(thKey)}">${esc(thLabel)}</option>`).join('')}
+                </select>
+              </div>
+              <div class="adm-field">
+                <label>Vector Icon</label>
+                <select id="new_cat_art">
+                  ${arts.map(([artKey, artLabel]) => `<option value="${esc(artKey)}">${esc(artLabel)}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+            <div class="adm-field">
+              <label>Category Photo</label>
+              <div id="new_cat_img_picker"></div>
+            </div>
+          </div>
+          <div class="adm-modal-foot">
+            <button type="button" class="adm-btn" id="btnAddCatCancel">Cancel</button>
+            <button type="button" class="adm-btn adm-btn-primary" id="btnAddCatSubmit">Create Category</button>
+          </div>
         </div>
       </div>
     `;
 
     dom.content.innerHTML = html;
 
-    dom.content.querySelectorAll('.cat-label-input').forEach(input => {
+    // Attach Image Pickers for existing categories
+    dom.content.querySelectorAll('.cat-img-box').forEach(box => {
+      const slug = box.dataset.slug;
+      const c = cats[slug] || {};
+      box.appendChild(
+        renderImgPicker(`cat_photo_${slug}`, c.photo || '', (path) => {
+          c.photo = path;
+          markDirty('categories');
+        }, 'categories')
+      );
+    });
+
+    // In-place field bindings
+    dom.content.querySelectorAll('.cat-in-title').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const slug = e.target.dataset.slug;
+        if (cats[slug]) cats[slug].title = e.target.value;
+        markDirty('categories');
+      });
+    });
+    dom.content.querySelectorAll('.cat-in-sub').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const slug = e.target.dataset.slug;
+        if (cats[slug]) cats[slug].sub = e.target.value;
+        markDirty('categories');
+      });
+    });
+    dom.content.querySelectorAll('.cat-in-desc').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const slug = e.target.dataset.slug;
+        if (cats[slug]) cats[slug].desc = e.target.value;
+        markDirty('categories');
+      });
+    });
+    dom.content.querySelectorAll('.cat-in-label').forEach(input => {
       input.addEventListener('input', (e) => {
         const slug = e.target.dataset.slug;
         labels[slug] = e.target.value;
         markDirty('categories');
       });
+    });
+    dom.content.querySelectorAll('.cat-in-theme').forEach(sel => {
+      sel.addEventListener('change', (e) => {
+        const slug = e.target.dataset.slug;
+        if (cats[slug]) cats[slug].theme = e.target.value;
+        markDirty('categories');
+      });
+    });
+    dom.content.querySelectorAll('.cat-in-art').forEach(sel => {
+      sel.addEventListener('change', (e) => {
+        const slug = e.target.dataset.slug;
+        if (cats[slug]) cats[slug].art = e.target.value;
+        markDirty('categories');
+      });
+    });
+
+    // Delete category
+    dom.content.querySelectorAll('.btn-del-cat').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const slug = btn.dataset.slug;
+        if (slug === 'all') {
+          toast('Cannot delete the root "all" category.', true);
+          return;
+        }
+        if (confirm(`Are you sure you want to delete category "${labels[slug] || slug}"?`)) {
+          delete cats[slug];
+          delete labels[slug];
+          markDirty('categories');
+          saveAll();
+          renderCategories();
+        }
+      });
+    });
+
+    // Save buttons
+    const saveCatsHandler = () => {
+      saveAll();
+    };
+    const btnTop = document.getElementById('btnSaveCatsTop');
+    const btnBtm = document.getElementById('btnSaveCatsBottom');
+    if (btnTop) btnTop.addEventListener('click', saveCatsHandler);
+    if (btnBtm) btnBtm.addEventListener('click', saveCatsHandler);
+
+    // Add Category Modal Logic
+    const addModal = document.getElementById('admAddCatModal');
+    let newCatPhoto = '';
+    const newCatPicker = document.getElementById('new_cat_img_picker');
+    if (newCatPicker) {
+      newCatPicker.appendChild(
+        renderImgPicker('new_cat_photo_input', '', (path) => {
+          newCatPhoto = path;
+        }, 'categories')
+      );
+    }
+
+    const openAddCat = () => {
+      addModal.classList.add('is-open');
+    };
+    const closeAddCat = () => {
+      addModal.classList.remove('is-open');
+    };
+
+    document.getElementById('btnOpenAddCatModal').addEventListener('click', openAddCat);
+    document.getElementById('btnAddCatClose').addEventListener('click', closeAddCat);
+    document.getElementById('btnAddCatCancel').addEventListener('click', closeAddCat);
+
+    document.getElementById('btnAddCatSubmit').addEventListener('click', () => {
+      const slugInput = document.getElementById('new_cat_slug');
+      const labelInput = document.getElementById('new_cat_label');
+      const titleInput = document.getElementById('new_cat_title');
+      const subInput = document.getElementById('new_cat_sub');
+      const descInput = document.getElementById('new_cat_desc');
+      const themeSelect = document.getElementById('new_cat_theme');
+      const artSelect = document.getElementById('new_cat_art');
+
+      let slug = (slugInput.value.trim() || labelInput.value.trim()).toLowerCase().replace(/[^a-z0-9\-]/g, '-').replace(/^-|-$/g, '');
+      if (!slug) {
+        toast('Please enter a valid category slug.', true);
+        return;
+      }
+      if (cats[slug]) {
+        toast('A category with this slug already exists.', true);
+        return;
+      }
+
+      cats[slug] = {
+        title: titleInput.value.trim() || labelInput.value.trim(),
+        sub: subInput.value.trim() || 'Dubai',
+        desc: descInput.value.trim(),
+        photo: newCatPhoto,
+        theme: themeSelect.value,
+        art: artSelect.value
+      };
+      labels[slug] = labelInput.value.trim() || titleInput.value.trim() || slug;
+
+      markDirty('categories');
+      closeAddCat();
+      saveAll();
+      toast(`Category "${labels[slug]}" created successfully!`);
+      renderCategories();
     });
   }
 
