@@ -1,29 +1,3 @@
 {
-    "orders": [
-        {
-            "id": "VCD-20761",
-            "date": "2026-09-11T14:46:50+02:00",
-            "source": "form",
-            "name": "MD RASEL GAZI",
-            "phone": "+8801615531118",
-            "emirate": "Dubai",
-            "area": "566",
-            "address": "House/Holding: 1443.7, Village/Raja: Purba Badurgacha",
-            "notes": "",
-            "payment": "Card on Delivery",
-            "subtotal": 280,
-            "delivery": 20,
-            "total": 300,
-            "items": [
-                {
-                    "id": "caliburn-g3",
-                    "name": "Uwell Caliburn G3 Pod Kit — Silver",
-                    "price": 140,
-                    "qty": 2
-                }
-            ],
-            "status": "new",
-            "ip": "127.0.0.1"
-        }
-    ]
+    "orders": []
 }
