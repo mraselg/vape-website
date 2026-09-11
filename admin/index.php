@@ -107,7 +107,7 @@ if ($authed) {
   window.ADM_ROLE = <?= json_encode($_SESSION['admin_role'] ?? 'admin') ?>;
   window.ADM_PHONE = <?= json_encode($_SESSION['admin_phone'] ?? '') ?>;
 </script>
-<script src="/admin/assets/admin.js?v=2.1"></script>
+<script src="/admin/assets/admin.js?v=2.2"></script>
 <?php endif; ?>
 
 <script>

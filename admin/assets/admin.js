@@ -725,7 +725,10 @@
 
           <div class="adm-grid2">
             <div class="adm-field">
-              <label>Category *</label>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <label style="margin:0;">Category *</label>
+                <button type="button" class="adm-btn adm-btn-sm" id="btnPeQuickAddCat" style="font-size:11px;padding:2px 8px;color:var(--adm-emerald);">➕ Add Category</button>
+              </div>
               <select id="pe_cat">
                 ${Object.keys(cats).map(c => `
                   <option value="${esc(c)}" ${p.cat === c ? 'selected' : ''}>${esc(catLabels[c] || c)}</option>
@@ -980,6 +983,41 @@
     formWrap.querySelector('#pe_specs_table').appendChild(
       renderKvEditor(p.specsTable || {}, (dict) => { p.specsTable = dict; }, 'Specification', 'Value')
     );
+
+    // Quick Category Add
+    const btnQuickCat = formWrap.querySelector('#btnPeQuickAddCat');
+    if (btnQuickCat) {
+      btnQuickCat.addEventListener('click', () => {
+        const catName = prompt('Enter new Category Name (e.g. Nicotine Pouches):');
+        if (!catName || !catName.trim()) return;
+        const cleanTitle = catName.trim();
+        const slug = cleanTitle.toLowerCase().replace(/[^a-z0-9\-]/g, '-').replace(/^-|-$/g, '');
+        if (!state.data.categories) state.data.categories = {};
+        if (!state.data.categories.cats) state.data.categories.cats = {};
+        if (!state.data.categories.labels) state.data.categories.labels = {};
+
+        state.data.categories.cats[slug] = {
+          title: cleanTitle,
+          sub: `Authentic ${cleanTitle} in Dubai`,
+          desc: `Buy original ${cleanTitle} online in Dubai & UAE.`,
+          theme: 'art-emerald',
+          art: 'device',
+          photo: 'assets/images/hero-iluma.webp'
+        };
+        state.data.categories.labels[slug] = cleanTitle;
+        markDirty('categories');
+        saveAll();
+
+        const sel = formWrap.querySelector('#pe_cat');
+        const opt = document.createElement('option');
+        opt.value = slug;
+        opt.textContent = `${cleanTitle} (${slug})`;
+        opt.selected = true;
+        sel.appendChild(opt);
+        p.cat = slug;
+        toast(`Category "${cleanTitle}" created and selected!`);
+      });
+    }
 
     // SERP Live Updates
     const serpTitle = formWrap.querySelector('#serpTitleText');
@@ -1349,7 +1387,55 @@
             </div>
           </div>
 
-          <!-- 17. FOOTER -->
+          <!-- 17. BUYING GUIDES & CONTENT PAGES -->
+          <div class="adm-mirror-sec" data-sec="guides" title="Click to edit Buying Guides &amp; Educational Pages">
+            <span class="adm-sec-edit-badge">✏️ Edit Buying Guides &amp; Pages</span>
+            <div style="padding:16px 20px;background:rgba(0,229,153,0.03);border-top:1px solid var(--adm-line);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+              <div>
+                <b>📚 UAE Buying Guides &amp; Content Pages:</b>
+                <span style="color:var(--adm-muted);margin-left:8px;">TEREA Flavor Guide, IQOS ILUMA Device Comparison, UAE Customs &amp; Advice</span>
+              </div>
+              <span class="adm-btn adm-btn-sm" style="pointer-events:none;">Configure Guides</span>
+            </div>
+          </div>
+
+          <!-- 18. EMIRATES DELIVERY SCHEDULES -->
+          <div class="adm-mirror-sec" data-sec="emirates" title="Click to edit UAE Emirates Delivery Schedules">
+            <span class="adm-sec-edit-badge">✏️ Edit Emirates Delivery</span>
+            <div style="padding:16px 20px;background:rgba(245,158,11,0.03);border-top:1px solid var(--adm-line);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+              <div>
+                <b>🚚 7 UAE Emirates Delivery Schedules:</b>
+                <span style="color:var(--adm-muted);margin-left:8px;">Dubai (1-2h), Sharjah &amp; Ajman (Same Day), Abu Dhabi &amp; Northern Emirates</span>
+              </div>
+              <span class="adm-btn adm-btn-sm" style="pointer-events:none;">Configure Emirates</span>
+            </div>
+          </div>
+
+          <!-- 19. PAYMENT & TRUST BADGES -->
+          <div class="adm-mirror-sec" data-sec="payment_badges" title="Click to edit Payment Badges">
+            <span class="adm-sec-edit-badge">✏️ Edit Payment Badges</span>
+            <div style="padding:16px 20px;background:rgba(59,130,246,0.03);border-top:1px solid var(--adm-line);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+              <div>
+                <b>💳 Accepted Payment Badges:</b>
+                <span style="color:var(--adm-muted);margin-left:8px;">${((settings.payment_badges || ['Cash on Delivery', 'Card on Delivery', 'Apple Pay']).slice(0, 4)).join(' · ')}</span>
+              </div>
+              <span class="adm-btn adm-btn-sm" style="pointer-events:none;">Configure Badges</span>
+            </div>
+          </div>
+
+          <!-- 20. FOOTER SHOP LINKS -->
+          <div class="adm-mirror-sec" data-sec="footer_links" title="Click to edit Footer Links">
+            <span class="adm-sec-edit-badge">✏️ Edit Footer Links</span>
+            <div style="padding:16px 20px;background:rgba(255,255,255,0.02);border-top:1px solid var(--adm-line);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+              <div>
+                <b>🔗 Footer Navigation &amp; Shop Links:</b>
+                <span style="color:var(--adm-muted);margin-left:8px;">${((home.footer_shop_links || []).map(l => l.label)).slice(0, 4).join(' · ')}</span>
+              </div>
+              <span class="adm-btn adm-btn-sm" style="pointer-events:none;">Configure Links</span>
+            </div>
+          </div>
+
+          <!-- 21. FOOTER -->
           <div class="adm-mirror-sec" data-sec="footer" title="Click to edit footer &amp; legal">
             <span class="adm-sec-edit-badge">✏️ Edit Footer</span>
             <div class="adm-mirror-footer">
@@ -1454,6 +1540,9 @@
               <label>"More Categories" Subtitle</label>
               <input type="text" id="classic_pop_more_sub" value="${esc((home.pop_categories && home.pop_categories.more_sub) || 'Tap to view all')}">
             </div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button type="button" class="adm-btn adm-btn-sm adm-btn-primary" onclick="ADM.openSectionModal('cats')">🎨 Manage Tiles &amp; ➕ Create New Category →</button>
           </div>
         </div>
 
@@ -1851,6 +1940,14 @@
     const bodyEl = document.getElementById('admSecModalBody');
     if (!modal || !titleEl || !bodyEl) return;
 
+    secKey = (secKey || '').toLowerCase().trim();
+    if (secKey === 'categories') secKey = 'cats';
+    if (secKey === 'bestsellers' || secKey === 'bestseller') secKey = 'vip';
+    if (secKey === 'faq') secKey = 'faqs';
+    if (secKey === 'links') secKey = 'footer_links';
+    if (secKey === 'badges') secKey = 'payment_badges';
+    if (secKey === 'pages') secKey = 'guides';
+
     const home = state.data.home;
     const settings = state.data.settings;
 
@@ -2105,10 +2202,64 @@
               <input type="text" id="m_cats_more_sub" value="${esc(pc.more_sub || 'Tap to view all')}">
             </div>
           </div>
-          <div class="adm-field" style="margin-top:14px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <label style="margin:0;">Category Showcase Tiles (${pc.tiles.length})</label>
-              <button type="button" class="adm-btn adm-btn-sm" id="btnAddCatTile">➕ Add Tile</button>
+
+          <!-- Quick Inline Category Creator Box -->
+          <div id="m_inline_cat_creator" class="adm-card is-highlight" style="display:none;margin-top:14px;background:var(--adm-panel3);border:1px solid var(--adm-emerald);padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <b style="color:var(--adm-emerald);font-size:15px;">✨ Create &amp; Add New Store Category</b>
+              <button type="button" class="adm-btn adm-btn-sm" id="btnCancelInlineCat">✕ Cancel</button>
+            </div>
+            <div class="adm-grid2">
+              <div class="adm-field">
+                <label>Category Title *</label>
+                <input type="text" id="inline_cat_title" placeholder="e.g. Vape Starter Kits">
+              </div>
+              <div class="adm-field">
+                <label>Navigation Display Label *</label>
+                <input type="text" id="inline_cat_label" placeholder="e.g. Starter Kits">
+              </div>
+            </div>
+            <div class="adm-grid2">
+              <div class="adm-field">
+                <label>Category Slug (URL ID)</label>
+                <input type="text" id="inline_cat_slug" placeholder="e.g. starter-kits">
+              </div>
+              <div class="adm-field">
+                <label>Subtitle</label>
+                <input type="text" id="inline_cat_sub" placeholder="e.g. Best starter kits in Dubai">
+              </div>
+            </div>
+            <div class="adm-grid2">
+              <div class="adm-field">
+                <label>Accent Theme</label>
+                <select id="inline_cat_theme">
+                  <option value="art-emerald">Dubai Emerald (Green)</option>
+                  <option value="art-purple">Electric Purple</option>
+                  <option value="art-navy">Deep Navy (Blue)</option>
+                  <option value="art-gold">Champagne Gold</option>
+                  <option value="art-rose">Crimson Rose (Red)</option>
+                  <option value="art-amber">Warm Amber (Orange)</option>
+                  <option value="art-cyan">Ice Cyan</option>
+                  <option value="art-slate">Sleek Slate</option>
+                </select>
+              </div>
+              <div class="adm-field">
+                <label>Category Photo</label>
+                <div id="inline_cat_img_picker"></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:12px;">
+              <button type="button" class="adm-btn adm-btn-primary" id="btnSubmitInlineCat">✓ Create Category &amp; Add Showcase Tile</button>
+            </div>
+          </div>
+
+          <div class="adm-field" style="margin-top:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+              <label style="margin:0;font-size:14px;font-weight:700;">Category Showcase Tiles (${pc.tiles.length})</label>
+              <div style="display:flex;gap:8px;">
+                <button type="button" class="adm-btn adm-btn-sm adm-btn-primary" id="btnToggleInlineCat">➕ Create New Category</button>
+                <button type="button" class="adm-btn adm-btn-sm" id="btnAddCatTile">➕ Add Tile</button>
+              </div>
             </div>
             <div id="m_cats_tiles_list" style="display:flex;flex-direction:column;gap:12px;"></div>
           </div>
@@ -2120,10 +2271,33 @@
         bodyEl.querySelector('#m_cats_more_title').addEventListener('input', (e) => { pc.more_title = e.target.value; markDirty('home'); });
         bodyEl.querySelector('#m_cats_more_sub').addEventListener('input', (e) => { pc.more_sub = e.target.value; markDirty('home'); });
 
+        let inlineCatPhoto = '';
+        const inlineImgPickerBox = bodyEl.querySelector('#inline_cat_img_picker');
+        if (inlineImgPickerBox) {
+          inlineImgPickerBox.appendChild(
+            renderImgPicker('m_inline_cat_photo', '', (path) => {
+              inlineCatPhoto = path;
+            }, 'categories')
+          );
+        }
+
+        const inlineCard = bodyEl.querySelector('#m_inline_cat_creator');
+        bodyEl.querySelector('#btnToggleInlineCat').addEventListener('click', () => {
+          inlineCard.style.display = inlineCard.style.display === 'none' ? 'block' : 'none';
+          if (inlineCard.style.display === 'block') {
+            bodyEl.querySelector('#inline_cat_title').focus();
+          }
+        });
+        bodyEl.querySelector('#btnCancelInlineCat').addEventListener('click', () => {
+          inlineCard.style.display = 'none';
+        });
+
         const renderTiles = () => {
           const list = bodyEl.querySelector('#m_cats_tiles_list');
           list.innerHTML = '';
-          const catKeys = Object.keys((state.data.categories && state.data.categories.cats) || {});
+          const catsObj = (state.data.categories && state.data.categories.cats) || {};
+          const catLabels = (state.data.categories && state.data.categories.labels) || {};
+          const catKeys = Object.keys(catsObj);
 
           pc.tiles.forEach((tile, idx) => {
             const card = document.createElement('div');
@@ -2149,7 +2323,7 @@
                 <div class="adm-field">
                   <label>Target Category</label>
                   <select class="tile-cat">
-                    ${catKeys.map(k => `<option value="${esc(k)}" ${tile.cat === k ? 'selected' : ''}>${esc(k)}</option>`).join('')}
+                    ${catKeys.map(k => `<option value="${esc(k)}" ${tile.cat === k ? 'selected' : ''}>${esc(catLabels[k] || k)} (${esc(k)})</option>`).join('')}
                   </select>
                 </div>
                 <div class="adm-field">
@@ -2176,9 +2350,62 @@
           });
         };
 
+        // Submit new category inline
+        bodyEl.querySelector('#btnSubmitInlineCat').addEventListener('click', () => {
+          const tIn = bodyEl.querySelector('#inline_cat_title');
+          const lIn = bodyEl.querySelector('#inline_cat_label');
+          const sIn = bodyEl.querySelector('#inline_cat_slug');
+          const subIn = bodyEl.querySelector('#inline_cat_sub');
+          const thIn = bodyEl.querySelector('#inline_cat_theme');
+
+          const title = tIn.value.trim();
+          const label = lIn.value.trim() || title;
+          let slug = sIn.value.trim() || label;
+          slug = slug.toLowerCase().replace(/[^a-z0-9\-]/g, '-').replace(/^-|-$/g, '');
+
+          if (!title || !slug) {
+            toast('Please enter a Category Title and valid slug.', true);
+            return;
+          }
+
+          if (!state.data.categories) state.data.categories = {};
+          if (!state.data.categories.cats) state.data.categories.cats = {};
+          if (!state.data.categories.labels) state.data.categories.labels = {};
+
+          state.data.categories.cats[slug] = {
+            title: title,
+            sub: subIn.value.trim() || `Authentic ${title} in Dubai & UAE`,
+            desc: `Shop premium ${title} with 1-2 hour express delivery in Dubai. 100% genuine and verified stock.`,
+            theme: thIn.value || 'art-emerald',
+            art: 'device',
+            photo: inlineCatPhoto || 'assets/images/hero-iluma.webp'
+          };
+          state.data.categories.labels[slug] = label;
+          markDirty('categories');
+
+          // Automatically add as a tile in popular categories showcase
+          pc.tiles.push({
+            cat: slug,
+            title: title.toUpperCase(),
+            sub: subIn.value.trim() || 'Best in Dubai',
+            bg: inlineCatPhoto || 'assets/images/hero-iluma.webp'
+          });
+          markDirty('home');
+
+          saveAll();
+          inlineCard.style.display = 'none';
+          tIn.value = '';
+          lIn.value = '';
+          sIn.value = '';
+          subIn.value = '';
+          toast(`Category "${title}" created and added to showcase!`);
+          renderTiles();
+        });
+
         renderTiles();
         bodyEl.querySelector('#btnAddCatTile').addEventListener('click', () => {
-          pc.tiles.push({ cat: 'iluma', title: 'NEW CATEGORY', sub: 'Best in Dubai', bg: 'assets/images/hero-iluma.webp' });
+          const firstCat = Object.keys((state.data.categories && state.data.categories.cats) || {})[0] || 'iluma';
+          pc.tiles.push({ cat: firstCat, title: 'NEW CATEGORY', sub: 'Best in Dubai', bg: 'assets/images/hero-iluma.webp' });
           markDirty('home');
           renderTiles();
         });
@@ -2768,9 +2995,367 @@
         break;
       }
 
+      case 'guides': {
+        titleEl.innerHTML = '📚 Edit Buying Guides &amp; UAE Educational Pages';
+        if (!home.guides) {
+          home.guides = [
+            {
+              id: 'terea-guide',
+              title: 'TEREA Flavor & Origin Guide (Japan vs Swiss)',
+              sub: 'Complete UAE comparison of cooling, tobacco intensity & aroma profiles.',
+              url: '/guide-terea.php',
+              badge: 'Flavors Guide',
+              badge_class: 'bg-emerald'
+            },
+            {
+              id: 'iluma-guide',
+              title: 'IQOS ILUMA i PRIME vs ONE vs Standard Comparison',
+              sub: 'Battery life, flex battery mode, touch screen & price breakdown.',
+              url: '/guide-iluma.php',
+              badge: 'Device Comparison',
+              badge_class: 'bg-gold'
+            }
+          ];
+        }
+
+        bodyEl.innerHTML = `
+          <div style="font-size:13px;color:var(--adm-muted);margin-bottom:14px;">
+            Manage and edit buying guides and informational resource pages available across the storefront:
+          </div>
+          <div id="m_guides_list" style="display:flex;flex-direction:column;gap:12px;"></div>
+          <div style="margin-top:14px;text-align:right;">
+            <button type="button" class="adm-btn adm-btn-sm adm-btn-primary" id="btnAddGuide">➕ Add New Guide Card</button>
+          </div>
+        `;
+
+        const renderGuides = () => {
+          const list = bodyEl.querySelector('#m_guides_list');
+          list.innerHTML = '';
+          home.guides.forEach((g, idx) => {
+            const card = document.createElement('div');
+            card.className = 'adm-card';
+            card.style.padding = '14px';
+            card.style.background = 'var(--adm-panel2)';
+            card.innerHTML = `
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <b>Guide #${idx + 1}: ${esc(g.title || 'Guide')}</b>
+                <button type="button" class="adm-btn adm-btn-sm adm-btn-danger btn-del-guide">✕ Remove</button>
+              </div>
+              <div class="adm-grid2">
+                <div class="adm-field">
+                  <label>Guide Title</label>
+                  <input type="text" class="g-title" value="${esc(g.title || '')}">
+                </div>
+                <div class="adm-field">
+                  <label>Badge Pill</label>
+                  <input type="text" class="g-badge" value="${esc(g.badge || '')}">
+                </div>
+              </div>
+              <div class="adm-field">
+                <label>Subtitle / Excerpt</label>
+                <textarea class="g-sub" rows="2">${esc(g.sub || '')}</textarea>
+              </div>
+              <div class="adm-field">
+                <label>Page URL / Destination</label>
+                <input type="text" class="g-url" value="${esc(g.url || '')}">
+              </div>
+            `;
+            card.querySelector('.g-title').addEventListener('input', (e) => { g.title = e.target.value; markDirty('home'); });
+            card.querySelector('.g-badge').addEventListener('input', (e) => { g.badge = e.target.value; markDirty('home'); });
+            card.querySelector('.g-sub').addEventListener('input', (e) => { g.sub = e.target.value; markDirty('home'); });
+            card.querySelector('.g-url').addEventListener('input', (e) => { g.url = e.target.value; markDirty('home'); });
+            card.querySelector('.btn-del-guide').addEventListener('click', () => {
+              home.guides.splice(idx, 1);
+              markDirty('home');
+              renderGuides();
+            });
+            list.appendChild(card);
+          });
+        };
+
+        renderGuides();
+        bodyEl.querySelector('#btnAddGuide').addEventListener('click', () => {
+          home.guides.push({
+            id: 'custom-guide-' + Date.now(),
+            title: 'New UAE Vape Guide',
+            sub: 'Helpful recommendations and tips for Dubai vapers.',
+            url: '/guide-terea.php',
+            badge: 'Expert Guide',
+            badge_class: 'bg-cyan'
+          });
+          markDirty('home');
+          renderGuides();
+        });
+        break;
+      }
+
+      case 'ranks': {
+        titleEl.innerHTML = '👑 Edit VIP Bestsellers Ranking Badges';
+        if (!home.vip_section) home.vip_section = {};
+        if (!home.vip_section.ranks) {
+          home.vip_section.ranks = [
+            { rank: '#1', label: 'TOP SELLER', class: 'rank-gold', icon: '👑' },
+            { rank: '#2', label: 'MOST POPULAR', class: 'rank-emerald', icon: '🔥' },
+            { rank: '#3', label: 'TOP FAVORITE', class: 'rank-cyan', icon: '💎' },
+            { rank: '#4', label: 'TOP RATED 4.9★', class: 'rank-violet', icon: '⭐' },
+            { rank: '#5', label: 'HOT DEMAND', class: 'rank-amber', icon: '⚡' },
+            { rank: '#6', label: 'VALUE CHOICE', class: 'rank-rose', icon: '💨' }
+          ];
+        }
+        const ranks = home.vip_section.ranks;
+
+        bodyEl.innerHTML = `
+          <div style="font-size:13px;color:var(--adm-muted);margin-bottom:14px;">
+            Customize the ranking badges displayed on the top 6 best-selling products on the homepage:
+          </div>
+          <div id="m_ranks_list" style="display:flex;flex-direction:column;gap:10px;"></div>
+        `;
+
+        const list = bodyEl.querySelector('#m_ranks_list');
+        ranks.forEach((r, idx) => {
+          const card = document.createElement('div');
+          card.className = 'adm-card';
+          card.style.padding = '10px 14px';
+          card.style.background = 'var(--adm-panel2)';
+          card.style.display = 'flex';
+          card.style.gap = '10px';
+          card.style.alignItems = 'center';
+          card.innerHTML = `
+            <input type="text" class="r-rank" style="width:70px;text-align:center;font-weight:700;" value="${esc(r.rank || '')}">
+            <input type="text" class="r-icon" style="width:50px;text-align:center;font-size:16px;" value="${esc(r.icon || '')}">
+            <input type="text" class="r-label" style="flex:1;font-weight:600;" value="${esc(r.label || '')}">
+            <select class="r-class" style="width:140px;">
+              <option value="rank-gold" ${r.class === 'rank-gold' ? 'selected' : ''}>Gold (rank-gold)</option>
+              <option value="rank-emerald" ${r.class === 'rank-emerald' ? 'selected' : ''}>Emerald (rank-emerald)</option>
+              <option value="rank-cyan" ${r.class === 'rank-cyan' ? 'selected' : ''}>Cyan (rank-cyan)</option>
+              <option value="rank-violet" ${r.class === 'rank-violet' ? 'selected' : ''}>Violet (rank-violet)</option>
+              <option value="rank-amber" ${r.class === 'rank-amber' ? 'selected' : ''}>Amber (rank-amber)</option>
+              <option value="rank-rose" ${r.class === 'rank-rose' ? 'selected' : ''}>Rose (rank-rose)</option>
+            </select>
+          `;
+          card.querySelector('.r-rank').addEventListener('input', (e) => { r.rank = e.target.value; markDirty('home'); });
+          card.querySelector('.r-icon').addEventListener('input', (e) => { r.icon = e.target.value; markDirty('home'); });
+          card.querySelector('.r-label').addEventListener('input', (e) => { r.label = e.target.value; markDirty('home'); });
+          card.querySelector('.r-class').addEventListener('change', (e) => { r.class = e.target.value; markDirty('home'); });
+          list.appendChild(card);
+        });
+        break;
+      }
+
+      case 'emirates': {
+        titleEl.innerHTML = '🚚 Edit UAE Emirates Delivery Options &amp; Times';
+        if (!home.checkout) home.checkout = {};
+        if (!home.checkout.emirates) {
+          home.checkout.emirates = [
+            { value: 'Dubai', label: 'Dubai (1–2h Express Delivery)' },
+            { value: 'Sharjah', label: 'Sharjah (Same Day Delivery)' },
+            { value: 'Ajman', label: 'Ajman (Same Day Delivery)' },
+            { value: 'Abu Dhabi', label: 'Abu Dhabi (Next Day Delivery)' },
+            { value: 'Ras Al Khaimah', label: 'Ras Al Khaimah (Next Day Delivery)' },
+            { value: 'Fujairah', label: 'Fujairah (Next Day Delivery)' },
+            { value: 'Umm Al Quwain', label: 'Umm Al Quwain (Same Day Delivery)' }
+          ];
+        }
+        const emirates = home.checkout.emirates;
+
+        bodyEl.innerHTML = `
+          <div style="font-size:13px;color:var(--adm-muted);margin-bottom:14px;">
+            Configure the 7 UAE Emirates options and dispatch delivery timeframes displayed at checkout:
+          </div>
+          <div id="m_emirates_list" style="display:flex;flex-direction:column;gap:10px;"></div>
+        `;
+
+        const list = bodyEl.querySelector('#m_emirates_list');
+        emirates.forEach((em, idx) => {
+          const card = document.createElement('div');
+          card.className = 'adm-card';
+          card.style.padding = '10px 14px';
+          card.style.background = 'var(--adm-panel2)';
+          card.style.display = 'flex';
+          card.style.gap = '12px';
+          card.style.alignItems = 'center';
+          card.innerHTML = `
+            <b style="width:130px;">${esc(em.value || 'Emirate')}</b>
+            <input type="text" class="em-label" style="flex:1;" value="${esc(em.label || '')}" placeholder="e.g. Dubai (1-2h Express Delivery)">
+          `;
+          card.querySelector('.em-label').addEventListener('input', (e) => { em.label = e.target.value; markDirty('home'); });
+          list.appendChild(card);
+        });
+        break;
+      }
+
+      case 'footer_links': {
+        titleEl.innerHTML = '🔗 Edit Footer Shop &amp; Navigation Links';
+        if (!home.footer_shop_links) home.footer_shop_links = [];
+        const links = home.footer_shop_links;
+
+        bodyEl.innerHTML = `
+          <div style="font-size:13px;color:var(--adm-muted);margin-bottom:14px;">
+            Navigation links displayed under "Shop &amp; Guides" column in the footer:
+          </div>
+          <div id="m_footer_links_list" style="display:flex;flex-direction:column;gap:10px;"></div>
+          <div style="margin-top:12px;text-align:right;">
+            <button type="button" class="adm-btn adm-btn-sm adm-btn-primary" id="btnAddFooterLink">➕ Add Navigation Link</button>
+          </div>
+        `;
+
+        const renderLinks = () => {
+          const list = bodyEl.querySelector('#m_footer_links_list');
+          list.innerHTML = '';
+          links.forEach((l, idx) => {
+            const card = document.createElement('div');
+            card.className = 'adm-card';
+            card.style.padding = '10px 14px';
+            card.style.background = 'var(--adm-panel2)';
+            card.style.display = 'flex';
+            card.style.gap = '10px';
+            card.style.alignItems = 'center';
+            card.innerHTML = `
+              <input type="text" class="fl-label" style="flex:1;" value="${esc(l.label || '')}" placeholder="Link label (e.g. IQOS ILUMA)">
+              <input type="text" class="fl-href" style="flex:1;" value="${esc(l.href || '')}" placeholder="Target URL (e.g. #shop or /guide-terea.php)">
+              <button type="button" class="adm-btn adm-btn-sm adm-btn-danger btn-del-fl">✕</button>
+            `;
+            card.querySelector('.fl-label').addEventListener('input', (e) => { l.label = e.target.value; markDirty('home'); });
+            card.querySelector('.fl-href').addEventListener('input', (e) => { l.href = e.target.value; markDirty('home'); });
+            card.querySelector('.btn-del-fl').addEventListener('click', () => {
+              links.splice(idx, 1);
+              markDirty('home');
+              renderLinks();
+            });
+            list.appendChild(card);
+          });
+        };
+
+        renderLinks();
+        bodyEl.querySelector('#btnAddFooterLink').addEventListener('click', () => {
+          links.push({ label: 'New Shop Link', href: '#shop', filter: '' });
+          markDirty('home');
+          renderLinks();
+        });
+        break;
+      }
+
+      case 'payment_badges': {
+        titleEl.innerHTML = '💳 Edit Payment &amp; Trust Badges';
+        if (!settings.payment_badges) settings.payment_badges = ['Cash on Delivery', 'Card on Delivery', 'Apple Pay', 'Visa / Mastercard', '100% Genuine ESMA'];
+
+        bodyEl.innerHTML = `
+          <div style="font-size:13px;color:var(--adm-muted);margin-bottom:14px;">
+            Payment and authenticity guarantee badges shown in footer and checkout:
+          </div>
+          <div id="m_badges_box"></div>
+        `;
+
+        bodyEl.querySelector('#m_badges_box').appendChild(
+          renderStringListEditor(settings.payment_badges, (items) => {
+            settings.payment_badges = items;
+            markDirty('settings');
+          }, 'Payment badge (e.g. Apple Pay, Cash on Delivery)', '+ Add Payment Badge')
+        );
+        break;
+      }
+
+      case 'social': {
+        titleEl.innerHTML = '📱 Edit Social Channels &amp; Direct Support';
+        bodyEl.innerHTML = `
+          <div class="adm-field">
+            <label>Instagram Page Link</label>
+            <input type="url" id="m_soc_insta" value="${esc(settings.instagram_url || '')}" placeholder="https://instagram.com/...">
+          </div>
+          <div class="adm-field">
+            <label>Telegram Channel / Bot Link</label>
+            <input type="url" id="m_soc_tele" value="${esc(settings.telegram_url || '')}" placeholder="https://t.me/...">
+          </div>
+          <div class="adm-field">
+            <label>WhatsApp Hotline Link / Number</label>
+            <input type="text" id="m_soc_wa" value="${esc(settings.wa_number || '')}" placeholder="+971 50 123 4567">
+          </div>
+        `;
+        bodyEl.querySelector('#m_soc_insta').addEventListener('input', (e) => { settings.instagram_url = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_soc_tele').addEventListener('input', (e) => { settings.telegram_url = e.target.value; markDirty('settings'); });
+        bodyEl.querySelector('#m_soc_wa').addEventListener('input', (e) => { settings.wa_number = e.target.value; markDirty('settings'); });
+        break;
+      }
+
       default: {
-        titleEl.innerHTML = '✏️ Edit Section';
-        bodyEl.innerHTML = `<p>Section settings can be modified here.</p>`;
+        const readableName = (secKey || 'Custom').replace(/[_-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        titleEl.innerHTML = `✏️ Edit ${esc(readableName)} Section`;
+
+        let target = home[secKey] || settings[secKey] || null;
+        if (!target) {
+          home[secKey] = {
+            title: readableName,
+            eyebrow: 'Special Feature',
+            desc: '',
+            button_label: 'Explore Collection',
+            button_link: '#shop'
+          };
+          target = home[secKey];
+          markDirty('home');
+        }
+
+        if (typeof target === 'object' && target !== null && !Array.isArray(target)) {
+          let fieldsHtml = '';
+          for (const k of Object.keys(target)) {
+            const val = target[k];
+            const fieldLabel = k.replace(/[_-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            if (typeof val === 'boolean') {
+              fieldsHtml += `
+                <label class="adm-check" style="margin-bottom:12px;">
+                  <input type="checkbox" class="dyn-field" data-prop="${esc(k)}" ${val ? 'checked' : ''}>
+                  <span>${esc(fieldLabel)}</span>
+                </label>
+              `;
+            } else if (typeof val === 'string' && (val.length > 70 || k.includes('text') || k.includes('desc') || k.includes('note') || k.includes('content'))) {
+              fieldsHtml += `
+                <div class="adm-field">
+                  <label>${esc(fieldLabel)}</label>
+                  <textarea class="dyn-field" data-prop="${esc(k)}" rows="3">${esc(val)}</textarea>
+                </div>
+              `;
+            } else if (typeof val === 'string' || typeof val === 'number') {
+              fieldsHtml += `
+                <div class="adm-field">
+                  <label>${esc(fieldLabel)}</label>
+                  <input type="text" class="dyn-field" data-prop="${esc(k)}" value="${esc(String(val))}">
+                </div>
+              `;
+            }
+          }
+
+          bodyEl.innerHTML = `
+            <div style="margin-bottom:14px;color:var(--adm-muted);font-size:13px;">
+              Configuring live properties for <b>${esc(readableName)}</b>:
+            </div>
+            ${fieldsHtml}
+            <div style="margin-top:16px;text-align:right;">
+              <button type="button" class="adm-btn adm-btn-primary" id="btnSaveDynSec">💾 Save Section Settings</button>
+            </div>
+          `;
+
+          bodyEl.querySelectorAll('.dyn-field').forEach(input => {
+            const prop = input.dataset.prop;
+            if (input.type === 'checkbox') {
+              input.addEventListener('change', (e) => {
+                target[prop] = e.target.checked;
+                markDirty('home');
+              });
+            } else {
+              input.addEventListener('input', (e) => {
+                target[prop] = e.target.value;
+                markDirty('home');
+              });
+            }
+          });
+
+          const btnDyn = bodyEl.querySelector('#btnSaveDynSec');
+          if (btnDyn) {
+            btnDyn.addEventListener('click', () => {
+              saveAll();
+              toast(`Saved ${readableName} section settings!`);
+            });
+          }
+        }
         break;
       }
     }
@@ -3188,6 +3773,7 @@
     dom.viewTitle.textContent = 'SEO & Schema Engine';
     const seo = state.data.seo;
     const settings = state.data.settings;
+    const prods = (state.data.products && state.data.products.products) || state.data.products || [];
 
     if (!seo.pages) seo.pages = {};
     if (!seo.pages.home) seo.pages.home = {};
@@ -3355,7 +3941,29 @@
         </div>
       </div>
 
-      <!-- 5. CATEGORY PAGES DYNAMIC SEO TEMPLATE -->
+      <!-- 5. INDIVIDUAL PRODUCT SEO & LIVE SERP CUSTOMIZER -->
+      <div class="adm-card is-highlight" id="seoProductCustomizerCard">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+          <div>
+            <h3 style="margin:0;"><span>🎯</span> Individual Product SEO &amp; Live Google SERP Customizer</h3>
+            <p class="adm-card-sub" style="margin:4px 0 0;">Select any product in your store to inspect, fine-tune, and optimize its custom Google Title, Meta Description, Search Keywords, and Live SERP Result.</p>
+          </div>
+          <button type="button" class="adm-btn adm-btn-primary adm-btn-sm" id="btnSaveProdSeoTop">💾 Save Product SEO</button>
+        </div>
+
+        <div class="adm-field">
+          <label style="font-size:14px;font-weight:700;color:var(--adm-emerald);">Choose Product to Customize SEO (${prods.length} products in store):</label>
+          <select id="seo_prod_picker" style="font-size:14px;font-weight:600;padding:10px 14px;background:var(--adm-panel2);border:1px solid var(--adm-emerald);border-radius:8px;color:#fff;width:100%;">
+            ${prods.map((p, idx) => `
+              <option value="${idx}">[${esc((p.cat || 'store').toUpperCase())}] ${esc(p.name)} — ${esc(p.price)} AED ${p.seo_title ? '✓ (Custom SEO active)' : ''}</option>
+            `).join('')}
+          </select>
+        </div>
+
+        <div id="seo_prod_details_box" style="margin-top:16px;"></div>
+      </div>
+
+      <!-- 6. CATEGORY PAGES DYNAMIC SEO TEMPLATE -->
       <div class="adm-card">
         <h3><span>📂</span> Category Pages Dynamic SEO Template</h3>
         <p class="adm-card-sub">Pattern applied to all category pages. Variable <code>{category}</code> is dynamically replaced by the category title.</p>
@@ -3481,6 +4089,154 @@
         markDirty('seo');
       }, 'branding')
     );
+
+    // ============ PRODUCT SEO ENGINE ============
+    const prodPicker = document.getElementById('seo_prod_picker');
+    const prodBox = document.getElementById('seo_prod_details_box');
+
+    const renderProdSeoEditor = (idx) => {
+      const p = prods[idx];
+      if (!p || !prodBox) return;
+
+      const prodPhoto = p.photo ? (p.photo.startsWith('/') ? p.photo : '/' + p.photo) : '/assets/images/hero-iluma.png';
+      const prodSlug = p.slug || p.id;
+      const liveUrl = `/product.php?slug=${encodeURIComponent(prodSlug)}`;
+      
+      const currentTitle = p.seo_title || `${p.name} UAE — Buy Online Dubai | Fast Delivery`;
+      const currentDesc = p.seo_desc || (p.short_desc || (p.description ? p.description.slice(0, 155) : '') || `Order authentic ${p.name} in Dubai & UAE. 100% genuine ESMA certified stock, 1-2 hour express delivery. Best price ${p.price} AED.`);
+
+      prodBox.innerHTML = `
+        <!-- Product Quick Bar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--adm-panel2);padding:14px;border-radius:10px;border:1px solid var(--adm-line);margin-bottom:16px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img src="${esc(prodPhoto)}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--adm-line);background:#000;" alt="${esc(p.name)}" onerror="this.src='/assets/images/hero-iluma.png'">
+            <div>
+              <b style="font-size:15px;color:#fff;">${esc(p.name)}</b>
+              <div style="font-size:12px;color:var(--adm-muted);margin-top:2px;">
+                <span class="adm-pill cat">${esc(p.cat || 'catalog')}</span>
+                <span style="margin-left:8px;color:var(--adm-emerald);font-weight:700;">${esc(p.price)} AED</span>
+                <span style="margin-left:8px;color:var(--adm-muted);">SKU: ${esc(p.sku || p.id)}</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="adm-btn adm-btn-sm" id="btnAutoSeoProd" style="color:var(--adm-emerald);border-color:rgba(0,229,153,0.4);">⚡ Auto-Generate Dubai SEO</button>
+            <a href="${esc(liveUrl)}" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="text-decoration:none;">↗ View Live Page</a>
+          </div>
+        </div>
+
+        <!-- Google SERP Snippet Preview for Product -->
+        <div class="adm-serp-preview" style="margin-bottom:18px;">
+          <div class="adm-serp-toggle">
+            <span style="font-size:12px;font-weight:700;color:#9aa0a6;">PRODUCT GOOGLE SEARCH SNIPPET</span>
+            <span style="font-size:11px;color:#8ab4f8;">Google Search AE (Desktop &amp; Mobile)</span>
+          </div>
+          <div class="adm-serp-url-row">
+            <span class="adm-serp-fav">⚡</span>
+            <span class="adm-serp-site">iqosai.com › product.php?slug=${esc(prodSlug)}</span>
+          </div>
+          <div class="adm-serp-title" id="prodSerpTitle">${esc(currentTitle)}</div>
+          <div class="adm-serp-desc" id="prodSerpDesc">${esc(currentDesc)}</div>
+          <div class="adm-serp-rating">★★★★★ <span>${esc(p.rating_value || '4.9')} (${esc(p.rating_count || '128')} reviews) · AED ${esc(p.price)} · In stock · 1-2h Dubai Delivery</span></div>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="adm-field">
+          <label>Custom Product SEO Title</label>
+          <input type="text" id="seo_cur_prod_title" value="${esc(p.seo_title || '')}" placeholder="e.g. ${esc(p.name)} UAE — Buy Online Dubai · Fast Delivery">
+          <span class="adm-hint">Recommended: 50–60 characters. If empty, the global PDP dynamic template will be used.</span>
+        </div>
+
+        <div class="adm-field">
+          <label>Custom Product Meta Description</label>
+          <textarea id="seo_cur_prod_desc" rows="3" placeholder="e.g. Buy authentic ${esc(p.name)} in Dubai &amp; UAE. Factory sealed ESMA certified stock, 1-2 hour express delivery. Best price guaranteed.">${esc(p.seo_desc || '')}</textarea>
+          <span class="adm-hint">Recommended: 140–160 characters.</span>
+        </div>
+
+        <div class="adm-grid2">
+          <div class="adm-field">
+            <label>Focus Keywords</label>
+            <input type="text" id="seo_cur_prod_kw" value="${esc(p.seo_keywords || '')}" placeholder="e.g. ${esc(p.name.toLowerCase())}, ${esc(p.name.toLowerCase())} dubai, buy ${esc(p.name.toLowerCase())} uae">
+          </div>
+          <div class="adm-field">
+            <label>Permanent URL Slug</label>
+            <input type="text" id="seo_cur_prod_slug" value="${esc(p.slug || p.id)}" placeholder="e.g. iluma-prime-remix">
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;">
+          <button type="button" class="adm-btn adm-btn-primary" id="btnSaveSingleProdSeo">💾 Save Product SEO</button>
+        </div>
+      `;
+
+      const titleIn = prodBox.querySelector('#seo_cur_prod_title');
+      const descIn = prodBox.querySelector('#seo_cur_prod_desc');
+      const kwIn = prodBox.querySelector('#seo_cur_prod_kw');
+      const slugIn = prodBox.querySelector('#seo_cur_prod_slug');
+      const pSerpTitle = prodBox.querySelector('#prodSerpTitle');
+      const pSerpDesc = prodBox.querySelector('#prodSerpDesc');
+
+      attachCharMeter(titleIn, 45, 65);
+      attachCharMeter(descIn, 140, 160);
+
+      titleIn.addEventListener('input', (e) => {
+        p.seo_title = e.target.value.trim();
+        pSerpTitle.textContent = e.target.value.trim() || `${p.name} UAE — Buy Online Dubai | Fast Delivery`;
+        markDirty('products');
+      });
+
+      descIn.addEventListener('input', (e) => {
+        p.seo_desc = e.target.value.trim();
+        pSerpDesc.textContent = e.target.value.trim() || `Buy authentic ${p.name} in Dubai & UAE. 1-2 hour express delivery.`;
+        markDirty('products');
+      });
+
+      kwIn.addEventListener('input', (e) => {
+        p.seo_keywords = e.target.value.trim();
+        markDirty('products');
+      });
+
+      slugIn.addEventListener('input', (e) => {
+        p.slug = e.target.value.trim().toLowerCase().replace(/[^a-z0-9\-]/g, '-').replace(/^-|-$/g, '');
+        markDirty('products');
+      });
+
+      // Auto-Generate Assistant
+      prodBox.querySelector('#btnAutoSeoProd').addEventListener('click', () => {
+        const brand = p.brand || 'Vape';
+        titleIn.value = `${p.name} UAE — Buy Online Dubai · Fast Delivery`;
+        descIn.value = `Order authentic ${p.name} in Dubai, Sharjah & Abu Dhabi. 100% genuine ESMA certified stock with 1-2 hour express delivery. Best UAE price ${p.price} AED.`;
+        kwIn.value = `${p.name.toLowerCase()}, ${p.name.toLowerCase()} dubai, buy ${p.name.toLowerCase()} uae, ${brand.toLowerCase()} delivery dubai`;
+
+        p.seo_title = titleIn.value;
+        p.seo_desc = descIn.value;
+        p.seo_keywords = kwIn.value;
+        pSerpTitle.textContent = titleIn.value;
+        pSerpDesc.textContent = descIn.value;
+        markDirty('products');
+        toast(`Generated optimized SEO for "${p.name}"!`);
+      });
+
+      const saveProdSeoHandler = () => {
+        saveAll();
+        toast(`SEO settings for "${p.name}" saved!`);
+        const opt = prodPicker.options[idx];
+        if (opt && !opt.textContent.includes('✓')) {
+          opt.textContent += ' ✓ (Custom SEO active)';
+        }
+      };
+
+      prodBox.querySelector('#btnSaveSingleProdSeo').addEventListener('click', saveProdSeoHandler);
+      const topBtn = document.getElementById('btnSaveProdSeoTop');
+      if (topBtn) topBtn.onclick = saveProdSeoHandler;
+    };
+
+    if (prodPicker && prods.length > 0) {
+      prodPicker.addEventListener('change', (e) => {
+        renderProdSeoEditor(parseInt(e.target.value, 10));
+      });
+      renderProdSeoEditor(0);
+    }
 
     const saveSeoHandler = () => {
       saveAll();
