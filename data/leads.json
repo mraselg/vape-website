@@ -1,6 +1,38 @@
 {
     "leads": [
         {
+            "id": "LEAD-260911-BF28E0",
+            "timestamp": "2026-09-11T14:47:03+02:00",
+            "formatted_time": "11 Sep 2026, 02:47 PM CEST",
+            "phone": "+880 01611985263",
+            "raw_phone": "88001611985263",
+            "country_code": "+880",
+            "message": "[Quick Reply] 🚚 Track 1-2h Express Delivery",
+            "product": "Vape Club Dubai",
+            "cart_total": 0,
+            "cart_summary": "",
+            "page": "/",
+            "ip": "",
+            "device": "Windows PC",
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        },
+        {
+            "id": "LEAD-260911-18205D",
+            "timestamp": "2026-09-11T14:47:01+02:00",
+            "formatted_time": "11 Sep 2026, 02:47 PM CEST",
+            "phone": "+880 01611985263",
+            "raw_phone": "88001611985263",
+            "country_code": "+880",
+            "message": "Initiated WhatsApp Chat",
+            "product": "Vape Club Dubai",
+            "cart_total": 0,
+            "cart_summary": "",
+            "page": "/",
+            "ip": "",
+            "device": "Windows PC",
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        },
+        {
             "id": "LEAD-260909-696FB8",
             "timestamp": "2026-09-09T17:46:14+02:00",
             "formatted_time": "09 Sep 2026, 05:46 PM CEST",

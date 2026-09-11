@@ -369,23 +369,27 @@
 
           '<ul class="qv-specs" style="margin-top:16px">' + specBullets + '</ul>' +
 
-          /* Add to Cart + WhatsApp Buy */
-          '<div class="pd-buy">' +
-            '<div class="qv-qty">' +
-              '<button class="qty-btn" id="pdDec" aria-label="Decrease quantity"><svg class="icon"><use href="#i-minus"/></svg></button>' +
-              '<span class="qty-val" id="pdQty">' + qty + '</span>' +
-              '<button class="qty-btn" id="pdInc" aria-label="Increase quantity"><svg class="icon"><use href="#i-plus"/></svg></button>' +
+          /* Clean Single-Action Buy Box */
+          '<div class="pd-single-action-box">' +
+            '<div class="pd-buy-row">' +
+              '<div class="qv-qty">' +
+                '<button class="qty-btn" id="pdDec" aria-label="Decrease quantity"><svg class="icon"><use href="#i-minus"/></svg></button>' +
+                '<span class="qty-val" id="pdQty">' + qty + '</span>' +
+                '<button class="qty-btn" id="pdInc" aria-label="Increase quantity"><svg class="icon"><use href="#i-plus"/></svg></button>' +
+              '</div>' +
+              '<a class="btn btn-wa btn-lg pd-primary-order-btn" id="pdDirectWa" target="_blank" rel="noopener">' +
+                '<svg class="icon" style="width:20px;height:20px"><use href="#i-wa"/></svg> ' +
+                '<span>Order Now (<span id="pdBtnTotal">' + (vState.price * qty) + ' AED</span>)</span>' +
+              '</a>' +
             '</div>' +
-            '<button class="add-btn btn-wa-cart" id="pdAdd" style="flex:1;min-height:50px;font-size:15px"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order on WhatsApp</button>' +
-          '</div>' +
-
-          '<div class="pd-actions-dual">' +
-            '<a class="btn btn-wa btn-block" id="pdDirectWa" target="_blank" rel="noopener">' +
-              '<svg class="icon"><use href="#i-wa"/></svg> Direct WhatsApp Order (Fastest 1-2h)' +
-            '</a>' +
-            '<button type="button" class="btn btn-ghost btn-block js-open-cart" style="border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;gap:8px">' +
-              '<svg class="icon icon-sm"><use href="#i-cart"/></svg> View Cart &amp; Complete Order' +
-            '</button>' +
+            '<div class="pd-sub-action-row">' +
+              '<button type="button" class="pd-sub-btn" id="pdAdd">' +
+                '<svg class="icon icon-sm"><use href="#i-cart"/></svg> + Add to Bag (Keep Shopping)' +
+              '</button>' +
+              '<button type="button" class="pd-sub-btn js-open-cart">' +
+                '<svg class="icon icon-sm"><use href="#i-bag"/></svg> View Bag' +
+              '</button>' +
+            '</div>' +
           '</div>' +
 
           '<div class="pd-trust">' +
@@ -413,6 +417,13 @@
     };
     $('#pdInc')?.addEventListener('click', () => { qty = Math.min(QTY_CAP, qty + 1); refreshQty(); });
     $('#pdDec')?.addEventListener('click', () => { qty = Math.max(1, qty - 1); refreshQty(); });
+
+    // Bind Direct WhatsApp button to also sync cart
+    $('#pdDirectWa')?.addEventListener('click', () => {
+      cart[vState.cartKey] = (cart[vState.cartKey] || 0) + qty;
+      save();
+      syncCount();
+    });
 
     // Bind Add to Cart
     $('#pdAdd')?.addEventListener('click', function () {
@@ -447,15 +458,19 @@
     const waBtn = $('#pdDirectWa');
     if (!waBtn) return;
     const itemTitle = vState.label ? p.name + ' [' + vState.label + ']' : p.name;
+    const totalAed = vState.price * qty;
     const msg =
       '*ORDER REQUEST - VAPE CLUB DUBAI*\n' +
       '---------------------------\n' +
-      '• ' + itemTitle + ' (' + qty + 'x) - ' + (vState.price * qty) + ' AED\n' +
+      '• ' + itemTitle + ' (' + qty + 'x) - ' + totalAed + ' AED\n' +
       '---------------------------\n' +
-      '*Total: ' + (vState.price * qty) + ' AED*\n' +
+      '*Total: ' + totalAed + ' AED*\n' +
       'Delivery: Dubai Express (1-2 Hours)\n' +
       'Please confirm my order!';
     waBtn.href = waLink(msg);
+
+    const btnTotalSpan = $('#pdBtnTotal');
+    if (btnTotalSpan) btnTotalSpan.textContent = totalAed + ' AED';
 
     $('#pdWaHeader').href = waLink('Hello Vape Club Dubai! I am on the product page for ' + itemTitle);
   }
@@ -508,12 +523,12 @@
 
     tabsBox.innerHTML =
       '<div class="pd-tabs-card">' +
-        '<div class="pd-tabs-nav" role="tablist">' +
-          '<button class="pd-tab-btn is-active" data-tab="desc" role="tab" aria-selected="true"><svg class="icon icon-sm"><use href="#i-info"/></svg> Overview &amp; Description</button>' +
-          '<button class="pd-tab-btn" data-tab="specs" role="tab" aria-selected="false"><svg class="icon icon-sm"><use href="#i-check"/></svg> Technical Specifications</button>' +
-          '<button class="pd-tab-btn" data-tab="box" role="tab" aria-selected="false"><svg class="icon icon-sm"><use href="#i-box"/></svg> What’s In The Box</button>' +
-          '<button class="pd-tab-btn" data-tab="flavor" role="tab" aria-selected="false"><svg class="icon icon-sm"><use href="#i-leaf"/></svg> Flavor &amp; Sensory Notes</button>' +
-          '<button class="pd-tab-btn" data-tab="faq" role="tab" aria-selected="false"><svg class="icon icon-sm"><use href="#i-shield"/></svg> Dubai FAQs &amp; Delivery</button>' +
+        '<div class="pd-tabs-nav" role="tablist" aria-label="Product Information Tabs">' +
+          '<button class="pd-tab-btn is-active" data-tab="desc" role="tab" aria-selected="true"><svg class="icon icon-sm"><use href="#i-info"/></svg> <span>Overview &amp; Description</span></button>' +
+          '<button class="pd-tab-btn" data-tab="specs" role="tab" aria-selected="false"><svg class="icon icon-sm"><use href="#i-check"/></svg> <span>Technical Specifications</span></button>' +
+          '<button class="pd-tab-btn" data-tab="box" role="tab" aria-selected="false"><svg class="icon icon-sm"><use href="#i-box"/></svg> <span>What’s In The Box</span></button>' +
+          '<button class="pd-tab-btn" data-tab="flavor" role="tab" aria-selected="false"><svg class="icon icon-sm"><use href="#i-leaf"/></svg> <span>Flavor &amp; Sensory Notes</span></button>' +
+          '<button class="pd-tab-btn" data-tab="faq" role="tab" aria-selected="false"><svg class="icon icon-sm"><use href="#i-shield"/></svg> <span>Dubai FAQs &amp; Delivery</span></button>' +
         '</div>' +
 
         '<div class="pd-tab-panels">' +
@@ -550,7 +565,7 @@
           '</div>' +
 
           /* Tab 2: Specifications Table */
-          '<div class="pd-tab-panel" id="panel-specs" role="tabpanel" style="display:none">' +
+          '<div class="pd-tab-panel" id="panel-specs" role="tabpanel">' +
             '<div class="pd-specs-table-wrap">' +
               '<h3 style="margin-bottom:14px;font-size:18px">Complete Technical Specifications</h3>' +
               '<table class="pd-specs-table">' +
@@ -560,7 +575,7 @@
           '</div>' +
 
           /* Tab 3: What is in the box */
-          '<div class="pd-tab-panel" id="panel-box" role="tabpanel" style="display:none">' +
+          '<div class="pd-tab-panel" id="panel-box" role="tabpanel">' +
             '<div class="pd-box-wrap">' +
               '<h3 style="margin-bottom:14px;font-size:18px">Package Contents</h3>' +
               '<p style="color:var(--body);margin-bottom:16px;font-size:13.5px">Everything included in your official factory-sealed packaging:</p>' +
@@ -572,7 +587,7 @@
           '</div>' +
 
           /* Tab 4: Flavor Profile */
-          '<div class="pd-tab-panel" id="panel-flavor" role="tabpanel" style="display:none">' +
+          '<div class="pd-tab-panel" id="panel-flavor" role="tabpanel">' +
             '<div class="pd-flavor-wrap">' +
               '<h3 style="margin-bottom:14px;font-size:18px">Taste &amp; Sensory Breakdown</h3>' +
               '<div class="flavor-meters-box">' +
@@ -589,7 +604,7 @@
           '</div>' +
 
           /* Tab 5: FAQs */
-          '<div class="pd-tab-panel" id="panel-faq" role="tabpanel" style="display:none">' +
+          '<div class="pd-tab-panel" id="panel-faq" role="tabpanel">' +
             '<div class="pd-faqs-wrap">' +
               '<h3 style="margin-bottom:14px;font-size:18px">Frequently Asked Questions — Dubai &amp; UAE</h3>' +
               '<div class="pd-faq-list">' + faqAccordion + '</div>' +
@@ -609,7 +624,6 @@
         });
         $$('.pd-tab-panel', tabsBox).forEach((panel) => {
           const isTarget = panel.id === 'panel-' + targetTab;
-          panel.style.display = isTarget ? 'block' : 'none';
           panel.classList.toggle('is-active', isTarget);
         });
       });

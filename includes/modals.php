@@ -60,7 +60,7 @@ $delivery  = (float) ($S['delivery_fee'] ?? 20);
           </div>
         </div>
         <a class="btn btn-wa btn-block btn-lg wa-banner-btn" id="btnWaInstantCheckout" href="#" target="_blank" rel="noopener">
-          <svg class="icon"><use href="#i-wa"/></svg> Send Order on WhatsApp (<span class="co-wa-total-chip">0 AED</span>)
+          <svg class="icon"><use href="#i-wa"/></svg> Complete Order Now (<span class="co-wa-total-chip">0 AED</span>)
         </a>
       </div>
 
@@ -184,7 +184,7 @@ $delivery  = (float) ($S['delivery_fee'] ?? 20);
             </select>
           </div>
           <a class="btn btn-wa btn-block btn-lg" id="btnSubmitWaOrder" href="#" target="_blank" rel="noopener" style="min-height:50px;font-size:16px">
-            <svg class="icon"><use href="#i-wa"/></svg> Complete Order on WhatsApp (<span id="btnWaOrderTotal">0 AED</span>)
+            <svg class="icon"><use href="#i-wa"/></svg> Complete Order Now (<span id="btnWaOrderTotal">0 AED</span>)
           </a>
           <p class="cart-note" style="text-align:center;margin-top:8px">
             <svg class="icon"><use href="#i-shield"/></svg> Pay Cash or Card to Courier upon receipt
