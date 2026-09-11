@@ -2,5 +2,9 @@
 scratch/*.tar.gz
 scratch/*.log
 scratch/cookies.txt
+scratch/__pycache__/
+__pycache__/
+*.pyc
 .DS_Store
 Thumbs.db
+
