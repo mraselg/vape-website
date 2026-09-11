@@ -81,4 +81,44 @@ if (!vcd_save('orders', ['orders' => $orders])) {
     exit;
 }
 
+// Dispatch instant notification to Telegram Bot if enabled
+$settings = vcd_load('settings');
+$botToken = trim((string) ($settings['telegram_bot_token'] ?? ''));
+$chatId   = trim((string) ($settings['telegram_chat_id'] ?? ''));
+$orderAlertsEnabled = (bool) ($settings['telegram_order_alerts_enabled'] ?? true);
+
+if ($orderAlertsEnabled && $botToken !== '' && $chatId !== '') {
+    $itemLines = [];
+    foreach ($items as $it) {
+        $itemLines[] = "• " . $it['qty'] . "x " . $it['name'] . " (" . number_format((float) ($it['price'] * $it['qty'])) . " AED)";
+    }
+    $itemsSummary = implode("\n", $itemLines);
+
+    $tgMsg = "🛍️ *NEW ORDER RECEIVED!* (`#" . ($order['id']) . "`)\n";
+    $tgMsg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+    $tgMsg .= "👤 *Customer*: " . ($order['name'] ?: 'Guest') . "\n";
+    $tgMsg .= "📞 *Phone*: `" . ($order['phone']) . "`\n";
+    if ($order['emirate'] !== '' || $order['area'] !== '') {
+        $tgMsg .= "📍 *Location*: " . trim($order['emirate'] . ', ' . $order['area']) . "\n";
+    }
+    if ($order['address'] !== '') {
+        $tgMsg .= "🏠 *Address*: " . $order['address'] . "\n";
+    }
+    $tgMsg .= "💳 *Payment*: " . ($order['payment'] ?: 'Cash on Delivery') . "\n";
+    $tgMsg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+    $tgMsg .= "📦 *Ordered Items*:\n" . $itemsSummary . "\n";
+    $tgMsg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+    $tgMsg .= "💵 *Subtotal*: " . number_format((float) $order['subtotal']) . " AED\n";
+    $tgMsg .= "🚚 *Delivery*: " . ($order['delivery'] > 0 ? number_format((float) $order['delivery']) . " AED" : "FREE") . "\n";
+    $tgMsg .= "💰 *Grand Total*: *" . number_format((float) $order['total']) . " AED*\n";
+    if ($order['notes'] !== '') {
+        $tgMsg .= "📝 *Notes*: " . $order['notes'] . "\n";
+    }
+    $tgMsg .= "🕒 *Time*: " . date('d M Y, h:i A') . " GST\n";
+    $tgMsg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+    $tgMsg .= "⚡ *Vape Club Dubai Order Dispatch*";
+
+    vcd_telegram_send($tgMsg, $botToken, $chatId);
+}
+
 echo json_encode(['ok' => true, 'id' => $order['id']]);

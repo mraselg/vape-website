@@ -76,6 +76,7 @@ if ($authed) {
       <button class="adm-nav-btn" data-view="seo"><span>🔍</span> SEO &amp; Schema</button>
       <button class="adm-nav-btn" data-view="orders"><span>🧾</span> Orders <em class="adm-nav-badge" id="ordersBadge" style="display:none"></em></button>
       <button class="adm-nav-btn" data-view="leads"><span>💬</span> WhatsApp Leads <em class="adm-nav-badge" id="leadsBadge" style="display:none"></em></button>
+      <button class="adm-nav-btn" data-view="telegram" id="navTelegramBtn"><span>🤖</span> Telegram Bot &amp; Alerts</button>
       <button class="adm-nav-btn" data-view="team" id="navTeamBtn"><span>👥</span> Staff &amp; Roles</button>
       <button class="adm-nav-btn" data-view="settings"><span>⚙️</span> Branding &amp; Settings</button>
       <button class="adm-nav-btn" data-view="account"><span>🔐</span> Account &amp; Backup</button>

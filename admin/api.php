@@ -215,6 +215,56 @@ switch ($action) {
         out(['ok' => true]);
     }
 
+    case 'test_telegram': {
+        require_role(['admin', 'editor']);
+        $botToken = trim((string) ($body['bot_token'] ?? ''));
+        $chatId   = trim((string) ($body['chat_id'] ?? ''));
+
+        $settings = vcd_load('settings');
+        if ($botToken === '') {
+            $botToken = trim((string) ($settings['telegram_bot_token'] ?? ''));
+        }
+        if ($chatId === '') {
+            $chatId = trim((string) ($settings['telegram_chat_id'] ?? ''));
+        }
+
+        if ($botToken === '') {
+            out(['ok' => false, 'error' => 'missing_bot_token', 'message' => 'Please provide a Telegram Bot API Token.'], 422);
+        }
+        if ($chatId === '') {
+            out(['ok' => false, 'error' => 'missing_chat_id', 'message' => 'Please provide a Telegram Chat ID or Channel ID.'], 422);
+        }
+
+        $now = date('d M Y, h:i A') . ' GST';
+        $user = htmlspecialchars((string) ($_SESSION['admin_name'] ?? 'Admin'), ENT_QUOTES, 'UTF-8');
+        $testMsg = "🚀 *VAPE CLUB DUBAI — TELEGRAM BOT TEST*\n";
+        $testMsg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+        $testMsg .= "✅ *Status*: Connection Verified Successfully!\n";
+        $testMsg .= "👤 *Triggered By*: " . $user . "\n";
+        $testMsg .= "🕒 *Timestamp*: " . $now . "\n";
+        $testMsg .= "⚡ *Telemetry Active*: Real-time alerts for New Store Orders and WhatsApp Leads are live.\n";
+        $testMsg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+        $testMsg .= "🌐 _iqosai.com — Control Center_";
+
+        $res = vcd_telegram_send($testMsg, $botToken, $chatId);
+        if (!empty($res['ok'])) {
+            out([
+                'ok'            => true,
+                'telegram_sent' => true,
+                'message'       => 'Test alert delivered to Telegram successfully!',
+                'chat_id'       => $chatId,
+                'timestamp'     => $now
+            ]);
+        } else {
+            out([
+                'ok'      => false,
+                'error'   => $res['error'] ?? 'telegram_failed',
+                'message' => $res['message'] ?? 'Failed to deliver message via Telegram Bot.',
+                'advice'  => 'Ensure your bot is started (open your bot in Telegram and send /start) and that your Chat ID and Bot Token are correct.'
+            ], 400);
+        }
+    }
+
     case 'change_password': {
         $cur = (string) ($body['current'] ?? '');
         $new = (string) ($body['new'] ?? '');

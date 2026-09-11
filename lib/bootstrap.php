@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 define('VCD_ROOT', dirname(__DIR__));
 define('VCD_DATA', VCD_ROOT . DIRECTORY_SEPARATOR . 'data');
-define('VCD_ASSET_VER', '3.0');
+define('VCD_ASSET_VER', '3.1');
 
 // Send HTTP headers to prevent aggressive browser/reverse proxy caching of dynamic HTML
 if (!headers_sent() && php_sapi_name() !== 'cli') {
@@ -105,3 +105,89 @@ function current_page(): string
 {
     return pathinfo((string) ($_SERVER['SCRIPT_NAME'] ?? ''), PATHINFO_FILENAME) ?: 'index';
 }
+
+/**
+ * Universal Telegram Message Dispatcher
+ * Sends a message via Telegram Bot API with Markdown formatting.
+ *
+ * @param string      $text      Markdown-formatted message text
+ * @param string|null $botToken  Optional specific Bot Token (or falls back to settings.json)
+ * @param string|null $chatId    Optional specific Chat ID (or falls back to settings.json)
+ * @return array{ok: bool, error?: string, message?: string, response?: array}
+ */
+function vcd_telegram_send(string $text, ?string $botToken = null, ?string $chatId = null): array
+{
+    global $VCD_SETTINGS;
+    $botToken = trim((string) ($botToken !== null ? $botToken : ($VCD_SETTINGS['telegram_bot_token'] ?? '')));
+    $chatId   = trim((string) ($chatId !== null ? $chatId : ($VCD_SETTINGS['telegram_chat_id'] ?? '')));
+
+    if ($botToken === '' || $chatId === '') {
+        return ['ok' => false, 'error' => 'credentials_missing', 'message' => 'Telegram Bot Token or Chat ID not configured.'];
+    }
+
+    $tgUrl = "https://api.telegram.org/bot{$botToken}/sendMessage";
+    $payload = [
+        'chat_id'                  => $chatId,
+        'text'                     => $text,
+        'parse_mode'               => 'Markdown',
+        'disable_web_page_preview' => true,
+    ];
+
+    if (function_exists('curl_init')) {
+        $ch = curl_init($tgUrl);
+        curl_setopt_array($ch, [
+            CURLOPT_POST           => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+            CURLOPT_POSTFIELDS     => json_encode($payload),
+            CURLOPT_TIMEOUT        => 6,
+            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        $raw = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $err  = curl_error($ch);
+        curl_close($ch);
+        if ($raw === false) {
+            return ['ok' => false, 'error' => 'curl_error', 'message' => $err ?: 'cURL request failed'];
+        }
+        $resp = json_decode((string) $raw, true);
+        if ($code === 200 && !empty($resp['ok'])) {
+            return ['ok' => true, 'response' => $resp];
+        }
+        return [
+            'ok'      => false,
+            'error'   => 'telegram_api_error',
+            'code'    => $code,
+            'message' => $resp['description'] ?? 'HTTP ' . $code
+        ];
+    }
+
+    $ctx = stream_context_create([
+        'http' => [
+            'method'        => 'POST',
+            'header'        => "Content-Type: application/json\r\n",
+            'content'       => json_encode($payload),
+            'timeout'       => 6,
+            'ignore_errors' => true,
+        ],
+        'ssl' => [
+            'verify_peer'      => false,
+            'verify_peer_name' => false,
+        ]
+    ]);
+    $raw = @file_get_contents($tgUrl, false, $ctx);
+    if ($raw === false) {
+        return ['ok' => false, 'error' => 'network_error', 'message' => 'Failed to connect to Telegram API.'];
+    }
+    $resp = json_decode((string) $raw, true);
+    if (!empty($resp['ok'])) {
+        return ['ok' => true, 'response' => $resp];
+    }
+    return [
+        'ok'      => false,
+        'error'   => 'telegram_api_error',
+        'message' => $resp['description'] ?? 'Telegram API returned an error.'
+    ];
+}
+
