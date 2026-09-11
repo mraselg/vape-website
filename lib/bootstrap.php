@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 define('VCD_ROOT', dirname(__DIR__));
 define('VCD_DATA', VCD_ROOT . DIRECTORY_SEPARATOR . 'data');
-define('VCD_ASSET_VER', '3.1');
+define('VCD_ASSET_VER', '3.2');
 
 // Send HTTP headers to prevent aggressive browser/reverse proxy caching of dynamic HTML
 if (!headers_sent() && php_sapi_name() !== 'cli') {
@@ -190,4 +190,75 @@ function vcd_telegram_send(string $text, ?string $botToken = null, ?string $chat
         'message' => $resp['description'] ?? 'Telegram API returned an error.'
     ];
 }
+
+/**
+ * Query Telegram Bot profile info (/getMe)
+ */
+function vcd_telegram_get_me(string $botToken): array
+{
+    $botToken = trim($botToken);
+    if ($botToken === '') {
+        return ['ok' => false, 'error' => 'empty_token', 'message' => 'Bot Token is required.'];
+    }
+    $url = "https://api.telegram.org/bot{$botToken}/getMe";
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 6,
+            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        $raw = curl_exec($ch);
+        curl_close($ch);
+        if ($raw === false) {
+            return ['ok' => false, 'error' => 'curl_error', 'message' => 'cURL connection failed.'];
+        }
+        $resp = json_decode((string) $raw, true);
+        return is_array($resp) ? $resp : ['ok' => false, 'error' => 'bad_json'];
+    }
+    $ctx = stream_context_create([
+        'ssl'  => ['verify_peer' => false, 'verify_peer_name' => false],
+        'http' => ['timeout' => 6, 'ignore_errors' => true]
+    ]);
+    $raw = @file_get_contents($url, false, $ctx);
+    $resp = json_decode((string) $raw, true);
+    return is_array($resp) ? $resp : ['ok' => false, 'error' => 'request_failed'];
+}
+
+/**
+ * Fetch recent updates from Telegram Bot to discover user chats (/getUpdates)
+ */
+function vcd_telegram_get_updates(string $botToken): array
+{
+    $botToken = trim($botToken);
+    if ($botToken === '') {
+        return ['ok' => false, 'error' => 'empty_token', 'message' => 'Bot Token is required.'];
+    }
+    $url = "https://api.telegram.org/bot{$botToken}/getUpdates";
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 6,
+            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        $raw = curl_exec($ch);
+        curl_close($ch);
+        if ($raw === false) {
+            return ['ok' => false, 'error' => 'curl_error', 'message' => 'cURL connection failed.'];
+        }
+        $resp = json_decode((string) $raw, true);
+        return is_array($resp) ? $resp : ['ok' => false, 'error' => 'bad_json'];
+    }
+    $ctx = stream_context_create([
+        'ssl'  => ['verify_peer' => false, 'verify_peer_name' => false],
+        'http' => ['timeout' => 6, 'ignore_errors' => true]
+    ]);
+    $raw = @file_get_contents($url, false, $ctx);
+    $resp = json_decode((string) $raw, true);
+    return is_array($resp) ? $resp : ['ok' => false, 'error' => 'request_failed'];
+}
+
 

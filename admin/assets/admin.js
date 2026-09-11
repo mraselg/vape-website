@@ -4595,9 +4595,14 @@
 
         <div class="adm-grid2" style="margin-top:16px;">
           <div class="adm-field">
-            <label>Telegram Chat ID or Channel ID</label>
-            <input type="text" id="tg_view_chat_id" value="${esc(s.telegram_chat_id || '')}" placeholder="e.g. 5987654321 or -100123456789">
-            <span class="adm-hint">Numeric User ID (message <b>@userinfobot</b> to find your ID) or Group ID (e.g. <code>-100...</code> with bot added as Admin).</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
+              <label style="margin:0;">Telegram Chat ID or Channel ID</label>
+              <button type="button" class="adm-btn adm-btn-sm" id="btnAutoDetectChatId" style="background:rgba(0,136,204,0.15);border-color:rgba(0,136,204,0.3);color:#29b6f6;font-weight:700;">
+                🔍 Auto-Detect My Chat ID
+              </button>
+            </div>
+            <input type="text" id="tg_view_chat_id" value="${esc(s.telegram_chat_id || '')}" placeholder="e.g. 6532343622 or -100123456789">
+            <span class="adm-hint">Numeric User ID or Group ID. Press <b>START</b> in your bot, then click <b>Auto-Detect</b> above to fetch automatically!</span>
           </div>
           <div class="adm-field">
             <label>Public Telegram Channel / Profile Link</label>
@@ -4605,6 +4610,8 @@
             <span class="adm-hint">Customer-facing Telegram URL displayed on website footer and social icons.</span>
           </div>
         </div>
+
+        <div id="tgDetectResultBox" style="display:none;margin-top:14px;"></div>
       </div>
 
       <!-- AUTOMATED EVENT TRIGGERS -->
@@ -4758,6 +4765,138 @@
     if (selOrders) selOrders.addEventListener('change', (e) => { s.telegram_order_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
     if (selLeads) selLeads.addEventListener('change', (e) => { s.telegram_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
     if (selVip) selVip.addEventListener('change', (e) => { s.telegram_vip_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
+
+    // Auto-detect chat ID handler
+    const btnDetect = document.getElementById('btnAutoDetectChatId');
+    const detectBox = document.getElementById('tgDetectResultBox');
+
+    const runDetectHandler = async () => {
+      const tokenVal = inpToken ? inpToken.value.trim() : (s.telegram_bot_token || '');
+      if (!tokenVal) {
+        toast('⚠️ Please enter your Bot API Token first.', true);
+        if (inpToken) inpToken.focus();
+        return;
+      }
+
+      if (btnDetect) {
+        btnDetect.disabled = true;
+        btnDetect.innerHTML = '⏳ Scanning Telegram…';
+      }
+      if (detectBox) {
+        detectBox.style.display = 'block';
+        detectBox.innerHTML = `
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);padding:14px;border-radius:10px;font-size:13px;">
+            ⏳ Checking recent messages on Telegram Bot API (<code>/getUpdates</code>)…
+          </div>
+        `;
+      }
+
+      try {
+        const res = await fetch('/admin/api.php?action=detect_telegram_chat_id', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF': window.ADM_CSRF || ''
+          },
+          body: JSON.stringify({ bot_token: tokenVal })
+        });
+        const data = await res.json();
+
+        if (data && data.ok) {
+          const botUsername = (data.bot && data.bot.username) || 'iqosaibot';
+          if (data.chats && data.chats.length > 0) {
+            toast(`✅ Discovered ${data.chats.length} Telegram user(s)!`);
+            let chatsHtml = data.chats.map(c => `
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,229,153,0.04);border:1px solid rgba(0,229,153,0.2);border-radius:8px;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+                <div>
+                  <b style="color:#fff;">${esc(c.name)}</b> <span style="color:var(--adm-emerald);font-size:12px;">${esc(c.username || '')}</span>
+                  <div style="font-size:11.5px;color:var(--adm-muted);margin-top:2px;">
+                    Chat ID: <code style="color:var(--adm-emerald);font-weight:700;">${esc(c.chat_id)}</code> · Type: <i>${esc(c.type)}</i> · ${esc(c.time)}
+                  </div>
+                  <div style="font-size:11px;color:#cbd5e1;margin-top:2px;">Last message: "${esc(c.text)}"</div>
+                </div>
+                <button type="button" class="adm-btn adm-btn-sm adm-btn-primary js-use-chat-id" data-cid="${esc(c.chat_id)}">
+                  ✔ Use This Chat ID
+                </button>
+              </div>
+            `).join('');
+
+            if (detectBox) {
+              detectBox.innerHTML = `
+                <div style="background:rgba(0,229,153,0.06);border:1px solid rgba(0,229,153,0.3);padding:14px;border-radius:10px;">
+                  <div style="font-weight:700;color:var(--adm-emerald);margin-bottom:8px;font-size:14px;">
+                    ✅ Found ${data.chats.length} Connected Telegram Account(s):
+                  </div>
+                  ${chatsHtml}
+                </div>
+              `;
+              detectBox.querySelectorAll('.js-use-chat-id').forEach(btn => {
+                btn.addEventListener('click', () => {
+                  const cid = btn.dataset.cid;
+                  if (inpChatId) inpChatId.value = cid;
+                  s.telegram_chat_id = cid;
+                  markDirty('settings');
+                  toast(`Chat ID set to ${cid}`);
+                });
+              });
+            }
+
+            if (data.latest_chat_id && inpChatId && !inpChatId.value) {
+              inpChatId.value = data.latest_chat_id;
+              s.telegram_chat_id = data.latest_chat_id;
+              markDirty('settings');
+            }
+          } else {
+            toast('⚠️ No users have messaged the bot yet.', true);
+            if (detectBox) {
+              detectBox.innerHTML = `
+                <div style="background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.35);padding:14px;border-radius:10px;">
+                  <div style="font-weight:700;color:#ffaa00;margin-bottom:6px;font-size:14px;">
+                    ⚠️ Bot Has Not Received Any Messages Yet!
+                  </div>
+                  <p style="margin:0 0 10px;font-size:12.5px;color:var(--adm-muted);line-height:1.4;">
+                    Telegram requires you to start the bot first. Follow these 2 easy steps:
+                  </p>
+                  <ol style="margin:0 0 12px 18px;font-size:12.5px;color:#cbd5e1;line-height:1.5;">
+                    <li>Open your bot in Telegram and press <b>START</b> (or send <code>/start</code> or <code>hi</code>).</li>
+                    <li>Come back here and click <b>Auto-Detect My Chat ID</b> again.</li>
+                  </ol>
+                  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <a href="https://t.me/${botUsername}" target="_blank" rel="noopener" class="adm-btn adm-btn-primary adm-btn-sm" style="background:#0088cc;border-color:#0088cc;display:inline-flex;align-items:center;gap:6px;">
+                      👉 Open @${botUsername} on Telegram &amp; Press START
+                    </a>
+                    <button type="button" class="adm-btn adm-btn-sm" id="btnDetectTryAgain">
+                      🔄 Try Auto-Detect Again
+                    </button>
+                  </div>
+                </div>
+              `;
+              const retryBtn = document.getElementById('btnDetectTryAgain');
+              if (retryBtn) retryBtn.addEventListener('click', runDetectHandler);
+            }
+          }
+        } else {
+          const msg = (data && data.message) || 'Failed to detect chats.';
+          toast('Detection failed: ' + msg, true);
+          if (detectBox) {
+            detectBox.innerHTML = `
+              <div style="background:rgba(255,77,106,0.1);border:1px solid rgba(255,77,106,0.3);padding:12px;border-radius:8px;color:#ff4d6a;">
+                ❌ ${esc(msg)}
+              </div>
+            `;
+          }
+        }
+      } catch (err) {
+        toast('Network error during auto-detection: ' + err.message, true);
+      } finally {
+        if (btnDetect) {
+          btnDetect.disabled = false;
+          btnDetect.innerHTML = '🔍 Auto-Detect My Chat ID';
+        }
+      }
+    };
+
+    if (btnDetect) btnDetect.addEventListener('click', runDetectHandler);
 
     // Test handler
     const runTestHandler = async (btnTrigger) => {

@@ -265,6 +265,85 @@ switch ($action) {
         }
     }
 
+    case 'detect_telegram_chat_id': {
+        require_role(['admin', 'editor']);
+        $botToken = trim((string) ($body['bot_token'] ?? ''));
+        if ($botToken === '') {
+            $settings = vcd_load('settings');
+            $botToken = trim((string) ($settings['telegram_bot_token'] ?? ''));
+        }
+
+        if ($botToken === '') {
+            out(['ok' => false, 'error' => 'missing_bot_token', 'message' => 'Please provide a Telegram Bot API Token.'], 422);
+        }
+
+        // 1. Verify Bot Token & Get Bot Info
+        $botInfo = vcd_telegram_get_me($botToken);
+        if (empty($botInfo['ok'])) {
+            out([
+                'ok'      => false,
+                'error'   => 'invalid_bot_token',
+                'message' => 'Telegram Bot API rejected this token. Please make sure the token is copied correctly from @BotFather.'
+            ], 400);
+        }
+        $botData = $botInfo['result'] ?? [];
+        $botUsername = $botData['username'] ?? '';
+        $botName = $botData['first_name'] ?? '';
+
+        // 2. Fetch updates from Telegram to discover users who clicked /start
+        $updates = vcd_telegram_get_updates($botToken);
+        $rawList = is_array($updates['result'] ?? null) ? $updates['result'] : [];
+
+        $discoveredChats = [];
+        $seen = [];
+
+        // Traverse backwards from newest to oldest
+        for ($i = count($rawList) - 1; $i >= 0; $i--) {
+            $u = $rawList[$i];
+            $msg = $u['message'] ?? $u['channel_post'] ?? $u['my_chat_member'] ?? [];
+            if (!is_array($msg) || empty($msg['chat']['id'])) {
+                continue;
+            }
+            $chat = $msg['chat'];
+            $cid = (string) $chat['id'];
+            if (isset($seen[$cid])) {
+                continue;
+            }
+            $seen[$cid] = true;
+
+            $frm = $msg['from'] ?? [];
+            $fullName = trim(($frm['first_name'] ?? '') . ' ' . ($frm['last_name'] ?? ''));
+            if ($fullName === '') {
+                $fullName = (string) ($chat['title'] ?? $chat['first_name'] ?? 'Telegram User');
+            }
+            $uname = (string) ($frm['username'] ?? $chat['username'] ?? '');
+
+            $timeStr = !empty($msg['date']) ? date('d M Y, h:i A', (int) $msg['date']) . ' GST' : 'Recent';
+            $text = (string) ($msg['text'] ?? $msg['caption'] ?? '(Started bot)');
+
+            $discoveredChats[] = [
+                'chat_id'  => $cid,
+                'type'     => (string) ($chat['type'] ?? 'private'),
+                'name'     => $fullName,
+                'username' => $uname !== '' ? '@' . ltrim($uname, '@') : '',
+                'text'     => $text,
+                'time'     => $timeStr
+            ];
+        }
+
+        out([
+            'ok'             => true,
+            'bot'            => [
+                'username'   => $botUsername,
+                'first_name' => $botName,
+                'id'         => $botData['id'] ?? null
+            ],
+            'chats'          => $discoveredChats,
+            'latest_chat_id' => !empty($discoveredChats[0]['chat_id']) ? $discoveredChats[0]['chat_id'] : null,
+            'count'          => count($discoveredChats)
+        ]);
+    }
+
     case 'change_password': {
         $cur = (string) ($body['current'] ?? '');
         $new = (string) ($body['new'] ?? '');

@@ -16,7 +16,7 @@
     "instagram_url": "https://instagram.com",
     "telegram_url": "https://t.me/iqosaibot",
     "telegram_bot_token": "8772277899:AAEbGGNrRLW57qqOuDi6VXT9YVPbYDwZqaM",
-    "telegram_chat_id": "",
+    "telegram_chat_id": "6532343622",
     "telegram_alerts_enabled": true,
     "telegram_order_alerts_enabled": true,
     "telegram_vip_alerts_enabled": true,
@@ -40,8 +40,8 @@
     ],
     "payment_badges": [
         "COD",
-        "VISA",
         "MASTERCARD",
+        "VISA",
         "APPLE PAY",
         "SAMSUNG PAY"
     ],

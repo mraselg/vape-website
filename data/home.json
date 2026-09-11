@@ -136,6 +136,10 @@
             {
                 "icon": "i-truck",
                 "text": "450 AED Free Delivery all UAE"
+            },
+            {
+                "icon": "i-check",
+                "text": "New Guarantee"
             }
         ],
         "ranks": [
