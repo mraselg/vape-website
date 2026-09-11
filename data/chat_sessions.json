@@ -1,1 +1,73 @@
-{}
+{
+    "CHAT-TEST1": {
+        "session_id": "CHAT-TEST1",
+        "phone": "501234567",
+        "page": "/",
+        "product": "IQOS ILUMA i PRIME Remix",
+        "device": "Mobile/Desktop",
+        "created_at": "2026-09-11 20:31:05",
+        "updated_at": "2026-09-11 20:31:26",
+        "messages": [
+            {
+                "id": "msg_1789151465_612",
+                "sender": "user",
+                "text": "Is IQOS ILUMA Prime Remix in stock for delivery now?",
+                "time": "08:31 PM",
+                "timestamp": 1789151465
+            },
+            {
+                "id": "agent_1789151467_272",
+                "sender": "agent",
+                "text": "Yes sir, we have it in stock for immediate 1-hour delivery!",
+                "time": "08:31 PM",
+                "timestamp": 1789151467
+            },
+            {
+                "id": "agent_1789151485_470",
+                "sender": "agent",
+                "text": "Great service!",
+                "time": "08:31 PM",
+                "timestamp": 1789151485
+            },
+            {
+                "id": "agent_1789151486_580",
+                "sender": "agent",
+                "text": "Perfect delivery",
+                "time": "08:31 PM",
+                "timestamp": 1789151486
+            }
+        ]
+    },
+    "CHAT-A9HSV": {
+        "session_id": "CHAT-A9HSV",
+        "phone": "501234567",
+        "page": "/",
+        "product": "Vape Club Dubai",
+        "device": "Windows PC",
+        "created_at": "2026-09-11 20:32:48",
+        "updated_at": "2026-09-11 20:32:51",
+        "messages": [
+            {
+                "id": "msg_1789151568_494",
+                "sender": "user",
+                "text": "Initiated Live Chat",
+                "time": "08:32 PM",
+                "timestamp": 1789151568
+            },
+            {
+                "id": "msg_1789151570_934",
+                "sender": "user",
+                "text": "Hello! Do you deliver to Business Bay in 1 hour?",
+                "time": "08:32 PM",
+                "timestamp": 1789151570
+            },
+            {
+                "id": "agent_1789151571_960",
+                "sender": "agent",
+                "text": "Yes sir! 1-hour express delivery is available in Business Bay.",
+                "time": "08:32 PM",
+                "timestamp": 1789151571
+            }
+        ]
+    }
+}

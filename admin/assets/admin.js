@@ -3885,15 +3885,30 @@
     if (!seo.pages.product) seo.pages.product = {};
 
     let html = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
         <p style="color:var(--adm-muted);margin:0;">Google UAE Search ranking, SERP snippets, structured data schemas, Meta Pixel, GA4, and webmaster verification.</p>
-        <button type="button" class="adm-btn adm-btn-primary" id="btnSeoSaveTop">💾 Save SEO Settings</button>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <a href="/sitemap.xml" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:rgba(0,229,153,0.15);color:#00e599;border:1px solid rgba(0,229,153,0.35);">
+            🗺️ Live Sitemap (sitemap.xml) ↗
+          </a>
+          <a href="/SEO_SEARCH_CONSOLE_GUIDE.md" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.35);">
+            📖 Search Console Guide (.md) ↗
+          </a>
+          <button type="button" class="adm-btn adm-btn-primary" id="btnSeoSaveTop">💾 Save SEO Settings</button>
+        </div>
       </div>
 
       <!-- 1. PRODUCTION URL & SCHEMAS -->
       <div class="adm-card is-highlight">
-        <h3><span>🔍</span> Production URL &amp; Google Structured Data Schemas</h3>
-        <p class="adm-card-sub">Zero SEO gaps: Canonical URLs, JSON-LD rich snippets and Google Star Ratings</p>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+          <div>
+            <h3 style="margin:0;"><span>🔍</span> Production URL &amp; Google Structured Data Schemas</h3>
+            <p class="adm-card-sub" style="margin-top:4px;">Zero SEO gaps: Canonical URLs, JSON-LD rich snippets and Google Star Ratings</p>
+          </div>
+          <div style="font-size:12px;color:var(--adm-emerald);font-weight:700;display:flex;align-items:center;gap:6px;">
+            <span>⚡ Sitemaps &amp; Schemas Auto-Synced</span>
+          </div>
+        </div>
 
         <div class="adm-grid2">
           <div class="adm-field">
