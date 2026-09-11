@@ -384,7 +384,7 @@
             '</div>' +
             '<div class="pd-sub-action-row">' +
               '<button type="button" class="pd-sub-btn" id="pdAdd">' +
-                '<svg class="icon icon-sm"><use href="#i-cart"/></svg> + Add to Bag (Keep Shopping)' +
+                '<svg class="icon icon-sm"><use href="#i-cart"/></svg> + Add to Bag' +
               '</button>' +
               '<button type="button" class="pd-sub-btn js-open-cart">' +
                 '<svg class="icon icon-sm"><use href="#i-bag"/></svg> View Bag' +
