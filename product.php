@@ -15,7 +15,7 @@ $ratingVal = (string) ($S['rating_value'] ?? '4.9');
 $ratingCnt = (string) ($S['rating_count'] ?? '214');
 $showRating = (bool) ($S['show_rating'] ?? true);
 
-$id = preg_replace('/[^a-z0-9\-]/', '', (string) ($_GET['id'] ?? ''));
+$id = preg_replace('/[^a-z0-9\-]/', '', (string) ($_GET['id'] ?? $_GET['slug'] ?? ''));
 $p  = $id !== '' ? product_by_id($id) : null;
 
 if (!$p) {

@@ -73,7 +73,7 @@ function product_by_id(string $id): ?array
 {
     global $VCD_PRODUCTS;
     foreach ($VCD_PRODUCTS as $p) {
-        if (($p['id'] ?? '') === $id) {
+        if (($p['id'] ?? '') === $id || (!empty($p['slug']) && $p['slug'] === $id)) {
             return $p;
         }
     }
