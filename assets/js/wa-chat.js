@@ -243,7 +243,7 @@
       <div class="wa-msg-bubble" style="background:#131c2a;border:1px solid rgba(0,229,153,0.35);box-shadow:0 6px 18px rgba(0,0,0,0.35);">
         <div class="wa-msg-sender" style="color:var(--adm-emerald, #00e599);display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;">
           <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00e599;box-shadow:0 0 8px #00e599;"></span>
-          Support Agent (Live via Telegram)
+          Support Agent (Live)
         </div>
         <p style="color:#f8fafc;font-size:13.5px;line-height:1.45;margin-top:4px;">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</p>
         <div class="wa-msg-meta" style="text-align:right;">
@@ -277,11 +277,11 @@
     window.open(link, '_blank');
   }
 
-  /* ---------- Real-Time Polling for Telegram Replies ---------- */
+  /* ---------- Real-Time Polling for Support Replies ---------- */
   function startPolling() {
-    if (pollTimer) return;
+    if (pollTimer) clearInterval(pollTimer);
     pollForReplies();
-    pollTimer = setInterval(pollForReplies, 2500);
+    pollTimer = setInterval(pollForReplies, 2000);
   }
 
   function stopPolling() {
@@ -289,10 +289,53 @@
       clearInterval(pollTimer);
       pollTimer = null;
     }
+    // If visitor has active chat, keep a gentle 4.5s background poll
+    const hasChat = localStorage.getItem('vcd_chat_active');
+    if (hasChat) {
+      pollTimer = setInterval(pollForReplies, 4500);
+    }
+  }
+
+  function notifyVisitorNewReply(text) {
+    playChime();
+    // Update any badge on floating WhatsApp buttons
+    const waBtns = document.querySelectorAll('.bnav-fab-wa, .js-open-wa-chat');
+    waBtns.forEach(b => {
+      b.classList.add('has-unread-reply');
+      if (!b.querySelector('.wa-badge-pulse')) {
+        const dot = document.createElement('span');
+        dot.className = 'wa-badge-pulse';
+        dot.setAttribute('style', 'position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:#00e599;box-shadow:0 0 8px #00e599;border:2px solid #070a0f;');
+        b.appendChild(dot);
+      }
+    });
+
+    // In-page toast notification
+    let toast = document.getElementById('vcdChatReplyToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'vcdChatReplyToast';
+      toast.setAttribute('style', 'position:fixed;bottom:84px;right:20px;z-index:999999;background:#0d1522;color:#fff;border:1px solid rgba(0,229,153,0.5);border-radius:12px;padding:12px 16px;box-shadow:0 10px 30px rgba(0,0,0,0.5);display:flex;align-items:center;gap:10px;cursor:pointer;animation:fadeIn 0.3s ease;max-width:320px;');
+      document.body.appendChild(toast);
+      toast.addEventListener('click', () => {
+        openWhatsAppModal();
+        toast.remove();
+      });
+    }
+    const snippet = text.length > 40 ? text.substring(0, 40) + '…' : text;
+    toast.innerHTML = `
+      <span style="font-size:20px;">💬</span>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#00e599;">New reply from Support Agent:</div>
+        <div style="font-size:13px;color:#e2e8f0;margin-top:2px;">"${snippet.replace(/</g, '&lt;')}"</div>
+      </div>
+    `;
+    setTimeout(() => {
+      if (toast && toast.parentNode) toast.remove();
+    }, 10000);
   }
 
   async function pollForReplies() {
-    if (!dom.modal || !dom.modal.classList.contains('is-open')) return;
     const sid = getChatSessionId();
     try {
       const res = await fetch(`/api/chat-message.php?action=poll&session_id=${encodeURIComponent(sid)}&after=${lastSeenTimestamp}`);
@@ -305,6 +348,9 @@
 
           if (m.sender === 'agent') {
             appendAgentReplyMessage(m.text, m.time);
+            if (!dom.modal || !dom.modal.classList.contains('is-open')) {
+              notifyVisitorNewReply(m.text);
+            }
           }
         });
       }
@@ -348,7 +394,9 @@
 
     activeLead = getLocalLead();
 
-    if (activeLead && activeLead.fullPhone) {
+    const hasActiveChat = (activeLead && activeLead.fullPhone) || localStorage.getItem('vcd_chat_active');
+
+    if (hasActiveChat) {
       dom.phoneCard.style.display = 'none';
       dom.chatStream.style.display = 'block';
       dom.modalFoot.style.display = 'flex';
@@ -469,7 +517,7 @@
             appendIncomingMessage('💨 Top Pick Today: IQOS ILUMA i PRIME (Remix Edition) + TEREA Japan Black Purple Menthol or Swiss Amber. 100% Authentic.');
             break;
           case 'order':
-            appendIncomingMessage('📦 Excellent! Your inquiry has been sent to our Telegram dispatcher. We are replying right here, or click below to open WhatsApp.');
+            appendIncomingMessage('📦 Excellent! Your inquiry has been received by Customer Support. We are replying right here, or click below to open WhatsApp.');
             break;
           case 'bundles':
             appendIncomingMessage('🏷️ Today\'s VIP Deal: Order any 2 ILUMA devices or 5+ TEREA packs for Free Express Shipping across UAE!');
@@ -478,10 +526,11 @@
             appendIncomingMessage('💳 We accept Cash on Delivery (COD), Card on Delivery, and Apple Pay directly at your door in Dubai.');
             break;
           default:
-            appendIncomingMessage('👤 Connecting you directly with our Dubai concierge specialist… Message sent to Telegram!');
+            appendIncomingMessage('👤 Connecting you directly with our Dubai concierge specialist… Message sent to Customer Support!');
             break;
         }
 
+        try { localStorage.setItem('vcd_chat_active', '1'); } catch(e){}
         startPolling();
         if (dom.handoffCard) dom.handoffCard.style.display = 'block';
       });
@@ -507,7 +556,8 @@
         device: getDeviceString()
       });
 
-      appendIncomingMessage('✅ Message sent to our Telegram dispatcher! An agent will reply directly in this window shortly. You can also tap below to chat on WhatsApp.', 700);
+      appendIncomingMessage('✅ Message sent to Customer Support! An agent will reply directly in this window shortly. You can also tap below to chat on WhatsApp.', 700);
+      try { localStorage.setItem('vcd_chat_active', '1'); } catch(e){}
       startPolling();
 
       if (dom.btnRealWhatsApp) {
@@ -561,6 +611,10 @@
       open: openWhatsAppModal,
       close: closeWhatsAppModal
     };
+
+    if (localStorage.getItem('vcd_chat_active')) {
+      stopPolling();
+    }
   }
 
   if (document.readyState === 'loading') {
