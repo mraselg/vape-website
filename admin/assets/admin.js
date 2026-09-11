@@ -4522,6 +4522,9 @@
   /* ============================================================
      VIEW: TELEGRAM BOT & REAL-TIME TELEMETRY
      ============================================================ */
+  /* ============================================================
+     VIEW: TELEGRAM BOT & REAL-TIME TELEMETRY (SIMPLIFIED)
+     ============================================================ */
   function renderTelegram() {
     dom.viewTitle.textContent = 'Telegram Bot & Alerts';
     const s = state.data.settings || {};
@@ -4531,189 +4534,128 @@
     const isConfigured = hasToken && hasChatId;
 
     let statusBadge = '';
-    let statusText = '';
     if (isConfigured) {
       statusBadge = '<span style="background:rgba(0,229,153,0.15);color:var(--adm-emerald);border:1px solid rgba(0,229,153,0.4);padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">● Active &amp; Ready</span>';
-      statusText = 'Telegram Bot is configured and actively sending real-time notifications for store events.';
     } else if (hasToken || hasChatId) {
-      statusBadge = '<span style="background:rgba(255,170,0,0.15);color:#ffaa00;border:1px solid rgba(255,170,0,0.4);padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">⚠️ Partially Configured</span>';
-      statusText = 'Both Bot API Token and Chat ID are required for automated dispatch.';
+      statusBadge = '<span style="background:rgba(255,170,0,0.15);color:#ffaa00;border:1px solid rgba(255,170,0,0.4);padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">⚠️ Incomplete</span>';
     } else {
       statusBadge = '<span style="background:rgba(255,255,255,0.06);color:var(--adm-muted);border:1px solid rgba(255,255,255,0.12);padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">○ Not Connected</span>';
-      statusText = 'Connect your Telegram Bot to receive instant phone alerts whenever an order is placed or a customer enters their WhatsApp number.';
     }
 
     let html = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
-        <div>
-          <p style="color:var(--adm-muted);margin:0;font-size:13.5px;">Direct Telegram Bot connection, recipient Chat ID, and instant alert triggers for store orders and WhatsApp leads.</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <h3 style="margin:0;font-size:16px;">Telegram Bot Configuration</h3>
+          ${statusBadge}
         </div>
         <div style="display:flex;gap:10px;">
           <button type="button" class="adm-btn adm-btn-secondary" id="btnTgTestHeader">⚡ Test Connection</button>
-          <button type="button" class="adm-btn adm-btn-primary" id="btnTgSaveTop">💾 Save Telegram Settings</button>
+          <button type="button" class="adm-btn adm-btn-primary" id="btnTgSaveTop">💾 Save Settings</button>
         </div>
       </div>
 
-      <!-- STATUS & TELEMETRY HEALTH CARD -->
-      <div class="adm-card is-highlight" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
-        <div style="display:flex;align-items:center;gap:16px;">
-          <div style="width:48px;height:48px;border-radius:14px;background:rgba(0,136,204,0.15);border:1px solid rgba(0,136,204,0.4);display:grid;place-items:center;font-size:24px;">
-            🤖
-          </div>
-          <div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-              <h3 style="margin:0;font-size:16px;">Telegram Telemetry Status</h3>
-              ${statusBadge}
-            </div>
-            <div style="font-size:12.5px;color:var(--adm-muted);">${statusText}</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <a href="https://t.me/BotFather" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:rgba(0,136,204,0.15);border-color:rgba(0,136,204,0.3);color:#29b6f6;">
-            ↗ Open @BotFather
-          </a>
-          <a href="https://t.me/userinfobot" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:rgba(255,255,255,0.06);">
-            ↗ Get Chat ID (@userinfobot)
-          </a>
-        </div>
-      </div>
-
-      <!-- CREDENTIALS & DIRECT LINKS -->
+      <!-- CARD 1: BOT CREDENTIALS -->
       <div class="adm-card">
-        <h3><span>🔑</span> Bot API Token &amp; Recipient Configuration</h3>
-        <p class="adm-card-sub">Enter your Telegram Bot API token from @BotFather and your personal or group Chat ID</p>
+        <h3><span>🤖</span> Bot Credentials</h3>
+        <p class="adm-card-sub">Essential API credentials for your Telegram Bot</p>
 
         <div class="adm-field">
           <label>Telegram Bot API Token</label>
           <div style="display:flex;gap:8px;">
-            <input type="password" id="tg_view_bot_token" value="${esc(s.telegram_bot_token || '')}" placeholder="e.g. 7123456789:AAHq_Abc123XYZ456..." style="flex:1;">
-            <button type="button" class="adm-btn adm-btn-sm" id="btnToggleTokenVis" title="Toggle visibility">👁️ Show</button>
-            <button type="button" class="adm-btn adm-btn-sm" id="btnCopyToken" title="Copy Token">📋 Copy</button>
+            <input type="password" id="tg_view_bot_token" value="${esc(s.telegram_bot_token || '')}" placeholder="e.g. 8772277899:AAEbGGNrRLW57qqOuDi6VXT9YVPbYDwZqaM" style="flex:1;">
+            <button type="button" class="adm-btn adm-btn-sm" id="btnToggleTokenVis">👁️ Show</button>
+            <button type="button" class="adm-btn adm-btn-sm" id="btnCopyToken">📋 Copy</button>
           </div>
-          <span class="adm-hint">Issued directly by <b>@BotFather</b> on Telegram when creating your bot. Stored securely on your server.</span>
         </div>
 
-        <div class="adm-grid2" style="margin-top:16px;">
+        <div class="adm-grid3" style="margin-top:14px;">
           <div class="adm-field">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
-              <label style="margin:0;">Telegram Chat ID or Channel ID</label>
-              <button type="button" class="adm-btn adm-btn-sm" id="btnAutoDetectChatId" style="background:rgba(0,136,204,0.15);border-color:rgba(0,136,204,0.3);color:#29b6f6;font-weight:700;">
-                🔍 Auto-Detect My Chat ID
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <label style="margin:0;">Telegram Chat ID</label>
+              <button type="button" class="adm-btn adm-btn-sm" id="btnAutoDetectChatId" style="background:rgba(0,136,204,0.15);border-color:rgba(0,136,204,0.3);color:#29b6f6;font-size:11px;padding:2px 8px;">
+                🔍 Auto-Detect
               </button>
             </div>
-            <input type="text" id="tg_view_chat_id" value="${esc(s.telegram_chat_id || '')}" placeholder="e.g. 6532343622 or -100123456789">
-            <span class="adm-hint">Numeric User ID or Group ID. Press <b>START</b> in your bot, then click <b>Auto-Detect</b> above to fetch automatically!</span>
+            <input type="text" id="tg_view_chat_id" value="${esc(s.telegram_chat_id || '')}" placeholder="e.g. 6532343622">
           </div>
+
           <div class="adm-field">
-            <label>Public Telegram Channel / Profile Link</label>
-            <input type="url" id="tg_view_channel_url" value="${esc(s.telegram_url || '')}" placeholder="https://t.me/yourusername">
-            <span class="adm-hint">Customer-facing Telegram URL displayed on website footer and social icons.</span>
+            <label>Bot Username</label>
+            <input type="text" id="tg_view_bot_username" value="${esc(s.telegram_bot_username || '@iqosaibot')}" placeholder="@iqosaibot">
+          </div>
+
+          <div class="adm-field">
+            <label>Public Link / Channel URL</label>
+            <input type="url" id="tg_view_channel_url" value="${esc(s.telegram_url || 'https://t.me/iqosaibot')}" placeholder="https://t.me/iqosaibot">
           </div>
         </div>
 
         <div id="tgDetectResultBox" style="display:none;margin-top:14px;"></div>
       </div>
 
-      <!-- AUTOMATED EVENT TRIGGERS -->
+      <!-- CARD 2: REAL-TIME TELEMETRY & ALERT TRIGGERS -->
       <div class="adm-card">
-        <h3><span>⚡</span> Automated Real-Time Event Triggers</h3>
-        <p class="adm-card-sub">Choose which events trigger instant background Telegram alerts to your phone</p>
+        <h3><span>⚡</span> Real-Time Alert Triggers &amp; Telemetry</h3>
+        <p class="adm-card-sub">Select which website events automatically dispatch instant notifications to your Telegram Bot</p>
 
-        <div class="adm-grid3">
+        <div class="adm-grid2">
           <div class="adm-field">
-            <label>🛍️ New Store Orders Alert</label>
-            <select id="tg_view_orders_enabled">
-              <option value="1" ${s.telegram_order_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Instant Order Ping)</option>
-              <option value="0" ${s.telegram_order_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
+            <label>👁️ Live Website Visitor Traffic Alert</label>
+            <select id="tg_view_traffic_enabled">
+              <option value="1" ${s.telegram_traffic_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Real-time Visitor IP &amp; Device Alert)</option>
+              <option value="0" ${s.telegram_traffic_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
             </select>
-            <span class="adm-hint">Sends customer name, phone, full address, items, payment method, and total amount whenever an order is submitted online.</span>
+            <span class="adm-hint">Sends an instant alert with visitor IP, Country/City, Device, Landing Page, and Referrer when a new user enters the website.</span>
           </div>
 
           <div class="adm-field">
-            <label>💬 In-Page WhatsApp Leads Alert</label>
+            <label>💬 Live Chat &amp; Customer Phone Leads</label>
             <select id="tg_view_leads_enabled">
-              <option value="1" ${s.telegram_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Real-time Lead Ping)</option>
+              <option value="1" ${s.telegram_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Instant Chat Alert)</option>
               <option value="0" ${s.telegram_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
             </select>
-            <span class="adm-hint">Sends visitor phone number, inquiry question, cart contents, and viewed product when WhatsApp chat opens.</span>
+            <span class="adm-hint">Sends visitor phone number and chat inquiries directly to Telegram.</span>
           </div>
 
           <div class="adm-field">
-            <label>💎 High-Value VIP Orders (&gt;500 AED)</label>
-            <select id="tg_view_vip_enabled">
-              <option value="1" ${s.telegram_vip_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (VIP Highlight)</option>
-              <option value="0" ${s.telegram_vip_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
+            <label>🔄 2-Way Telegram Chat Reply</label>
+            <select id="tg_view_2way_enabled">
+              <option value="1" ${s.telegram_2way_chat_enabled !== false ? 'selected' : ''}>✅ Enabled (Reply from Telegram to Website)</option>
+              <option value="0" ${s.telegram_2way_chat_enabled === false ? 'selected' : ''}>❌ Disabled</option>
             </select>
-            <span class="adm-hint">Appends special VIP priority badges on high-value orders for prompt dispatch.</span>
+            <span class="adm-hint">Allows you to reply directly from Telegram to the website visitor in real time!</span>
+          </div>
+
+          <div class="adm-field">
+            <label>🛍️ Store Orders Alert</label>
+            <select id="tg_view_orders_enabled">
+              <option value="1" ${s.telegram_order_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Instant Order Alert)</option>
+              <option value="0" ${s.telegram_order_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
+            </select>
+            <span class="adm-hint">Sends customer phone, items, address, and total amount when an order is placed online.</span>
           </div>
         </div>
       </div>
 
-      <!-- LIVE DIAGNOSTICS & TEST DISPATCH -->
+      <!-- CARD 3: 2-WAY WEBHOOK & LIVE DIAGNOSTICS -->
       <div class="adm-card">
-        <h3><span>🧪</span> Live Connection Test &amp; Diagnostics</h3>
-        <p class="adm-card-sub">Test your credentials instantly before saving to ensure your Telegram Bot delivers messages reliably</p>
+        <h3><span>🧪</span> 2-Way Webhook &amp; Live Test</h3>
+        <p class="adm-card-sub">Test communication and activate Telegram Webhook for real-time 2-way chat</p>
 
-        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
-          <button type="button" class="adm-btn adm-btn-secondary adm-btn-lg" id="btnRunTelegramTest">
-            ⚡ Send Live Test Telegram Message
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <button type="button" class="adm-btn adm-btn-secondary" id="btnRunTelegramTest">
+            ⚡ Send Test Telegram Message
           </button>
-          <span style="font-size:12.5px;color:var(--adm-muted);">Will dispatch a test message to the Chat ID specified above using the token provided.</span>
+          <button type="button" class="adm-btn adm-btn-secondary" id="btnConnectWebhook" style="border-color:rgba(0,136,204,0.4);background:rgba(0,136,204,0.1);color:#29b6f6;">
+            🔗 Connect / Update 2-Way Webhook
+          </button>
         </div>
 
-        <div id="tgTestResultBox" style="display:none;margin-top:14px;padding:14px 18px;border-radius:10px;font-size:13px;line-height:1.5;"></div>
-      </div>
-
-      <!-- 5-MINUTE STEP-BY-STEP SETUP GUIDE -->
-      <div class="adm-card">
-        <h3><span>📖</span> Step-by-Step Telegram Setup Guide (5 Minutes)</h3>
-        <p class="adm-card-sub">Follow these simple steps if you don't already have a Telegram Bot API key</p>
-
-        <div style="display:grid;gap:12px;margin-top:10px;">
-          <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,0.02);padding:12px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);">
-            <span style="background:var(--adm-emerald);color:#000;font-weight:800;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;flex-shrink:0;font-size:12px;">1</span>
-            <div>
-              <b>Open Telegram and search for @BotFather</b>
-              <div style="color:var(--adm-muted);font-size:12px;margin-top:2px;">Click <a href="https://t.me/BotFather" target="_blank" rel="noopener" style="color:var(--adm-emerald);">@BotFather</a> in Telegram (the official bot creation tool from Telegram).</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,0.02);padding:12px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);">
-            <span style="background:var(--adm-emerald);color:#000;font-weight:800;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;flex-shrink:0;font-size:12px;">2</span>
-            <div>
-              <b>Create a New Bot</b>
-              <div style="color:var(--adm-muted);font-size:12px;margin-top:2px;">Send <code>/newbot</code>. Choose a display name (e.g. <em>Vape Club Dubai Alerts</em>) and a bot username ending with <code>_bot</code> (e.g. <em>vapeclub_dubai_bot</em>).</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,0.02);padding:12px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);">
-            <span style="background:var(--adm-emerald);color:#000;font-weight:800;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;flex-shrink:0;font-size:12px;">3</span>
-            <div>
-              <b>Copy the HTTP API Token</b>
-              <div style="color:var(--adm-muted);font-size:12px;margin-top:2px;">BotFather will reply with an API Token (e.g. <code>123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ</code>). Paste it into the <b>Telegram Bot API Token</b> field above.</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,0.02);padding:12px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);">
-            <span style="background:var(--adm-emerald);color:#000;font-weight:800;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;flex-shrink:0;font-size:12px;">4</span>
-            <div>
-              <b>Start Your Bot &amp; Get Your Chat ID</b>
-              <div style="color:var(--adm-muted);font-size:12px;margin-top:2px;">Open your newly created bot in Telegram and press <b>Start</b> (or send <code>/start</code>). Then message <a href="https://t.me/userinfobot" target="_blank" rel="noopener" style="color:var(--adm-emerald);">@userinfobot</a> to see your numeric <code>Id</code>, and paste it into <b>Telegram Chat ID</b> above.</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,0.02);padding:12px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);">
-            <span style="background:var(--adm-emerald);color:#000;font-weight:800;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;flex-shrink:0;font-size:12px;">5</span>
-            <div>
-              <b>Test &amp; Save</b>
-              <div style="color:var(--adm-muted);font-size:12px;margin-top:2px;">Click <b>⚡ Send Live Test Telegram Message</b>. Once delivered to your phone, click <b>💾 Save Telegram Settings</b>. You're all set!</div>
-            </div>
-          </div>
-        </div>
+        <div id="tgTestResultBox" style="display:none;margin-top:14px;padding:12px 16px;border-radius:8px;font-size:13px;line-height:1.5;"></div>
       </div>
 
       <div style="text-align:right;margin-top:20px;">
-        <button type="button" class="adm-btn adm-btn-primary adm-btn-lg" id="btnTgSaveBottom">💾 Save All Telegram Settings</button>
+        <button type="button" class="adm-btn adm-btn-primary adm-btn-lg" id="btnTgSaveBottom">💾 Save Telegram Settings</button>
       </div>
     `;
 
@@ -4722,13 +4664,21 @@
     // Element references
     const inpToken = document.getElementById('tg_view_bot_token');
     const inpChatId = document.getElementById('tg_view_chat_id');
+    const inpUsername = document.getElementById('tg_view_bot_username');
     const inpChanUrl = document.getElementById('tg_view_channel_url');
-    const selOrders = document.getElementById('tg_view_orders_enabled');
+    const selTraffic = document.getElementById('tg_view_traffic_enabled');
     const selLeads = document.getElementById('tg_view_leads_enabled');
-    const selVip = document.getElementById('tg_view_vip_enabled');
+    const sel2Way = document.getElementById('tg_view_2way_enabled');
+    const selOrders = document.getElementById('tg_view_orders_enabled');
+
     const btnToggleVis = document.getElementById('btnToggleTokenVis');
     const btnCopy = document.getElementById('btnCopyToken');
+    const btnDetect = document.getElementById('btnAutoDetectChatId');
+    const detectBox = document.getElementById('tgDetectResultBox');
     const resultBox = document.getElementById('tgTestResultBox');
+    const btnTestRun = document.getElementById('btnRunTelegramTest');
+    const btnTestHead = document.getElementById('btnTgTestHeader');
+    const btnWebhook = document.getElementById('btnConnectWebhook');
 
     // Toggle password visibility
     if (btnToggleVis && inpToken) {
@@ -4746,253 +4696,198 @@
     // Copy Token
     if (btnCopy && inpToken) {
       btnCopy.addEventListener('click', () => {
-        if (!inpToken.value) {
-          toast('No token to copy', true);
-          return;
-        }
+        if (!inpToken.value) { toast('No token to copy', true); return; }
         navigator.clipboard.writeText(inpToken.value).then(() => {
-          toast('📋 Telegram Bot Token copied to clipboard');
-        }).catch(() => {
-          toast('Failed to copy', true);
-        });
+          toast('📋 Telegram Bot Token copied');
+        }).catch(() => { toast('Failed to copy', true); });
       });
     }
 
-    // Input bindings to state.data.settings
+    // Input bindings
     if (inpToken) inpToken.addEventListener('input', (e) => { s.telegram_bot_token = e.target.value.trim(); markDirty('settings'); });
     if (inpChatId) inpChatId.addEventListener('input', (e) => { s.telegram_chat_id = e.target.value.trim(); markDirty('settings'); });
+    if (inpUsername) inpUsername.addEventListener('input', (e) => { s.telegram_bot_username = e.target.value.trim(); markDirty('settings'); });
     if (inpChanUrl) inpChanUrl.addEventListener('input', (e) => { s.telegram_url = e.target.value.trim(); markDirty('settings'); });
-    if (selOrders) selOrders.addEventListener('change', (e) => { s.telegram_order_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
+    if (selTraffic) selTraffic.addEventListener('change', (e) => { s.telegram_traffic_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
     if (selLeads) selLeads.addEventListener('change', (e) => { s.telegram_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
-    if (selVip) selVip.addEventListener('change', (e) => { s.telegram_vip_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
+    if (sel2Way) sel2Way.addEventListener('change', (e) => { s.telegram_2way_chat_enabled = e.target.value === '1'; markDirty('settings'); });
+    if (selOrders) selOrders.addEventListener('change', (e) => { s.telegram_order_alerts_enabled = e.target.value === '1'; markDirty('settings'); });
 
-    // Auto-detect chat ID handler
-    const btnDetect = document.getElementById('btnAutoDetectChatId');
-    const detectBox = document.getElementById('tgDetectResultBox');
+    // Auto-detect Chat ID
+    if (btnDetect) {
+      btnDetect.addEventListener('click', async () => {
+        const tokenVal = inpToken ? inpToken.value.trim() : (s.telegram_bot_token || '');
+        if (!tokenVal) {
+          toast('⚠️ Please enter your Bot API Token first.', true);
+          if (inpToken) inpToken.focus();
+          return;
+        }
 
-    const runDetectHandler = async () => {
-      const tokenVal = inpToken ? inpToken.value.trim() : (s.telegram_bot_token || '');
-      if (!tokenVal) {
-        toast('⚠️ Please enter your Bot API Token first.', true);
-        if (inpToken) inpToken.focus();
-        return;
-      }
-
-      if (btnDetect) {
         btnDetect.disabled = true;
-        btnDetect.innerHTML = '⏳ Scanning Telegram…';
-      }
-      if (detectBox) {
-        detectBox.style.display = 'block';
-        detectBox.innerHTML = `
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);padding:14px;border-radius:10px;font-size:13px;">
-            ⏳ Checking recent messages on Telegram Bot API (<code>/getUpdates</code>)…
-          </div>
-        `;
-      }
+        btnDetect.innerHTML = '⏳ Scanning…';
+        if (detectBox) {
+          detectBox.style.display = 'block';
+          detectBox.innerHTML = '<div style="background:rgba(255,255,255,0.03);padding:10px 14px;border-radius:8px;font-size:12.5px;">⏳ Scanning Telegram updates (/getUpdates)…</div>';
+        }
 
-      try {
-        const res = await fetch('/admin/api.php?action=detect_telegram_chat_id', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF': window.ADM_CSRF || ''
-          },
-          body: JSON.stringify({ bot_token: tokenVal })
-        });
-        const data = await res.json();
+        try {
+          const res = await fetch('/admin/api.php?action=detect_telegram_chat_id', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF': window.ADM_CSRF || '' },
+            body: JSON.stringify({ bot_token: tokenVal })
+          });
+          const data = await res.json();
 
-        if (data && data.ok) {
-          const botUsername = (data.bot && data.bot.username) || 'iqosaibot';
-          if (data.chats && data.chats.length > 0) {
-            toast(`✅ Discovered ${data.chats.length} Telegram user(s)!`);
-            let chatsHtml = data.chats.map(c => `
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,229,153,0.04);border:1px solid rgba(0,229,153,0.2);border-radius:8px;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
-                <div>
-                  <b style="color:#fff;">${esc(c.name)}</b> <span style="color:var(--adm-emerald);font-size:12px;">${esc(c.username || '')}</span>
-                  <div style="font-size:11.5px;color:var(--adm-muted);margin-top:2px;">
-                    Chat ID: <code style="color:var(--adm-emerald);font-weight:700;">${esc(c.chat_id)}</code> · Type: <i>${esc(c.type)}</i> · ${esc(c.time)}
+          if (data && data.ok) {
+            if (data.chats && data.chats.length > 0) {
+              toast(`✅ Discovered ${data.chats.length} Telegram chat(s)!`);
+              let chatsHtml = data.chats.map(c => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(0,229,153,0.04);border:1px solid rgba(0,229,153,0.2);border-radius:6px;margin-bottom:6px;gap:8px;">
+                  <div>
+                    <b>${esc(c.name)}</b> <span style="color:var(--adm-emerald);font-size:11px;">${esc(c.username || '')}</span>
+                    <div style="font-size:11px;color:var(--adm-muted);">ID: <code style="color:var(--adm-emerald);">${esc(c.chat_id)}</code> · ${esc(c.time)}</div>
                   </div>
-                  <div style="font-size:11px;color:#cbd5e1;margin-top:2px;">Last message: "${esc(c.text)}"</div>
+                  <button type="button" class="adm-btn adm-btn-sm adm-btn-primary js-use-chat-id" data-cid="${esc(c.chat_id)}">Use This</button>
                 </div>
-                <button type="button" class="adm-btn adm-btn-sm adm-btn-primary js-use-chat-id" data-cid="${esc(c.chat_id)}">
-                  ✔ Use This Chat ID
-                </button>
-              </div>
-            `).join('');
+              `).join('');
 
-            if (detectBox) {
-              detectBox.innerHTML = `
-                <div style="background:rgba(0,229,153,0.06);border:1px solid rgba(0,229,153,0.3);padding:14px;border-radius:10px;">
-                  <div style="font-weight:700;color:var(--adm-emerald);margin-bottom:8px;font-size:14px;">
-                    ✅ Found ${data.chats.length} Connected Telegram Account(s):
-                  </div>
-                  ${chatsHtml}
-                </div>
-              `;
-              detectBox.querySelectorAll('.js-use-chat-id').forEach(btn => {
-                btn.addEventListener('click', () => {
-                  const cid = btn.dataset.cid;
-                  if (inpChatId) inpChatId.value = cid;
-                  s.telegram_chat_id = cid;
-                  markDirty('settings');
-                  toast(`Chat ID set to ${cid}`);
+              if (detectBox) {
+                detectBox.innerHTML = `<div style="background:rgba(0,229,153,0.06);border:1px solid rgba(0,229,153,0.25);padding:12px;border-radius:8px;">${chatsHtml}</div>`;
+                detectBox.querySelectorAll('.js-use-chat-id').forEach(btn => {
+                  btn.addEventListener('click', () => {
+                    const cid = btn.dataset.cid;
+                    if (inpChatId) inpChatId.value = cid;
+                    s.telegram_chat_id = cid;
+                    markDirty('settings');
+                    toast(`Chat ID set to ${cid}`);
+                  });
                 });
-              });
-            }
-
-            if (data.latest_chat_id && inpChatId && !inpChatId.value) {
-              inpChatId.value = data.latest_chat_id;
-              s.telegram_chat_id = data.latest_chat_id;
-              markDirty('settings');
+              }
+            } else {
+              toast('No messages found. Please send /start to your bot in Telegram first.', true);
+              if (detectBox) {
+                detectBox.innerHTML = '<div style="background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.3);padding:10px 14px;border-radius:8px;font-size:12px;color:#ffaa00;">⚠️ Bot has not received any messages yet. Open Telegram, send <b>/start</b> to your bot, then click Auto-Detect again.</div>';
+              }
             }
           } else {
-            toast('⚠️ No users have messaged the bot yet.', true);
-            if (detectBox) {
-              detectBox.innerHTML = `
-                <div style="background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.35);padding:14px;border-radius:10px;">
-                  <div style="font-weight:700;color:#ffaa00;margin-bottom:6px;font-size:14px;">
-                    ⚠️ Bot Has Not Received Any Messages Yet!
-                  </div>
-                  <p style="margin:0 0 10px;font-size:12.5px;color:var(--adm-muted);line-height:1.4;">
-                    Telegram requires you to start the bot first. Follow these 2 easy steps:
-                  </p>
-                  <ol style="margin:0 0 12px 18px;font-size:12.5px;color:#cbd5e1;line-height:1.5;">
-                    <li>Open your bot in Telegram and press <b>START</b> (or send <code>/start</code> or <code>hi</code>).</li>
-                    <li>Come back here and click <b>Auto-Detect My Chat ID</b> again.</li>
-                  </ol>
-                  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-                    <a href="https://t.me/${botUsername}" target="_blank" rel="noopener" class="adm-btn adm-btn-primary adm-btn-sm" style="background:#0088cc;border-color:#0088cc;display:inline-flex;align-items:center;gap:6px;">
-                      👉 Open @${botUsername} on Telegram &amp; Press START
-                    </a>
-                    <button type="button" class="adm-btn adm-btn-sm" id="btnDetectTryAgain">
-                      🔄 Try Auto-Detect Again
-                    </button>
-                  </div>
-                </div>
-              `;
-              const retryBtn = document.getElementById('btnDetectTryAgain');
-              if (retryBtn) retryBtn.addEventListener('click', runDetectHandler);
-            }
+            toast('Auto-detection failed: ' + (data.message || 'Error'), true);
           }
-        } else {
-          const msg = (data && data.message) || 'Failed to detect chats.';
-          toast('Detection failed: ' + msg, true);
-          if (detectBox) {
-            detectBox.innerHTML = `
-              <div style="background:rgba(255,77,106,0.1);border:1px solid rgba(255,77,106,0.3);padding:12px;border-radius:8px;color:#ff4d6a;">
-                ❌ ${esc(msg)}
-              </div>
-            `;
-          }
-        }
-      } catch (err) {
-        toast('Network error during auto-detection: ' + err.message, true);
-      } finally {
-        if (btnDetect) {
+        } catch (err) {
+          toast('Network error: ' + err.message, true);
+        } finally {
           btnDetect.disabled = false;
-          btnDetect.innerHTML = '🔍 Auto-Detect My Chat ID';
+          btnDetect.innerHTML = '🔍 Auto-Detect';
         }
-      }
-    };
+      });
+    }
 
-    if (btnDetect) btnDetect.addEventListener('click', runDetectHandler);
+    // Connect Webhook handler
+    if (btnWebhook) {
+      btnWebhook.addEventListener('click', async () => {
+        const tokenVal = inpToken ? inpToken.value.trim() : (s.telegram_bot_token || '');
+        if (!tokenVal) {
+          toast('⚠️ Please enter your Bot API Token first.', true);
+          return;
+        }
 
-    // Test handler
+        btnWebhook.disabled = true;
+        btnWebhook.innerHTML = '⏳ Connecting Webhook…';
+
+        try {
+          const res = await fetch('/admin/api.php?action=set_telegram_webhook', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF': window.ADM_CSRF || '' },
+            body: JSON.stringify({
+              bot_token: tokenVal,
+              webhook_url: 'https://iqosai.com/api/tg-webhook.php'
+            })
+          });
+          const data = await res.json();
+
+          if (data && data.ok) {
+            toast('✅ Telegram Webhook connected! 2-Way live chat is active.');
+            if (resultBox) {
+              resultBox.style.display = 'block';
+              resultBox.style.background = 'rgba(0,229,153,0.08)';
+              resultBox.style.border = '1px solid rgba(0,229,153,0.3)';
+              resultBox.style.color = '#fff';
+              resultBox.innerHTML = `
+                <b style="color:var(--adm-emerald);">✅ Webhook Connected Successfully!</b><br>
+                <span style="color:var(--adm-muted);font-size:12px;">URL: <code>${esc(data.webhook_url)}</code></span><br>
+                <span style="font-size:12px;">You can now swipe &amp; reply to visitor messages directly in Telegram to answer website customers in real time!</span>
+              `;
+            }
+          } else {
+            toast('Webhook setup failed: ' + (data.message || 'Error'), true);
+          }
+        } catch (err) {
+          toast('Network error: ' + err.message, true);
+        } finally {
+          btnWebhook.disabled = false;
+          btnWebhook.innerHTML = '🔗 Connect / Update 2-Way Webhook';
+        }
+      });
+    }
+
+    // Test Message handler
     const runTestHandler = async (btnTrigger) => {
       const tokenVal = inpToken ? inpToken.value.trim() : (s.telegram_bot_token || '');
       const chatIdVal = inpChatId ? inpChatId.value.trim() : (s.telegram_chat_id || '');
 
-      if (!tokenVal) {
-        toast('⚠️ Please enter a Telegram Bot API Token first.', true);
-        if (inpToken) inpToken.focus();
-        return;
-      }
-      if (!chatIdVal) {
-        toast('⚠️ Please enter a Telegram Chat ID or Channel ID first.', true);
-        if (inpChatId) inpChatId.focus();
+      if (!tokenVal || !chatIdVal) {
+        toast('⚠️ Please enter both Bot Token and Chat ID first.', true);
         return;
       }
 
       if (btnTrigger) {
         btnTrigger.disabled = true;
-        btnTrigger.innerHTML = '⏳ Dispatching Telegram Alert…';
+        btnTrigger.innerHTML = '⏳ Dispatching…';
       }
-      toast('Dispatching live test message via Telegram Bot API…');
 
       if (resultBox) {
         resultBox.style.display = 'block';
         resultBox.style.background = 'rgba(255,255,255,0.04)';
         resultBox.style.border = '1px solid rgba(255,255,255,0.1)';
         resultBox.style.color = '#fff';
-        resultBox.innerHTML = '⏳ Contacting Telegram API (<code>https://api.telegram.org/bot…</code>)…';
+        resultBox.innerHTML = '⏳ Contacting Telegram API…';
       }
 
       try {
         const res = await fetch('/admin/api.php?action=test_telegram', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF': window.ADM_CSRF || ''
-          },
-          body: JSON.stringify({
-            bot_token: tokenVal,
-            chat_id: chatIdVal
-          })
+          headers: { 'Content-Type': 'application/json', 'X-CSRF': window.ADM_CSRF || '' },
+          body: JSON.stringify({ bot_token: tokenVal, chat_id: chatIdVal })
         });
         const data = await res.json();
 
         if (data && data.ok) {
-          toast('✅ Telegram test message delivered to your chat successfully!');
+          toast('✅ Telegram test message delivered successfully!');
           if (resultBox) {
             resultBox.style.background = 'rgba(0,229,153,0.08)';
             resultBox.style.border = '1px solid rgba(0,229,153,0.3)';
-            resultBox.style.color = '#fff';
             resultBox.innerHTML = `
-              <div style="color:var(--adm-emerald);font-weight:700;font-size:14px;margin-bottom:6px;">
-                ✅ Telegram Bot Connection Verified Successfully!
-              </div>
-              <div style="font-size:12.5px;color:var(--adm-muted);">
-                A live test alert was delivered to Chat ID: <b>${esc(data.chat_id || chatIdVal)}</b> at ${esc(data.timestamp || 'now')}.<br>
-                Your store is ready to send real-time alerts for New Orders and WhatsApp Leads. Remember to click <b>Save Telegram Settings</b>.
-              </div>
+              <b style="color:var(--adm-emerald);">✅ Test Alert Delivered Successfully!</b><br>
+              <span style="font-size:12px;color:var(--adm-muted);">Delivered to Chat ID: <b>${esc(data.chat_id || chatIdVal)}</b> at ${esc(data.timestamp || 'now')}.</span>
             `;
           }
         } else {
-          const errMsg = (data && (data.message || data.error)) || 'Telegram API rejected the request';
-          const advice = (data && data.advice) || 'Check your token and make sure you sent /start to your bot.';
-          toast('❌ Telegram test failed: ' + errMsg, true);
+          toast('❌ Test failed: ' + (data.message || 'Error'), true);
           if (resultBox) {
             resultBox.style.background = 'rgba(255,77,106,0.08)';
             resultBox.style.border = '1px solid rgba(255,77,106,0.3)';
-            resultBox.style.color = '#fff';
-            resultBox.innerHTML = `
-              <div style="color:#ff4d6a;font-weight:700;font-size:14px;margin-bottom:6px;">
-                ❌ Telegram Test Failed: ${esc(errMsg)}
-              </div>
-              <div style="font-size:12.5px;color:var(--adm-muted);">
-                <b>Troubleshooting Advice:</b> ${esc(advice)}
-              </div>
-            `;
+            resultBox.innerHTML = `<b style="color:#ff4d6a;">❌ Test Failed:</b> ${esc(data.message || 'Error')}<br><span style="font-size:12px;color:var(--adm-muted);">${esc(data.advice || '')}</span>`;
           }
         }
       } catch (err) {
-        toast('Network error testing Telegram: ' + err.message, true);
-        if (resultBox) {
-          resultBox.style.background = 'rgba(255,77,106,0.08)';
-          resultBox.style.border = '1px solid rgba(255,77,106,0.3)';
-          resultBox.innerHTML = `<span style="color:#ff4d6a;">Network Error:</span> ${esc(err.message)}`;
-        }
+        toast('Network error: ' + err.message, true);
       } finally {
         if (btnTrigger) {
           btnTrigger.disabled = false;
-          btnTrigger.innerHTML = '⚡ Send Live Test Telegram Message';
+          btnTrigger.innerHTML = '⚡ Send Test Telegram Message';
         }
       }
     };
 
-    const btnTestRun = document.getElementById('btnRunTelegramTest');
-    const btnTestHead = document.getElementById('btnTgTestHeader');
     if (btnTestRun) btnTestRun.addEventListener('click', () => runTestHandler(btnTestRun));
     if (btnTestHead) btnTestHead.addEventListener('click', () => runTestHandler(btnTestHead));
 
@@ -5000,10 +4895,12 @@
     const saveTelegramHandler = async () => {
       if (inpToken) s.telegram_bot_token = inpToken.value.trim();
       if (inpChatId) s.telegram_chat_id = inpChatId.value.trim();
+      if (inpUsername) s.telegram_bot_username = inpUsername.value.trim();
       if (inpChanUrl) s.telegram_url = inpChanUrl.value.trim();
-      if (selOrders) s.telegram_order_alerts_enabled = selOrders.value === '1';
+      if (selTraffic) s.telegram_traffic_alerts_enabled = selTraffic.value === '1';
       if (selLeads) s.telegram_alerts_enabled = selLeads.value === '1';
-      if (selVip) s.telegram_vip_alerts_enabled = selVip.value === '1';
+      if (sel2Way) s.telegram_2way_chat_enabled = sel2Way.value === '1';
+      if (selOrders) s.telegram_order_alerts_enabled = selOrders.value === '1';
 
       markDirty('settings');
       await saveAll();

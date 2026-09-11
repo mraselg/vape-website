@@ -344,6 +344,55 @@ switch ($action) {
         ]);
     }
 
+    case 'set_telegram_webhook': {
+        require_role(['admin', 'editor']);
+        $botToken = trim((string) ($body['bot_token'] ?? ''));
+        if ($botToken === '') {
+            $settings = vcd_load('settings');
+            $botToken = trim((string) ($settings['telegram_bot_token'] ?? ''));
+        }
+        if ($botToken === '') {
+            out(['ok' => false, 'error' => 'missing_bot_token', 'message' => 'Bot Token is required.'], 422);
+        }
+
+        $webhookUrl = trim((string) ($body['webhook_url'] ?? ''));
+        if ($webhookUrl === '') {
+            $webhookUrl = 'https://iqosai.com/api/tg-webhook.php';
+        }
+
+        $res = vcd_telegram_set_webhook($botToken, $webhookUrl);
+        if (!empty($res['ok'])) {
+            out([
+                'ok'          => true,
+                'webhook_url' => $webhookUrl,
+                'message'     => 'Telegram Webhook registered successfully! 2-Way live chat is now active.'
+            ]);
+        } else {
+            out([
+                'ok'      => false,
+                'error'   => $res['error'] ?? 'webhook_failed',
+                'message' => $res['description'] ?? 'Telegram rejected webhook registration.'
+            ], 400);
+        }
+    }
+
+    case 'get_telegram_webhook_info': {
+        require_role(['admin', 'editor']);
+        $botToken = trim((string) ($body['bot_token'] ?? ''));
+        if ($botToken === '') {
+            $settings = vcd_load('settings');
+            $botToken = trim((string) ($settings['telegram_bot_token'] ?? ''));
+        }
+        if ($botToken === '') {
+            out(['ok' => false, 'error' => 'missing_bot_token'], 422);
+        }
+        $info = vcd_telegram_get_webhook_info($botToken);
+        out([
+            'ok'   => !empty($info['ok']),
+            'info' => $info['result'] ?? []
+        ]);
+    }
+
     case 'change_password': {
         $cur = (string) ($body['current'] ?? '');
         $new = (string) ($body['new'] ?? '');

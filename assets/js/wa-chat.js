@@ -1,13 +1,14 @@
 /**
- * Vape Club Dubai — In-Page WhatsApp Chat & Lead Telemetry System
- * Authentic WhatsApp UI, Phone Number Verifier, Silent Telegram Dispatcher,
- * Automated Quick Replies, and Real WhatsApp Handoff.
+ * Vape Club Dubai — In-Page Live Chat & WhatsApp Telemetry System
+ * Real-time 2-way live chat with Telegram Bot, Phone Number Verifier,
+ * Automated Quick Replies, Agent Chime & WhatsApp Handoff.
  */
 (function () {
   'use strict';
 
   const WA_NUMBER = (window.VCD && window.VCD.waNumber) || '971562848450';
   const LS_KEY = 'vcd_wa_lead';
+  const LS_SID = 'vcd_chat_sid';
 
   const dom = {
     modal: document.getElementById('waChatModal'),
@@ -34,7 +35,18 @@
 
   let activeLead = null;
   let activeProductContext = '';
-  let activeCartContext = '';
+  let pollTimer = null;
+  let lastSeenTimestamp = 0;
+  const renderedMsgIds = new Set();
+
+  function getChatSessionId() {
+    let sid = localStorage.getItem(LS_SID);
+    if (!sid) {
+      sid = 'CHAT-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+      localStorage.setItem(LS_SID, sid);
+    }
+    return sid;
+  }
 
   function getLocalLead() {
     try {
@@ -89,9 +101,34 @@
     }
   }
 
+  function playChime() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.09);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } catch (e) {}
+  }
+
   async function postLeadTelemetry(payload) {
     try {
-      const res = await fetch('/api/wa-lead.php', {
+      payload.session_id = getChatSessionId();
+      fetch('/api/wa-lead.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(() => {});
+
+      const res = await fetch('/api/chat-message.php?action=send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -106,7 +143,6 @@
   function validatePhoneNumber(countryCode, number) {
     const cleanNum = number.replace(/\D/g, '');
     if (countryCode === '+971') {
-      // UAE Mobile: 9 digits starting with 5 (e.g. 50 123 4567)
       const validUae = cleanNum.length === 9 && cleanNum.startsWith('5');
       return {
         valid: validUae,
@@ -114,7 +150,6 @@
         hint: validUae ? '✓ Active UAE WhatsApp Number' : 'Enter 9 digits starting with 5 (e.g. 50 123 4567)'
       };
     } else if (countryCode === '+966') {
-      // KSA: 9 digits starting with 5
       const validKsa = cleanNum.length === 9 && cleanNum.startsWith('5');
       return {
         valid: validKsa,
@@ -156,16 +191,16 @@
   }
 
   /* ---------- Message Append Helpers ---------- */
-  function appendOutgoingMessage(text) {
+  function appendOutgoingMessage(text, timeStr = null) {
     if (!dom.dynamicMessages) return;
-    const timeStr = getTimeString();
+    const tStr = timeStr || getTimeString();
     const el = document.createElement('div');
     el.className = 'wa-msg wa-msg-out';
     el.innerHTML = `
       <div class="wa-msg-bubble">
         <p>${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</p>
         <div class="wa-msg-meta">
-          <span class="wa-msg-time">${timeStr}</span>
+          <span class="wa-msg-time">${tStr}</span>
           <span class="wa-ticks">✓✓</span>
         </div>
       </div>
@@ -197,6 +232,30 @@
     }, delayMs);
   }
 
+  function appendAgentReplyMessage(text, timeStr) {
+    if (!dom.dynamicMessages) return;
+    if (dom.typingBubble) dom.typingBubble.style.display = 'none';
+    if (dom.statusText) dom.statusText.textContent = 'online';
+    const tStr = timeStr || getTimeString();
+    const el = document.createElement('div');
+    el.className = 'wa-msg wa-msg-in is-agent-live';
+    el.innerHTML = `
+      <div class="wa-msg-bubble" style="background:#131c2a;border:1px solid rgba(0,229,153,0.35);box-shadow:0 6px 18px rgba(0,0,0,0.35);">
+        <div class="wa-msg-sender" style="color:var(--adm-emerald, #00e599);display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00e599;box-shadow:0 0 8px #00e599;"></span>
+          Support Agent (Live via Telegram)
+        </div>
+        <p style="color:#f8fafc;font-size:13.5px;line-height:1.45;margin-top:4px;">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</p>
+        <div class="wa-msg-meta" style="text-align:right;">
+          <span class="wa-msg-time" style="color:#94a3b8;font-size:11px;">${tStr}</span>
+        </div>
+      </div>
+    `;
+    dom.dynamicMessages.appendChild(el);
+    scrollChatToBottom();
+    playChime();
+  }
+
   function scrollChatToBottom() {
     if (dom.modalBody) {
       setTimeout(() => {
@@ -215,11 +274,64 @@
       dom.handoffCard.style.display = 'block';
     }
     scrollChatToBottom();
+    window.open(link, '_blank');
+  }
 
-    // Launch WhatsApp directly after a brief delay
-    setTimeout(() => {
-      window.open(link, '_blank');
-    }, 1200);
+  /* ---------- Real-Time Polling for Telegram Replies ---------- */
+  function startPolling() {
+    if (pollTimer) return;
+    pollForReplies();
+    pollTimer = setInterval(pollForReplies, 2500);
+  }
+
+  function stopPolling() {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+  }
+
+  async function pollForReplies() {
+    if (!dom.modal || !dom.modal.classList.contains('is-open')) return;
+    const sid = getChatSessionId();
+    try {
+      const res = await fetch(`/api/chat-message.php?action=poll&session_id=${encodeURIComponent(sid)}&after=${lastSeenTimestamp}`);
+      const data = await res.json();
+      if (data && data.ok && Array.isArray(data.messages)) {
+        data.messages.forEach(m => {
+          if (m.id && renderedMsgIds.has(m.id)) return;
+          if (m.id) renderedMsgIds.add(m.id);
+          if (m.timestamp) lastSeenTimestamp = Math.max(lastSeenTimestamp, m.timestamp);
+
+          if (m.sender === 'agent') {
+            appendAgentReplyMessage(m.text, m.time);
+          }
+        });
+      }
+    } catch (e) {}
+  }
+
+  async function loadChatHistory() {
+    const sid = getChatSessionId();
+    try {
+      const res = await fetch(`/api/chat-message.php?action=history&session_id=${encodeURIComponent(sid)}`);
+      const data = await res.json();
+      if (data && data.ok && Array.isArray(data.messages)) {
+        data.messages.forEach(m => {
+          if (m.id && renderedMsgIds.has(m.id)) return;
+          if (m.id) renderedMsgIds.add(m.id);
+          if (m.timestamp) lastSeenTimestamp = Math.max(lastSeenTimestamp, m.timestamp);
+
+          if (m.sender === 'user') {
+            if (m.text && !m.text.startsWith('📞 Customer connected')) {
+              appendOutgoingMessage(m.text, m.time);
+            }
+          } else if (m.sender === 'agent') {
+            appendAgentReplyMessage(m.text, m.time);
+          }
+        });
+      }
+    } catch (e) {}
   }
 
   /* ---------- Modal Open & State Initialization ---------- */
@@ -237,10 +349,12 @@
     activeLead = getLocalLead();
 
     if (activeLead && activeLead.fullPhone) {
-      // Returning verified user: skip phone prompt
       dom.phoneCard.style.display = 'none';
       dom.chatStream.style.display = 'block';
       dom.modalFoot.style.display = 'flex';
+
+      loadChatHistory();
+      startPolling();
 
       if (contextMsg) {
         appendOutgoingMessage(contextMsg);
@@ -255,10 +369,9 @@
           cart_summary: cart.summary,
           device: getDeviceString()
         });
-        appendIncomingMessage(`Hello again! I see your inquiry regarding "${activeProductContext}". Our Dubai dispatch team is on standby to prepare your order within 1-2 hours.`);
+        appendIncomingMessage(`Hello again! I see your inquiry regarding "${activeProductContext}". Our Dubai dispatch team is on standby to assist you.`);
       }
     } else {
-      // First-time user: show phone verifier
       dom.phoneCard.style.display = 'block';
       dom.chatStream.style.display = 'none';
       dom.modalFoot.style.display = 'none';
@@ -275,11 +388,11 @@
     dom.modal.classList.remove('is-open');
     dom.modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('wa-modal-locked');
+    stopPolling();
   }
 
   /* ---------- Initialization & Event Bindings ---------- */
   function init() {
-    // Phone input validation listener
     if (dom.phoneInput) {
       dom.phoneInput.addEventListener('input', updatePhoneValidation);
     }
@@ -287,7 +400,6 @@
       dom.countrySelect.addEventListener('change', updatePhoneValidation);
     }
 
-    // Phone form submission
     if (dom.phoneForm) {
       dom.phoneForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -298,12 +410,12 @@
 
         saveLocalLead({ fullPhone, phone, countryCode: code });
 
-        // Silent Telemetry Dispatch to /api/wa-lead.php -> Telegram Bot
+        // Telemetry Dispatch to Telegram Bot
         postLeadTelemetry({
           full_phone: fullPhone,
           phone: phone,
           country_code: code,
-          message: 'Initiated WhatsApp Chat',
+          message: 'Initiated Live Chat',
           page: window.location.pathname + window.location.search,
           product_name: activeProductContext,
           cart_total: cart.total,
@@ -321,6 +433,8 @@
           dom.chatStream.style.display = 'block';
           dom.modalFoot.style.display = 'flex';
           scrollChatToBottom();
+          startPolling();
+          loadChatHistory();
           if (dom.inputMessage) dom.inputMessage.focus();
         }, 260);
       });
@@ -336,7 +450,6 @@
 
         appendOutgoingMessage(text);
 
-        // Silent telemetry of question
         const lead = activeLead || getLocalLead() || {};
         postLeadTelemetry({
           full_phone: lead.fullPhone || '',
@@ -348,34 +461,29 @@
           device: getDeviceString()
         });
 
-        // Automated responses
         switch (replyKey) {
           case 'track':
-            appendIncomingMessage('🚚 Our Dubai express couriers deliver in 1-2 hours across Downtown, Marina, Business Bay, JBR, Deira, and all Dubai zones! Cash or Card on Delivery.');
-            setTimeout(() => triggerRealWhatsApp(text), 1600);
+            appendIncomingMessage('🚚 Express delivery in 1-2 hours across Downtown, Marina, Business Bay, JBR, Deira, and all Dubai zones! Cash or Card on Delivery.');
             break;
           case 'recommend':
-            appendIncomingMessage('💨 Top Pick Today: IQOS ILUMA i PRIME (Remix Edition) + TEREA Japan Black Purple Menthol or Swiss Amber. Sealed authentic Japanese & Swiss stock guaranteed.');
-            setTimeout(() => triggerRealWhatsApp(text), 1600);
+            appendIncomingMessage('💨 Top Pick Today: IQOS ILUMA i PRIME (Remix Edition) + TEREA Japan Black Purple Menthol or Swiss Amber. 100% Authentic.');
             break;
           case 'order':
-            appendIncomingMessage('📦 Excellent! Your cart items are queued for fast dispatch. Connecting you with WhatsApp order confirmation right now…');
-            setTimeout(() => triggerRealWhatsApp(text), 1600);
+            appendIncomingMessage('📦 Excellent! Your inquiry has been sent to our Telegram dispatcher. We are replying right here, or click below to open WhatsApp.');
             break;
           case 'bundles':
-            appendIncomingMessage('🏷️ Today\'s VIP Deal: Order any 2 ILUMA devices or 5+ TEREA packs to receive Free Express Shipping across all UAE + complimentary lighter!');
-            setTimeout(() => triggerRealWhatsApp(text), 1600);
+            appendIncomingMessage('🏷️ Today\'s VIP Deal: Order any 2 ILUMA devices or 5+ TEREA packs for Free Express Shipping across UAE!');
             break;
           case 'payment':
-            appendIncomingMessage('💳 We accept Cash on Delivery (COD), Card on Delivery (all credit/debit cards), and Apple Pay directly at your door in Dubai.');
-            setTimeout(() => triggerRealWhatsApp(text), 1600);
+            appendIncomingMessage('💳 We accept Cash on Delivery (COD), Card on Delivery, and Apple Pay directly at your door in Dubai.');
             break;
-          case 'agent':
           default:
-            appendIncomingMessage('👤 Connecting you directly with our Dubai concierge specialist right now…');
-            setTimeout(() => triggerRealWhatsApp(text), 1600);
+            appendIncomingMessage('👤 Connecting you directly with our Dubai concierge specialist… Message sent to Telegram!');
             break;
         }
+
+        startPolling();
+        if (dom.handoffCard) dom.handoffCard.style.display = 'block';
       });
     }
 
@@ -388,7 +496,6 @@
 
       appendOutgoingMessage(text);
 
-      // Silent telemetry dispatch
       const lead = activeLead || getLocalLead() || {};
       postLeadTelemetry({
         full_phone: lead.fullPhone || '',
@@ -400,8 +507,15 @@
         device: getDeviceString()
       });
 
-      appendIncomingMessage('Thank you! Launching official WhatsApp Messenger to complete your request directly with our Dubai agent…', 800);
-      setTimeout(() => triggerRealWhatsApp(text), 1500);
+      appendIncomingMessage('✅ Message sent to our Telegram dispatcher! An agent will reply directly in this window shortly. You can also tap below to chat on WhatsApp.', 700);
+      startPolling();
+
+      if (dom.btnRealWhatsApp) {
+        dom.btnRealWhatsApp.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+      }
+      if (dom.handoffCard) {
+        dom.handoffCard.style.display = 'block';
+      }
     };
 
     if (dom.btnSend) dom.btnSend.addEventListener('click', sendHandler);
@@ -416,13 +530,11 @@
 
     if (dom.modalClose) dom.modalClose.addEventListener('click', closeWhatsAppModal);
 
-    // Global Click Interceptor for all WhatsApp Buttons
+    // Global Click Interceptor for WhatsApp Buttons
     document.addEventListener('click', (e) => {
       const waBtn = e.target.closest('.js-open-wa-chat, .bnav-fab-wa, a[href*="wa.me"], a[href*="api.whatsapp.com"], #btnWaInstantCheckout, .btn-wa:not(#btnOpenCheckout)');
       if (!waBtn) return;
       if (waBtn.id === 'btnOpenCheckout') return;
-
-      // Don't intercept if inside the WhatsApp modal itself!
       if (waBtn.closest('#waChatModal')) return;
 
       e.preventDefault();
@@ -435,7 +547,6 @@
         const cart = getCartSummary();
         contextMsg = `Hello Vape Club Dubai! I would like to place an order for: ${cart.summary || 'items in my cart'}.`;
       } else {
-        // Check for product card context
         const card = waBtn.closest('[data-id], .card, .vip-card, .pd-wrap');
         if (card) {
           prodTitle = (card.querySelector('.card-title, .vip-title, h1') || {}).textContent || '';
@@ -446,7 +557,6 @@
       openWhatsAppModal(contextMsg, prodTitle.trim());
     }, true);
 
-    // Expose controller globally
     window.VCD_WA_CHAT = {
       open: openWhatsAppModal,
       close: closeWhatsAppModal

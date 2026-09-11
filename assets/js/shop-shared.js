@@ -967,16 +967,41 @@ function syncBottomNavActive() {
 }
 window.addEventListener('hashchange', syncBottomNavActive);
 
+/* ============================================================
+   REAL-TIME VISITOR TELEMETRY BEACON (TELEGRAM)
+   ============================================================ */
+function triggerVisitorBeacon() {
+  try {
+    // Only send once per browser session
+    if (sessionStorage.getItem('vcd_vping')) return;
+    sessionStorage.setItem('vcd_vping', '1');
+
+    fetch('/api/visitor-ping.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        page: window.location.pathname + window.location.search,
+        referrer: document.referrer || 'Direct / Bookmark',
+        screen: `${window.screen.width}x${window.screen.height}`,
+        title: document.title
+      })
+    }).catch(() => {});
+  } catch (e) {}
+}
+
 // Run initial shared setups
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     initThemeSwitcher();
     syncBottomNavActive();
     syncBadges();
+    triggerVisitorBeacon();
   });
 } else {
   initThemeSwitcher();
   syncBottomNavActive();
   syncBadges();
+  triggerVisitorBeacon();
 }
+
 

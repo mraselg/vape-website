@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 define('VCD_ROOT', dirname(__DIR__));
 define('VCD_DATA', VCD_ROOT . DIRECTORY_SEPARATOR . 'data');
-define('VCD_ASSET_VER', '3.2');
+define('VCD_ASSET_VER', '3.3');
 
 // Send HTTP headers to prevent aggressive browser/reverse proxy caching of dynamic HTML
 if (!headers_sent() && php_sapi_name() !== 'cli') {
@@ -115,7 +115,7 @@ function current_page(): string
  * @param string|null $chatId    Optional specific Chat ID (or falls back to settings.json)
  * @return array{ok: bool, error?: string, message?: string, response?: array}
  */
-function vcd_telegram_send(string $text, ?string $botToken = null, ?string $chatId = null): array
+function vcd_telegram_send(string $text, ?string $botToken = null, ?string $chatId = null, string $parseMode = 'HTML'): array
 {
     global $VCD_SETTINGS;
     $botToken = trim((string) ($botToken !== null ? $botToken : ($VCD_SETTINGS['telegram_bot_token'] ?? '')));
@@ -129,7 +129,7 @@ function vcd_telegram_send(string $text, ?string $botToken = null, ?string $chat
     $payload = [
         'chat_id'                  => $chatId,
         'text'                     => $text,
-        'parse_mode'               => 'Markdown',
+        'parse_mode'               => $parseMode,
         'disable_web_page_preview' => true,
     ];
 
@@ -260,5 +260,84 @@ function vcd_telegram_get_updates(string $botToken): array
     $resp = json_decode((string) $raw, true);
     return is_array($resp) ? $resp : ['ok' => false, 'error' => 'request_failed'];
 }
+
+/**
+ * Set Webhook for 2-way Telegram communication (/setWebhook)
+ */
+function vcd_telegram_set_webhook(string $botToken, string $webhookUrl): array
+{
+    $botToken = trim($botToken);
+    if ($botToken === '') {
+        return ['ok' => false, 'error' => 'empty_token', 'message' => 'Bot Token is required.'];
+    }
+    $url = "https://api.telegram.org/bot{$botToken}/setWebhook";
+    $payload = [
+        'url' => $webhookUrl,
+        'drop_pending_updates' => false,
+        'allowed_updates' => ['message']
+    ];
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_POST           => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+            CURLOPT_POSTFIELDS     => json_encode($payload),
+            CURLOPT_TIMEOUT        => 8,
+            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        $raw = curl_exec($ch);
+        curl_close($ch);
+        $resp = json_decode((string) $raw, true);
+        return is_array($resp) ? $resp : ['ok' => false, 'error' => 'bad_response'];
+    }
+    $ctx = stream_context_create([
+        'http' => [
+            'method' => 'POST',
+            'header' => "Content-Type: application/json\r\n",
+            'content' => json_encode($payload),
+            'timeout' => 8,
+            'ignore_errors' => true
+        ],
+        'ssl' => ['verify_peer' => false, 'verify_peer_name' => false]
+    ]);
+    $raw = @file_get_contents($url, false, $ctx);
+    $resp = json_decode((string) $raw, true);
+    return is_array($resp) ? $resp : ['ok' => false, 'error' => 'request_failed'];
+}
+
+/**
+ * Check Webhook status (/getWebhookInfo)
+ */
+function vcd_telegram_get_webhook_info(string $botToken): array
+{
+    $botToken = trim($botToken);
+    if ($botToken === '') {
+        return ['ok' => false, 'error' => 'empty_token', 'message' => 'Bot Token is required.'];
+    }
+    $url = "https://api.telegram.org/bot{$botToken}/getWebhookInfo";
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 6,
+            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ]);
+        $raw = curl_exec($ch);
+        curl_close($ch);
+        $resp = json_decode((string) $raw, true);
+        return is_array($resp) ? $resp : ['ok' => false, 'error' => 'bad_response'];
+    }
+    $ctx = stream_context_create([
+        'http' => ['timeout' => 6, 'ignore_errors' => true],
+        'ssl'  => ['verify_peer' => false, 'verify_peer_name' => false]
+    ]);
+    $raw = @file_get_contents($url, false, $ctx);
+    $resp = json_decode((string) $raw, true);
+    return is_array($resp) ? $resp : ['ok' => false, 'error' => 'request_failed'];
+}
+
 
 
