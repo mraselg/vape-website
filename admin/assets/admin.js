@@ -4523,7 +4523,7 @@
      VIEW: TELEGRAM BOT & REAL-TIME TELEMETRY
      ============================================================ */
   /* ============================================================
-     VIEW: TELEGRAM BOT & REAL-TIME TELEMETRY (SIMPLIFIED)
+     VIEW: TELEGRAM BOT & REAL-TIME TELEMETRY (SIMPLIFIED + (i) GUIDANCE)
      ============================================================ */
   function renderTelegram() {
     dom.viewTitle.textContent = 'Telegram Bot & Alerts';
@@ -4557,10 +4557,13 @@
       <!-- CARD 1: BOT CREDENTIALS -->
       <div class="adm-card">
         <h3><span>🤖</span> Bot Credentials</h3>
-        <p class="adm-card-sub">Essential API credentials for your Telegram Bot</p>
+        <p class="adm-card-sub">Essential API credentials for your Telegram Bot (click <b>ⓘ</b> next to any field for instant instructions)</p>
 
         <div class="adm-field">
-          <label>Telegram Bot API Token</label>
+          <label>
+            Telegram Bot API Token
+            <button type="button" class="adm-info-btn js-tg-info" data-topic="bot_token" title="How to get Bot API Token">ⓘ</button>
+          </label>
           <div style="display:flex;gap:8px;">
             <input type="password" id="tg_view_bot_token" value="${esc(s.telegram_bot_token || '')}" placeholder="e.g. 8772277899:AAEbGGNrRLW57qqOuDi6VXT9YVPbYDwZqaM" style="flex:1;">
             <button type="button" class="adm-btn adm-btn-sm" id="btnToggleTokenVis">👁️ Show</button>
@@ -4571,7 +4574,10 @@
         <div class="adm-grid3" style="margin-top:14px;">
           <div class="adm-field">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <label style="margin:0;">Telegram Chat ID</label>
+              <label style="margin:0;">
+                Telegram Chat ID
+                <button type="button" class="adm-info-btn js-tg-info" data-topic="chat_id" title="How to get Chat ID">ⓘ</button>
+              </label>
               <button type="button" class="adm-btn adm-btn-sm" id="btnAutoDetectChatId" style="background:rgba(0,136,204,0.15);border-color:rgba(0,136,204,0.3);color:#29b6f6;font-size:11px;padding:2px 8px;">
                 🔍 Auto-Detect
               </button>
@@ -4580,12 +4586,18 @@
           </div>
 
           <div class="adm-field">
-            <label>Bot Username</label>
+            <label>
+              Bot Username
+              <button type="button" class="adm-info-btn js-tg-info" data-topic="bot_username" title="How to find Bot Username">ⓘ</button>
+            </label>
             <input type="text" id="tg_view_bot_username" value="${esc(s.telegram_bot_username || '@iqosaibot')}" placeholder="@iqosaibot">
           </div>
 
           <div class="adm-field">
-            <label>Public Link / Channel URL</label>
+            <label>
+              Public Link / Channel URL
+              <button type="button" class="adm-info-btn js-tg-info" data-topic="channel_url" title="What is Public Link">ⓘ</button>
+            </label>
             <input type="url" id="tg_view_channel_url" value="${esc(s.telegram_url || 'https://t.me/iqosaibot')}" placeholder="https://t.me/iqosaibot">
           </div>
         </div>
@@ -4600,7 +4612,10 @@
 
         <div class="adm-grid2">
           <div class="adm-field">
-            <label>👁️ Live Website Visitor Traffic Alert</label>
+            <label>
+              👁️ Live Website Visitor Traffic Alert
+              <button type="button" class="adm-info-btn js-tg-info" data-topic="traffic_alert" title="About Visitor Tracking">ⓘ</button>
+            </label>
             <select id="tg_view_traffic_enabled">
               <option value="1" ${s.telegram_traffic_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Real-time Visitor IP &amp; Device Alert)</option>
               <option value="0" ${s.telegram_traffic_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
@@ -4609,7 +4624,10 @@
           </div>
 
           <div class="adm-field">
-            <label>💬 Live Chat &amp; Customer Phone Leads</label>
+            <label>
+              💬 Live Chat &amp; Customer Phone Leads
+              <button type="button" class="adm-info-btn js-tg-info" data-topic="leads_alert" title="About Live Chat Leads">ⓘ</button>
+            </label>
             <select id="tg_view_leads_enabled">
               <option value="1" ${s.telegram_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Instant Chat Alert)</option>
               <option value="0" ${s.telegram_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
@@ -4618,7 +4636,10 @@
           </div>
 
           <div class="adm-field">
-            <label>🔄 2-Way Telegram Chat Reply</label>
+            <label>
+              🔄 2-Way Telegram Chat Reply
+              <button type="button" class="adm-info-btn js-tg-info" data-topic="2way_chat" title="How 2-Way Chat Works">ⓘ</button>
+            </label>
             <select id="tg_view_2way_enabled">
               <option value="1" ${s.telegram_2way_chat_enabled !== false ? 'selected' : ''}>✅ Enabled (Reply from Telegram to Website)</option>
               <option value="0" ${s.telegram_2way_chat_enabled === false ? 'selected' : ''}>❌ Disabled</option>
@@ -4627,7 +4648,10 @@
           </div>
 
           <div class="adm-field">
-            <label>🛍️ Store Orders Alert</label>
+            <label>
+              🛍️ Store Orders Alert
+              <button type="button" class="adm-info-btn js-tg-info" data-topic="orders_alert" title="About Order Alerts">ⓘ</button>
+            </label>
             <select id="tg_view_orders_enabled">
               <option value="1" ${s.telegram_order_alerts_enabled !== false ? 'selected' : ''}>✅ Enabled (Instant Order Alert)</option>
               <option value="0" ${s.telegram_order_alerts_enabled === false ? 'selected' : ''}>❌ Disabled</option>
@@ -4646,9 +4670,12 @@
           <button type="button" class="adm-btn adm-btn-secondary" id="btnRunTelegramTest">
             ⚡ Send Test Telegram Message
           </button>
-          <button type="button" class="adm-btn adm-btn-secondary" id="btnConnectWebhook" style="border-color:rgba(0,136,204,0.4);background:rgba(0,136,204,0.1);color:#29b6f6;">
-            🔗 Connect / Update 2-Way Webhook
-          </button>
+          <div style="display:inline-flex;align-items:center;gap:4px;">
+            <button type="button" class="adm-btn adm-btn-secondary" id="btnConnectWebhook" style="border-color:rgba(0,136,204,0.4);background:rgba(0,136,204,0.1);color:#29b6f6;">
+              🔗 Connect / Update 2-Way Webhook
+            </button>
+            <button type="button" class="adm-info-btn js-tg-info" data-topic="webhook_guide" title="How Webhook Works">ⓘ</button>
+          </div>
         </div>
 
         <div id="tgTestResultBox" style="display:none;margin-top:14px;padding:12px 16px;border-radius:8px;font-size:13px;line-height:1.5;"></div>
@@ -4656,6 +4683,24 @@
 
       <div style="text-align:right;margin-top:20px;">
         <button type="button" class="adm-btn adm-btn-primary adm-btn-lg" id="btnTgSaveBottom">💾 Save Telegram Settings</button>
+      </div>
+
+      <!-- INTERACTIVE GUIDELINE MODAL -->
+      <div id="tgInfoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:99999;align-items:center;justify-content:center;padding:16px;">
+        <div style="background:#0d1522;border:1px solid rgba(0,136,204,0.35);box-shadow:0 16px 50px rgba(0,0,0,0.7);border-radius:16px;max-width:520px;width:100%;overflow:hidden;">
+          <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.02);">
+            <h3 id="tgModalTitle" style="margin:0;font-size:15px;display:flex;align-items:center;gap:8px;color:#fff;">
+              <span>ℹ️</span> Guideline
+            </h3>
+            <button type="button" id="tgModalClose" style="background:none;border:none;color:var(--adm-muted);font-size:20px;cursor:pointer;line-height:1;padding:4px 8px;">✕</button>
+          </div>
+          <div id="tgModalBody" style="padding:20px;font-size:13px;line-height:1.6;color:#cbd5e1;max-height:70vh;overflow-y:auto;">
+          </div>
+          <div id="tgModalFoot" style="padding:12px 20px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);gap:10px;">
+            <div id="tgModalAction"></div>
+            <button type="button" class="adm-btn adm-btn-secondary" id="tgModalOk">Got it / ঠিক আছে</button>
+          </div>
+        </div>
       </div>
     `;
 
@@ -4679,6 +4724,195 @@
     const btnTestRun = document.getElementById('btnRunTelegramTest');
     const btnTestHead = document.getElementById('btnTgTestHeader');
     const btnWebhook = document.getElementById('btnConnectWebhook');
+
+    // Guideline Modal elements & dictionary
+    const modalWrap = document.getElementById('tgInfoModal');
+    const modalTitle = document.getElementById('tgModalTitle');
+    const modalBody = document.getElementById('tgModalBody');
+    const modalAction = document.getElementById('tgModalAction');
+    const modalClose = document.getElementById('tgModalClose');
+    const modalOk = document.getElementById('tgModalOk');
+
+    const tgGuides = {
+      bot_token: {
+        title: '🤖 Telegram Bot API Token কি এবং কিভাবে পাবেন?',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">বটের API Token হলো Telegram Bot-কে আপনার ওয়েবসাইটের সাথে কানেক্ট করার চাবি (Key)।</p>
+            <div style="background:rgba(0,136,204,0.08);border:1px solid rgba(0,136,204,0.25);padding:12px;border-radius:8px;margin-bottom:12px;">
+              <b style="color:#38bdf8;">টোকেন পাওয়ার সহজ ধাপ:</b>
+              <ol style="margin:6px 0 0 16px;padding:0;">
+                <li>টেলিগ্রাম অ্যাপে গিয়ে <b>@BotFather</b> সার্চ করুন (বা নিচের বাটনে ক্লিক করুন)।</li>
+                <li>মেসেজ বক্সে <code>/newbot</code> লিখে পাঠান।</li>
+                <li>আপনার বটের একটি নাম দিন (যেমন: <i>IQOS Dubai Alerts</i>)।</li>
+                <li>এরপর একটি ইউনিক ইউজারনেম দিন যার শেষে <code>_bot</code> থাকবে (যেমন: <i>iqos_dubai_bot</i>)।</li>
+                <li>BotFather আপনাকে সাথে সাথে একটি <b>HTTP API Token</b> দেবে।</li>
+                <li>সেই টোকেনটি কপি করে এই ঘরে পেস্ট করে দিন!</li>
+              </ol>
+            </div>
+            <div style="font-size:12px;color:var(--adm-muted);">
+              💡 <b>উদাহরণ:</b> <code>8772277899:AAEbGGNrRLW57qqOuDi6VXT9YVPbYDwZqaM</code>
+            </div>
+          </div>
+        `,
+        action: `<a href="https://t.me/BotFather" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:#0088cc;color:#fff;border-color:#0088cc;">👉 Open @BotFather ↗</a>`
+      },
+      chat_id: {
+        title: '🆔 Telegram Chat ID কি এবং কিভাবে পাবেন?',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">Chat ID হলো আপনার টেলিগ্রাম একাউন্টের একটি ইউনিক নাম্বার, যাতে বট সরাসরি আপনার ফোনে নোটিফিকেশন পাঠাতে পারে।</p>
+            <div style="background:rgba(0,229,153,0.08);border:1px solid rgba(0,229,153,0.25);padding:12px;border-radius:8px;margin-bottom:12px;">
+              <b style="color:var(--adm-emerald);">চ্যাট আইডি বের করার পদ্ধতি:</b>
+              <ol style="margin:6px 0 0 16px;padding:0;">
+                <li>প্রথমে আপনার তৈরি করা বটে যান এবং <b>START</b> বাটনে চাপুন (বা <code>/start</code> লিখে পাঠান)।</li>
+                <li>এরপর পাশে থাকা <b>🔍 Auto-Detect</b> বাটনে ক্লিক করলে আপনার চ্যাট আইডি অটো বসে যাবে!</li>
+                <li>অথবা টেলিগ্রামে <b>@userinfobot</b>-এ মেসেজ দিলে আপনার Numeric ID (যেমন: <code>6532343622</code>) দেখা যাবে।</li>
+                <li>যদি কোনো গ্রুপে এলার্ট পেতে চান, তবে বটকে সেই গ্রুপে Admin বানিয়ে গ্রুপের চ্যাট আইডি (যেমন: <code>-100123456789</code>) দিন।</li>
+              </ol>
+            </div>
+          </div>
+        `,
+        action: `<a href="https://t.me/userinfobot" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:rgba(255,255,255,0.08);">👉 Open @userinfobot ↗</a>`
+      },
+      bot_username: {
+        title: '🏷️ Bot Username কি?',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">এটি আপনার বটের পাবলিক ইউজারনেম যা @BotFather দিয়ে তৈরি করার সময় নির্ধারণ করেছিলেন।</p>
+            <ul style="margin:6px 0 0 16px;padding:0;">
+              <li>ইউজারনেম সবসময় <code>@</code> দিয়ে শুরু হয় এবং শেষে <code>bot</code> থাকে।</li>
+              <li>যেমন: <code>@iqosaibot</code> বা <code>@vapeclubbot</code></li>
+              <li>এটি কাস্টমারকে বট ওপেন করতে এবং ওয়েব হুকের সাথে ভেরিফিকেশনে ব্যবহৃত হয়।</li>
+            </ul>
+          </div>
+        `,
+        action: `<a href="https://t.me/iqosaibot" target="_blank" rel="noopener" class="adm-btn adm-btn-sm" style="background:#0088cc;color:#fff;">👉 Open @iqosaibot ↗</a>`
+      },
+      channel_url: {
+        title: '🔗 Public Link / Channel URL কি?',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">ওয়েবসাইটের ফুটার (Footer) এবং সোশ্যাল মিডিয়া আইকনে ভিজিটরদের দেখানোর জন্য আপনার অফিসিয়াল টেলিগ্রাম লিংক।</p>
+            <p>ভিজিটররা যখন ওয়েবসাইটে টেলিগ্রাম আইকনে ক্লিক করবে, সরাসরি এই লিংকে গিয়ে আপনার সাথে চ্যাট বা চ্যানেল দেখতে পারবে।</p>
+            <div style="font-size:12px;color:var(--adm-muted);">💡 <b>উদাহরণ:</b> <code>https://t.me/iqosaibot</code></div>
+          </div>
+        `,
+        action: ``
+      },
+      traffic_alert: {
+        title: '👁️ Live Website Visitor Traffic Alert কি?',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">যখনই কোনো নতুন ভিজিটর ওয়েবসাইটে প্রবেশ করবে, সাথে সাথে তার বিস্তারিত তথ্য আপনার টেলিগ্রাম বটে চলে আসবে:</p>
+            <ul style="margin:6px 0 0 16px;padding:0;">
+              <li><b>🌐 IP Address</b> — ভিজিটরের আইপি ঠিকানা</li>
+              <li><b>📍 Location</b> — দেশ ও শহর (যেমন: 🇦🇪 Dubai, United Arab Emirates)</li>
+              <li><b>📱 Device &amp; OS</b> — মোবাইল/পিসি ও ব্রাউজার (iPhone Safari, Android Chrome ইত্যাদি)</li>
+              <li><b>🔗 Landing Page</b> — কোন প্রোডাক্ট বা পেজে ঢুকেছে</li>
+              <li><b>🧭 Source</b> — ভিজিটর কোথা থেকে এসেছে (গুগল সার্চ, ফেসবুক নাকি সরাসরি)</li>
+            </ul>
+            <div style="margin-top:10px;padding:10px;background:rgba(255,255,255,0.03);border-radius:6px;font-size:12px;color:var(--adm-muted);">
+              🛡️ <b>অ্যান্টি-স্প্যাম ফিল্টার:</b> একই ব্যক্তি পেজ রিলোড দিলে বারবার এলার্ট আসবে না। স্মার্ট ১৫ মিনিটের সেশন ক্যাশ থাকবে।
+            </div>
+          </div>
+        `,
+        action: ``
+      },
+      leads_alert: {
+        title: '💬 Live Chat & WhatsApp Leads Alert কি?',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">ওয়েবসাইটে থাকা লাইভ চ্যাট উইন্ডোতে গ্রাহকের প্রতিটি মুভমেন্ট ও মেসেজ বটে পৌঁছানোর ফিচার:</p>
+            <ul style="margin:6px 0 0 16px;padding:0;">
+              <li>গ্রাহক তার WhatsApp/মোবাইল নাম্বার ইনপুট করলেই সেই নাম্বার সরাসরি বটে সেন্ড হবে।</li>
+              <li>গ্রাহক কোনো প্রশ্ন বা মেসেজ টাইপ করলে মেসেজের সাথে সাথে তার কার্টের আইটেম ও প্রোডাক্ট নাম সহ নোটিফিকেশন আসবে।</li>
+            </ul>
+          </div>
+        `,
+        action: ``
+      },
+      '2way_chat': {
+        title: '🔄 2-Way Telegram Chat Reply (বট থেকে উত্তর দেওয়া)',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">এই ফিচারের মাধ্যমে আপনি টেলিগ্রাম থেকেই সরাসরি ওয়েবসাইটের গ্রাহককে উত্তর দিতে পারবেন!</p>
+            <div style="background:rgba(0,229,153,0.08);border:1px solid rgba(0,229,153,0.25);padding:12px;border-radius:8px;margin-bottom:10px;">
+              <b style="color:var(--adm-emerald);">কিভাবে কাজ করে:</b>
+              <ol style="margin:6px 0 0 16px;padding:0;">
+                <li>ওয়েবসাইটে কাস্টমার মেসেজ দিলে আপনার টেলিগ্রাম বটে মেসেজ আসবে (যেমন: <code>#CHAT-7429</code>)।</li>
+                <li>টেলিগ্রামে সেই মেসেজটি <b>Swipe / Reply</b> করে লিখে সেন্ড করে দিন!</li>
+                <li>অথবা <code>/reply 7429 আপনার উত্তর</code> লিখে সেন্ড করুন।</li>
+                <li>আপনার পাঠানো উত্তর সাথে সাথে ওয়েবসাইটের কাস্টমারের চ্যাট স্ক্রিনে লাইভ Support Agent বাবল হিসেবে ভেসে উঠবে!</li>
+              </ol>
+            </div>
+          </div>
+        `,
+        action: ``
+      },
+      orders_alert: {
+        title: '🛍️ Store Orders Alert কি?',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">ওয়েবসাইট থেকে যেকোনো কাস্টমার অর্ডার কনফার্ম করলেই সাথে সাথে পুরো অর্ডারের সামারি আপনার টেলিগ্রাম বটে রিয়েল-টাইমে চলে আসবে:</p>
+            <ul style="margin:6px 0 0 16px;padding:0;">
+              <li>অর্ডার নম্বর ও গ্রাহকের নাম</li>
+              <li>মোবাইল নাম্বার (ক্লিক করে সরাসরি কল দেওয়ার সুবিধা)</li>
+              <li>সম্পূর্ণ ডেলিভারি ঠিকানা ও এমিরেটস (দুবাই/শারজাহ ইত্যাদি)</li>
+              <li>কার্টের প্রোডাক্ট তালিকা, কোয়ান্টিটি এবং মোট বিল</li>
+              <li>পেমেন্ট মেথড (Cash on Delivery / Card on Delivery)</li>
+            </ul>
+          </div>
+        `,
+        action: ``
+      },
+      webhook_guide: {
+        title: '🔗 2-Way Live Chat Webhook কি?',
+        body: `
+          <div style="font-size:13px;line-height:1.6;">
+            <p style="margin-top:0;">টেলিগ্রাম বট যাতে আপনার পাঠানো রিপ্লাই স্বয়ংক্রিয়ভাবে আমাদের ওয়েবসাইটের সার্ভারে পাঠাতে পারে, সেজন্য Webhook কানেক্ট করতে হয়।</p>
+            <ul style="margin:6px 0 0 16px;padding:0;">
+              <li><b>Webhook URL:</b> <code>https://iqosai.com/api/tg-webhook.php</code></li>
+              <li>"Connect / Update 2-Way Webhook" বাটনে ক্লিক করলে টেলিগ্রাম API-এর সাথে এটি সম্পূর্ণ স্বয়ংক্রিয়ভাবে কানেক্ট হয়ে যায়।</li>
+              <li>এর ফলে আলাদা কোনো সার্ভার অ্যাপ্লিকেশন ছাড়া ব্যাকগ্রাউন্ডেই টেলিগ্রামের সাথে ওয়েবসাইটের সরাসরি ২-ওয়ে যোগাযোগ চালু থাকে।</li>
+            </ul>
+          </div>
+        `,
+        action: ``
+      }
+    };
+
+    // Open guideline modal handler
+    const openGuideModal = (topicKey) => {
+      const g = tgGuides[topicKey];
+      if (!g || !modalWrap) return;
+      if (modalTitle) modalTitle.innerHTML = `<span>ℹ️</span> ${g.title}`;
+      if (modalBody) modalBody.innerHTML = g.body;
+      if (modalAction) modalAction.innerHTML = g.action || '';
+      modalWrap.style.display = 'flex';
+    };
+
+    const closeGuideModal = () => {
+      if (modalWrap) modalWrap.style.display = 'none';
+    };
+
+    // Bind all info buttons
+    dom.content.querySelectorAll('.js-tg-info').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const topic = btn.dataset.topic;
+        openGuideModal(topic);
+      });
+    });
+
+    if (modalClose) modalClose.addEventListener('click', closeGuideModal);
+    if (modalOk) modalOk.addEventListener('click', closeGuideModal);
+    if (modalWrap) {
+      modalWrap.addEventListener('click', (e) => {
+        if (e.target === modalWrap) closeGuideModal();
+      });
+    }
 
     // Toggle password visibility
     if (btnToggleVis && inpToken) {
