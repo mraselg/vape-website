@@ -8,4 +8,4 @@ Disallow: /data/
 Disallow: /scratch/
 Disallow: /api/
 
-Sitemap: https://iqosai.com/sitemap.xml
+Sitemap: https://iqosae.com/sitemap.xml

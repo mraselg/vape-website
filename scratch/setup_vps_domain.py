@@ -82,9 +82,9 @@ WantedBy=multi-user.target
     print("6. Configuring Apache VirtualHost for iqosai.com...")
     apache_vhost = """# Apache Reverse Proxy for iqosai.com -> PHP Server on port 8010
 <VirtualHost 104.207.64.113:80 127.0.0.1:80>
-    ServerName iqosai.com
-    ServerAlias www.iqosai.com
-    ServerAdmin webmaster@iqosai.com
+    ServerName iqosae.com
+    ServerAlias www.iqosae.com iqosai.com www.iqosai.com
+    ServerAdmin webmaster@iqosae.com
 
     ProxyPreserveHost On
     ProxyPass / http://127.0.0.1:8010/
@@ -95,9 +95,9 @@ WantedBy=multi-user.target
 </VirtualHost>
 
 <VirtualHost 104.207.64.113:443 127.0.0.1:443>
-    ServerName iqosai.com
-    ServerAlias www.iqosai.com
-    ServerAdmin webmaster@iqosai.com
+    ServerName iqosae.com
+    ServerAlias www.iqosae.com iqosai.com www.iqosai.com
+    ServerAdmin webmaster@iqosae.com
 
     SSLEngine on
     SSLCertificateFile /etc/apache2/conf.d/ssl.crt/server.crt

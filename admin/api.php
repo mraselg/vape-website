@@ -242,9 +242,8 @@ switch ($action) {
         $testMsg .= "✅ *Status*: Connection Verified Successfully!\n";
         $testMsg .= "👤 *Triggered By*: " . $user . "\n";
         $testMsg .= "🕒 *Timestamp*: " . $now . "\n";
-        $testMsg .= "⚡ *Telemetry Active*: Real-time alerts for New Store Orders and WhatsApp Leads are live.\n";
-        $testMsg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
-        $testMsg .= "🌐 _iqosai.com — Control Center_";
+        $domain = !empty($VCD_SEO['site_url']) ? preg_replace('#^https?://#', '', $VCD_SEO['site_url']) : 'iqosae.com';
+        $testMsg .= "🌐 _" . $domain . " — Control Center_";
 
         $res = vcd_telegram_send($testMsg, $botToken, $chatId);
         if (!empty($res['ok'])) {
@@ -357,7 +356,10 @@ switch ($action) {
 
         $webhookUrl = trim((string) ($body['webhook_url'] ?? ''));
         if ($webhookUrl === '') {
-            $webhookUrl = 'https://iqosai.com/api/tg-webhook.php';
+            $webhookUrl = site_url('/api/tg-webhook.php');
+            if (empty($webhookUrl) || str_starts_with($webhookUrl, '/')) {
+                $webhookUrl = 'https://iqosae.com/api/tg-webhook.php';
+            }
         }
 
         $res = vcd_telegram_set_webhook($botToken, $webhookUrl);

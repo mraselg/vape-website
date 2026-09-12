@@ -890,7 +890,7 @@
             </div>
             <div class="adm-serp-url-row">
               <span class="adm-serp-fav">⚡</span>
-              <span class="adm-serp-site">iqosai.com</span>
+              <span class="adm-serp-site">iqosae.com</span>
               <span class="adm-serp-slug">› product › <span id="serpSlugText">${esc(p.slug || p.id)}</span></span>
             </div>
             <div class="adm-serp-title" id="serpTitleText">
@@ -3913,7 +3913,7 @@
         <div class="adm-grid2">
           <div class="adm-field">
             <label>Canonical Production URL</label>
-            <input type="url" id="seo_site_url" value="${esc(seo.site_url || 'https://iqosai.com')}">
+            <input type="url" id="seo_site_url" value="${esc(seo.site_url || 'https://iqosae.com')}">
           </div>
           <div class="adm-field">
             <label>Geo Region (ISO 3166-2 UAE)</label>
@@ -4033,7 +4033,7 @@
           </div>
           <div class="adm-serp-url-row">
             <span class="adm-serp-fav">⚡</span>
-            <span class="adm-serp-site">${esc(seo.site_url ? seo.site_url.replace(/^https?:\/\//, '') : 'iqosai.com')}</span>
+            <span class="adm-serp-site">${esc(seo.site_url ? seo.site_url.replace(/^https?:\/\//, '') : 'iqosae.com')}</span>
           </div>
           <div class="adm-serp-title" id="homeSerpTitle">${esc(seo.pages.home.title || '')}</div>
           <div class="adm-serp-desc" id="homeSerpDesc">${esc(seo.pages.home.description || '')}</div>
@@ -4252,7 +4252,7 @@
           </div>
           <div class="adm-serp-url-row">
             <span class="adm-serp-fav">⚡</span>
-            <span class="adm-serp-site">iqosai.com › product.php?slug=${esc(prodSlug)}</span>
+            <span class="adm-serp-site">${esc(seo.site_url ? seo.site_url.replace(/^https?:\/\//, '') : 'iqosae.com')} › product.php?slug=${esc(prodSlug)}</span>
           </div>
           <div class="adm-serp-title" id="prodSerpTitle">${esc(currentTitle)}</div>
           <div class="adm-serp-desc" id="prodSerpDesc">${esc(currentDesc)}</div>
@@ -4887,7 +4887,7 @@
           <div style="font-size:13px;line-height:1.6;">
             <p style="margin-top:0;">টেলিগ্রাম বট যাতে আপনার পাঠানো রিপ্লাই স্বয়ংক্রিয়ভাবে আমাদের ওয়েবসাইটের সার্ভারে পাঠাতে পারে, সেজন্য Webhook কানেক্ট করতে হয়।</p>
             <ul style="margin:6px 0 0 16px;padding:0;">
-              <li><b>Webhook URL:</b> <code>https://iqosai.com/api/tg-webhook.php</code></li>
+              <li><b>Webhook URL:</b> <code>https://iqosae.com/api/tg-webhook.php</code></li>
               <li>"Connect / Update 2-Way Webhook" বাটনে ক্লিক করলে টেলিগ্রাম API-এর সাথে এটি সম্পূর্ণ স্বয়ংক্রিয়ভাবে কানেক্ট হয়ে যায়।</li>
               <li>এর ফলে আলাদা কোনো সার্ভার অ্যাপ্লিকেশন ছাড়া ব্যাকগ্রাউন্ডেই টেলিগ্রামের সাথে ওয়েবসাইটের সরাসরি ২-ওয়ে যোগাযোগ চালু থাকে।</li>
             </ul>
@@ -5048,7 +5048,7 @@
             headers: { 'Content-Type': 'application/json', 'X-CSRF': window.ADM_CSRF || '' },
             body: JSON.stringify({
               bot_token: tokenVal,
-              webhook_url: 'https://iqosai.com/api/tg-webhook.php'
+              webhook_url: 'https://iqosae.com/api/tg-webhook.php'
             })
           });
           const data = await res.json();

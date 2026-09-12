@@ -1,6 +1,38 @@
 {
     "leads": [
         {
+            "id": "LEAD-260911-FEAB94",
+            "timestamp": "2026-09-11T20:32:49+02:00",
+            "formatted_time": "11 Sep 2026, 08:32 PM CEST",
+            "phone": "+971 501234567",
+            "raw_phone": "971501234567",
+            "country_code": "+971",
+            "message": "Hello! Do you deliver to Business Bay in 1 hour?",
+            "product": "Vape Club Dubai",
+            "cart_total": 0,
+            "cart_summary": "",
+            "page": "/",
+            "ip": "",
+            "device": "Windows PC",
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36"
+        },
+        {
+            "id": "LEAD-260911-D9070E",
+            "timestamp": "2026-09-11T20:32:47+02:00",
+            "formatted_time": "11 Sep 2026, 08:32 PM CEST",
+            "phone": "+971 501234567",
+            "raw_phone": "971501234567",
+            "country_code": "+971",
+            "message": "Initiated Live Chat",
+            "product": "Vape Club Dubai",
+            "cart_total": 0,
+            "cart_summary": "",
+            "page": "/",
+            "ip": "",
+            "device": "Windows PC",
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36"
+        },
+        {
             "id": "LEAD-260911-BF28E0",
             "timestamp": "2026-09-11T14:47:03+02:00",
             "formatted_time": "11 Sep 2026, 02:47 PM CEST",
