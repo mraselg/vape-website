@@ -38,9 +38,10 @@ if hp:
         print(f"     OpenGraph URL: {og.group(1)}")
     
     # Check Schemas
+    assert '"@type": "Organization"' in hp or '"@type":"Organization"' in hp, "Organization schema missing"
     assert '"@type": "WebSite"' in hp or '"@type":"WebSite"' in hp, "WebSite schema missing"
     assert '"@type": "Store"' in hp or '"@type":"Store"' in hp or '"@type": "LocalBusiness"' in hp, "Store schema missing"
-    print("     Schemas verified: WebSite, Store/LocalBusiness, FAQPage")
+    print("     Schemas verified: Organization, WebSite, Store/LocalBusiness, FAQPage")
 
 # 2. Category Page
 cat = test_url("/category.php?cat=terea-japan", "Category Page (TEREA Japan)")
