@@ -332,6 +332,7 @@
 
     const savingsPill = vState.old && vState.old > vState.price
       ? '<span class="pd-save-badge">Save ' + (vState.old - vState.price) + ' AED (' + Math.round((1 - vState.price / vState.old) * 100) + '% OFF)</span>'
+      : '';
     const galPhotos = [];
     if (vState.photo) galPhotos.push(vState.photo);
     if (Array.isArray(p.gallery)) {
