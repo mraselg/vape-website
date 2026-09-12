@@ -9,3 +9,4 @@ __pycache__/
 Thumbs.db
 scratch/*.png
 data/*.log
+production_release/*.zip

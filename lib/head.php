@@ -183,6 +183,46 @@ function render_vcd_script(): void
 
 /* ---------- JSON-LD builders ---------- */
 
+function jsonld_organization(): array
+{
+    global $VCD_SETTINGS, $VCD_SEO;
+    $brand = trim(($VCD_SETTINGS['brand_name'] ?? 'VAPE CLUB') . ' ' . ($VCD_SETTINGS['brand_tagline'] ?? ''));
+    $logo = !empty($VCD_SETTINGS['logo_image']) ? site_url($VCD_SETTINGS['logo_image']) : site_url($VCD_SEO['default_og_image'] ?? 'assets/images/hero-iluma.png');
+    $socials = array_values(array_filter([
+        $VCD_SETTINGS['instagram_url'] ?? '',
+        $VCD_SETTINGS['telegram_url'] ?? '',
+        $VCD_SETTINGS['facebook_url'] ?? '',
+        $VCD_SETTINGS['tiktok_url'] ?? '',
+    ]));
+    return [
+        '@context' => 'https://schema.org',
+        '@type'    => 'Organization',
+        'name'     => $brand,
+        'alternateName' => ['Vape Club Dubai', 'IQOS Dubai Online', 'TEREA Dubai Store'],
+        'url'      => site_url('/'),
+        'logo'     => [
+            '@type' => 'ImageObject',
+            'url'   => $logo
+        ],
+        'contactPoint' => [
+            '@type'             => 'ContactPoint',
+            'telephone'         => $VCD_SETTINGS['phone_tel'] ?? '+971562848450',
+            'contactType'       => 'Customer Service',
+            'areaServed'        => 'AE',
+            'availableLanguage' => ['English', 'Arabic']
+        ],
+        'address' => [
+            '@type'           => 'PostalAddress',
+            'streetAddress'   => $VCD_SETTINGS['address'] ?? 'International City, Dragon Mart, Dubai',
+            'addressLocality' => 'Dubai',
+            'addressRegion'   => 'Dubai',
+            'postalCode'      => '00000',
+            'addressCountry'  => 'AE'
+        ],
+        'sameAs' => $socials
+    ];
+}
+
 function jsonld_local_business(): array
 {
     global $VCD_SETTINGS, $VCD_SEO;

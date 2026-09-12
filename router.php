@@ -29,6 +29,18 @@ if ($path === '/') {
     return true;
 }
 
+/* Pretty URLs */
+if (preg_match('#^/product/([a-zA-Z0-9_-]+)/?$#', $path, $m)) {
+    $_GET['id'] = $m[1];
+    require __DIR__ . '/product.php';
+    return true;
+}
+if (preg_match('#^/category/([a-zA-Z0-9_-]+)/?$#', $path, $m)) {
+    $_GET['cat'] = $m[1];
+    require __DIR__ . '/category.php';
+    return true;
+}
+
 /* Canonical root redirection (SEO: prevent duplicate /index.php in search engines) */
 if ($path === '/index.php') {
     $qs = (string) ($_SERVER['QUERY_STRING'] ?? '');

@@ -1,1 +1,20 @@
-{}
+{
+    "CHAT-1STS6": {
+        "session_id": "CHAT-1STS6",
+        "phone": "01611985263",
+        "page": "/",
+        "product": "Vape Club Dubai",
+        "device": "Windows PC",
+        "created_at": "2026-09-12 09:58:35",
+        "updated_at": "2026-09-12 09:58:35",
+        "messages": [
+            {
+                "id": "msg_1789199915_407",
+                "sender": "user",
+                "text": "Hello Vape Club Dubai! I would like to place an order for: items in my cart.",
+                "time": "09:58 AM",
+                "timestamp": 1789199915
+            }
+        ]
+    }
+}

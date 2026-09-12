@@ -1,6 +1,22 @@
 {
     "leads": [
         {
+            "id": "LEAD-260912-EA2AB0",
+            "timestamp": "2026-09-12T09:58:34+02:00",
+            "formatted_time": "12 Sep 2026, 09:58 AM CEST",
+            "phone": "+880 01611985263",
+            "raw_phone": "88001611985263",
+            "country_code": "+880",
+            "message": "Hello Vape Club Dubai! I would like to place an order for: items in my cart.",
+            "product": "Vape Club Dubai",
+            "cart_total": 0,
+            "cart_summary": "",
+            "page": "/",
+            "ip": "",
+            "device": "Windows PC",
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        },
+        {
             "id": "LEAD-260911-FEAB94",
             "timestamp": "2026-09-11T20:32:49+02:00",
             "formatted_time": "11 Sep 2026, 08:32 PM CEST",

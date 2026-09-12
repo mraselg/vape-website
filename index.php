@@ -14,6 +14,9 @@ $seoPage = $VCD_SEO['pages']['home'] ?? [];
 
 /* JSON-LD stack for the home page */
 $jsonld = [];
+if ($VCD_SEO['schema_organization'] ?? true) {
+    $jsonld[] = jsonld_organization();
+}
 if ($VCD_SEO['schema_local_business'] ?? true) {
     $jsonld[] = jsonld_local_business();
 }

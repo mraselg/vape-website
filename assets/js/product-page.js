@@ -332,15 +332,34 @@
 
     const savingsPill = vState.old && vState.old > vState.price
       ? '<span class="pd-save-badge">Save ' + (vState.old - vState.price) + ' AED (' + Math.round((1 - vState.price / vState.old) * 100) + '% OFF)</span>'
+    const galPhotos = [];
+    if (vState.photo) galPhotos.push(vState.photo);
+    if (Array.isArray(p.gallery)) {
+      p.gallery.forEach((g) => { if (g && !galPhotos.includes(g)) galPhotos.push(g); });
+    }
+    if (p.variants?.colors) {
+      p.variants.colors.forEach((c) => { if (c.photo && !galPhotos.includes(c.photo)) galPhotos.push(c.photo); });
+    }
+    const galHtml = galPhotos.length > 1
+      ? '<div class="pd-gallery-strip" id="pdGalleryStrip" role="region" aria-label="Product image gallery">' +
+          galPhotos.map((src, i) =>
+            '<button type="button" class="pd-gal-thumb' + (src === vState.photo ? ' is-active' : '') + '" data-src="' + esc(src) + '" aria-label="View photo ' + (i+1) + '">' +
+              '<img src="' + esc(src) + '" alt="' + esc(p.name) + ' view ' + (i+1) + '" loading="lazy" onerror="this.parentElement.remove()">' +
+            '</button>'
+          ).join('') +
+        '</div>'
       : '';
 
     $('#pdRoot').innerHTML =
       '<article class="pd-hero">' +
-        '<div class="pd-media ' + mediaBg(p) + ' ' + p.theme + '" id="pdMediaBox" role="button" tabindex="0" title="Click to view fullscreen / zoom">' +
-          badgeHtml(p) +
-          (p.flag ? '<span class="origin-flag">' + p.flag + '</span>' : '') +
-          artInner('pd-photo') +
-          (vState.photo ? '<button class="pd-zoom-trigger" id="pdZoomTrigger" type="button"><svg class="icon icon-sm"><use href="#i-search"/></svg> Fullscreen / Zoom</button>' : '') +
+        '<div class="pd-media-wrap">' +
+          '<div class="pd-media ' + mediaBg(p) + ' ' + p.theme + '" id="pdMediaBox" role="button" tabindex="0" title="Click to view fullscreen / zoom">' +
+            badgeHtml(p) +
+            (p.flag ? '<span class="origin-flag">' + p.flag + '</span>' : '') +
+            artInner('pd-photo') +
+            (vState.photo ? '<button class="pd-zoom-trigger" id="pdZoomTrigger" type="button"><svg class="icon icon-sm"><use href="#i-search"/></svg> Fullscreen / Zoom</button>' : '') +
+          '</div>' +
+          galHtml +
         '</div>' +
         '<div class="pd-info">' +
           '<div class="pd-eyebrow-row">' +
@@ -449,6 +468,23 @@
         renderHero();
       });
     });
+
+    // Gallery Thumbnails Click Binding
+    const galStrip = $('#pdGalleryStrip');
+    if (galStrip) {
+      galStrip.addEventListener('click', (e) => {
+        const btn = e.target.closest('.pd-gal-thumb');
+        if (!btn) return;
+        const src = btn.dataset.src;
+        if (!src) return;
+        const hero = $('#pdHeroImg');
+        if (hero) hero.src = src;
+        const lb = $('#lbImg');
+        if (lb) lb.src = src;
+        galStrip.querySelectorAll('.pd-gal-thumb').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+      });
+    }
 
     // Lightbox triggers
     bindLightbox(vState);

@@ -1376,5 +1376,239 @@ button, input, select, textarea { font-family: inherit; }
   box-shadow: 0 0 10px rgba(0, 136, 204, 0.5);
 }
 
+/* ============================================================
+   SMART IMAGE CROPPER & STUDIO MODAL
+   ============================================================ */
+.adm-cropper-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(4, 7, 12, 0.88);
+  backdrop-filter: blur(16px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: admFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.adm-cropper-dialog {
+  width: 100%;
+  max-width: 680px;
+  background: var(--adm-panel);
+  border: 1px solid var(--adm-line2);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(0, 229, 153, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 94vh;
+}
+.adm-cropper-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--adm-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--adm-panel2);
+}
+.adm-cropper-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+.adm-cropper-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(0, 229, 153, 0.15);
+  color: var(--adm-emerald);
+  font-weight: 600;
+}
+.adm-cropper-body {
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.adm-cropper-viewport {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: none;
+  border: 1px solid var(--adm-line);
+}
+.adm-cropper-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  cursor: grab;
+}
+.adm-cropper-canvas:active {
+  cursor: grabbing;
+}
+.adm-cropper-ratios {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.adm-ratio-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--adm-panel2);
+  border: 1px solid var(--adm-line);
+  color: var(--adm-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.adm-ratio-btn:hover {
+  color: var(--adm-text);
+  border-color: var(--adm-line2);
+}
+.adm-ratio-btn.is-active {
+  background: rgba(0, 229, 153, 0.16);
+  border-color: var(--adm-emerald);
+  color: var(--adm-emerald);
+}
+.adm-cropper-controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  background: var(--adm-panel2);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--adm-line);
+}
+.adm-cropper-zoom-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.adm-cropper-zoom-slider {
+  flex: 1;
+  accent-color: var(--adm-emerald);
+  height: 6px;
+  cursor: pointer;
+}
+.adm-cropper-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--adm-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--adm-panel2);
+  gap: 10px;
+}
 
+/* ============================================================
+   GALLERY MANAGER STYLES
+   ============================================================ */
+.adm-gal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.adm-gal-card {
+  position: relative;
+  background: var(--adm-panel2);
+  border: 1px solid var(--adm-line2);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+}
+.adm-gal-card:hover {
+  border-color: var(--adm-emerald);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+.adm-gal-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: #000;
+  display: block;
+}
+.adm-gal-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: var(--adm-panel3);
+  align-items: center;
+}
+.adm-gal-btn {
+  background: transparent;
+  border: none;
+  color: var(--adm-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 13px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+.adm-gal-btn:hover {
+  color: #fff;
+}
+.adm-gal-btn.adm-gal-del:hover {
+  color: var(--adm-red);
+}
 
+/* ============================================================
+   VARIANT BUILDER STYLES
+   ============================================================ */
+.adm-var-section {
+  background: var(--adm-panel2);
+  border: 1px solid var(--adm-line2);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.adm-var-sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.adm-var-sec-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.adm-var-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 10px;
+  background: var(--adm-panel);
+  border: 1px solid var(--adm-line);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+.adm-color-preview-pill {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: inline-block;
+  vertical-align: middle;
+}

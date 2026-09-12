@@ -48,17 +48,25 @@ foreach ($VCD_CATS as $key => $cat) {
     ];
 }
 
-// Products with images
+// Products with primary and gallery images
 foreach ($VCD_PRODUCTS as $p) {
     $entry = [
         'loc'        => site_url('/product.php?id=' . rawurlencode((string) ($p['id'] ?? ''))),
         'lastmod'    => $today,
         'changefreq' => 'weekly',
-        'priority'   => '0.9'
+        'priority'   => '0.9',
+        'images'     => []
     ];
+    $title = (string) ($p['name'] ?? 'Vape Product');
     if (!empty($p['photo'])) {
-        $entry['image'] = site_url((string) $p['photo']);
-        $entry['title'] = (string) ($p['name'] ?? 'Vape Product');
+        $entry['images'][] = ['loc' => site_url((string) $p['photo']), 'title' => $title];
+    }
+    if (!empty($p['gallery']) && is_array($p['gallery'])) {
+        foreach ($p['gallery'] as $gPhoto) {
+            if (!empty($gPhoto) && $gPhoto !== ($p['photo'] ?? '')) {
+                $entry['images'][] = ['loc' => site_url((string) $gPhoto), 'title' => $title];
+            }
+        }
     }
     $urls[] = $entry;
 }
@@ -73,11 +81,13 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
     <lastmod><?= e($u['lastmod']) ?></lastmod>
     <changefreq><?= e($u['changefreq']) ?></changefreq>
     <priority><?= e($u['priority']) ?></priority>
-<?php if (!empty($u['image'])): ?>
+<?php if (!empty($u['images'])): ?>
+<?php foreach ($u['images'] as $img): ?>
     <image:image>
-      <image:loc><?= e($u['image']) ?></image:loc>
-      <image:title><?= e($u['title'] ?? '') ?></image:title>
+      <image:loc><?= e($img['loc']) ?></image:loc>
+      <image:title><?= e($img['title']) ?></image:title>
     </image:image>
+<?php endforeach; ?>
 <?php endif; ?>
   </url>
 <?php endforeach; ?>

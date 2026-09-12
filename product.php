@@ -116,22 +116,61 @@ $seoDesc = !empty($p['seo_desc'])
 
 $jsonld = [];
 if ($VCD_SEO['schema_product'] ?? true) {
+    $allProdPhotos = array_values(array_unique(array_filter(array_merge([$photo], is_array($p['gallery'] ?? null) ? $p['gallery'] : []))));
+    $schemaImages = !empty($allProdPhotos) ? array_map('site_url', $allProdPhotos) : ($photo !== '' ? [site_url($photo)] : []);
     $schema = [
         '@context' => 'https://schema.org/',
         '@type'    => 'Product',
         'name'     => (string) $p['name'],
-        'image'    => $photo !== '' ? [site_url($photo)] : [],
+        'image'    => $schemaImages,
         'description' => preg_replace('/\s+/', ' ', (string) ($p['description'] ?? $seoDesc)),
         'sku'      => $sku,
+        'mpn'      => $sku,
         'brand'    => ['@type' => 'Brand', 'name' => (string) ($p['brand'] ?? $brandName)],
         'offers'   => [
             '@type'         => 'Offer',
             'url'           => site_url('/product.php?id=' . rawurlencode((string) $p['id'])),
             'priceCurrency' => 'AED',
             'price'         => $price,
+            'priceValidUntil' => date('Y-12-31', strtotime('+1 year')),
             'availability'  => 'https://schema.org/' . (($p['stock'] ?? 'in') === 'out' ? 'OutOfStock' : 'InStock'),
             'itemCondition' => 'https://schema.org/NewCondition',
             'seller'        => ['@type' => 'Organization', 'name' => $brandName],
+            'shippingDetails' => [
+                '@type' => 'OfferShippingDetails',
+                'shippingRate' => [
+                    '@type' => 'MonetaryAmount',
+                    'value' => (string) ($S['delivery_fee'] ?? '20'),
+                    'currency' => 'AED'
+                ],
+                'shippingDestination' => [
+                    '@type' => 'DefinedRegion',
+                    'addressCountry' => 'AE'
+                ],
+                'deliveryTime' => [
+                    '@type' => 'ShippingDeliveryTime',
+                    'handlingTime' => [
+                        '@type' => 'QuantitativeValue',
+                        'minValue' => 0,
+                        'maxValue' => 1,
+                        'unitCode' => 'HUR'
+                    ],
+                    'transitTime' => [
+                        '@type' => 'QuantitativeValue',
+                        'minValue' => 1,
+                        'maxValue' => 2,
+                        'unitCode' => 'HUR'
+                    ]
+                ]
+            ],
+            'hasMerchantReturnPolicy' => [
+                '@type' => 'MerchantReturnPolicy',
+                'applicableCountry' => 'AE',
+                'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                'merchantReturnDays' => 7,
+                'returnMethod' => 'https://schema.org/ReturnByMail',
+                'returnFees' => 'https://schema.org/FreeReturn'
+            ]
         ],
     ];
     if ($showRating && $ratingCnt !== '' && (int) $ratingCnt > 0) {
@@ -292,12 +331,41 @@ function pd_variants_html(array $p, array $v, string $selPack, ?string $selColor
         : '';
     $freeUnlocked = $price >= $threshold;
   ?><article class="pd-hero">
-      <div class="pd-media <?= media_bg($p) . ' ' . e($p['theme'] ?? '') ?>" id="pdMediaBox" role="button" tabindex="0" title="Click to view fullscreen / zoom">
-        <?= badge_stack($p) ?>
-        <?= !empty($p['flag']) ? '<span class="origin-flag">' . e($p['flag']) . '</span>' : '' ?>
-        <?= art_use($p) ?>
-        <?= $photo !== '' ? '<img class="pd-photo" id="pdHeroImg" src="' . e($photo) . '" alt="' . e($p['name']) . '" onerror="this.remove()">' : '' ?>
-        <?= $photo !== '' ? '<button class="pd-zoom-trigger" id="pdZoomTrigger" type="button"><svg class="icon icon-sm"><use href="#i-search"/></svg> Fullscreen / Zoom</button>' : '' ?>
+      <div class="pd-media-wrap">
+        <div class="pd-media <?= media_bg($p) . ' ' . e($p['theme'] ?? '') ?>" id="pdMediaBox" role="button" tabindex="0" title="Click to view fullscreen / zoom">
+          <?= badge_stack($p) ?>
+          <?= !empty($p['flag']) ? '<span class="origin-flag">' . e($p['flag']) . '</span>' : '' ?>
+          <?= art_use($p) ?>
+          <?= $photo !== '' ? '<img class="pd-photo" id="pdHeroImg" src="' . e($photo) . '" alt="' . e($p['name']) . '" onerror="this.remove()">' : '' ?>
+          <?= $photo !== '' ? '<button class="pd-zoom-trigger" id="pdZoomTrigger" type="button"><svg class="icon icon-sm"><use href="#i-search"/></svg> Fullscreen / Zoom</button>' : '' ?>
+        </div>
+        <?php
+        $galleryPhotos = [];
+        if (!empty($photo)) $galleryPhotos[] = $photo;
+        if (!empty($p['gallery']) && is_array($p['gallery'])) {
+            foreach ($p['gallery'] as $gPh) {
+                if (!empty($gPh) && !in_array($gPh, $galleryPhotos, true)) {
+                    $galleryPhotos[] = $gPh;
+                }
+            }
+        }
+        if (!empty($p['variants']['colors']) && is_array($p['variants']['colors'])) {
+            foreach ($p['variants']['colors'] as $cItem) {
+                if (!empty($cItem['photo']) && !in_array($cItem['photo'], $galleryPhotos, true)) {
+                    $galleryPhotos[] = $cItem['photo'];
+                }
+            }
+        }
+        ?>
+        <?php if (count($galleryPhotos) > 1): ?>
+        <div class="pd-gallery-strip" id="pdGalleryStrip" role="region" aria-label="Product image gallery">
+          <?php foreach ($galleryPhotos as $gIdx => $gSrc): ?>
+          <button type="button" class="pd-gal-thumb<?= $gIdx === 0 ? ' is-active' : '' ?>" data-src="<?= e($gSrc) ?>" aria-label="View photo <?= $gIdx + 1 ?>">
+            <img src="<?= e($gSrc) ?>" alt="<?= e($p['name']) ?> view <?= $gIdx + 1 ?>" loading="lazy" onerror="this.parentElement.remove()">
+          </button>
+          <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
       </div>
       <div class="pd-info">
         <div class="pd-eyebrow-row">
