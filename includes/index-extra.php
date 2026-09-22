@@ -32,19 +32,4 @@ $AGE = $VCD_HOME['age_gate'] ?? [];
   </div>
 </div>
 
-<?php if ($AGE['enabled'] ?? true): ?>
-<!-- ========== AGE GATE ========== -->
-<div class="modal" id="ageModal" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
-  <div class="modal-panel age-panel">
-    <div class="age-shield"><svg class="icon"><use href="#i-18"/></svg></div>
-    <h2 id="ageTitle"><?= e($AGE['title'] ?? '') ?></h2>
-    <p><?= e($AGE['text'] ?? '') ?></p>
-    <div class="age-under-msg" id="ageUnderMsg"><?= e($AGE['under_msg'] ?? '') ?></div>
-    <div class="age-btns">
-      <button class="btn btn-primary btn-block" id="ageYes"><svg class="icon"><use href="#i-check"/></svg> <?= e($AGE['yes_label'] ?? '') ?></button>
-      <button class="btn btn-ghost btn-block" id="ageNo"><?= e($AGE['no_label'] ?? '') ?></button>
-    </div>
-    <p class="age-note"><svg class="icon"><use href="#i-shield"/></svg> <?= e($AGE['note'] ?? '') ?></p>
-  </div>
-</div>
-<?php endif; ?>
+

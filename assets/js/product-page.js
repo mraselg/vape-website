@@ -4,14 +4,18 @@
 'use strict';
 
 (function productPage() {
-  /* Age gate guard — home owns the gate */
-  if (localStorage.getItem(LS_AGE) !== 'true') {
-    location.replace('/');
-    return;
+  /* Age gate guard — prompt on page if not verified yet, never bounce user away */
+  if (typeof initUniversalAgeGate === 'function') {
+    initUniversalAgeGate();
   }
 
+
   const params = new URLSearchParams(location.search);
-  const rawId = params.get('id') || params.get('slug');
+  let rawId = params.get('id') || params.get('slug');
+  if (!rawId) {
+    const m = location.pathname.match(/\/product\/([a-zA-Z0-9_-]+)/);
+    if (m) rawId = m[1];
+  }
   /* Unknown/invalid id: stop here instead of silently showing another product.
      (product.php already answers with HTTP 404 + noindex for crawlers.) */
   if (!rawId || !byId(rawId)) {

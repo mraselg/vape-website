@@ -35,7 +35,7 @@ function cardHtml(p) {
       '</div>' +
       '<div class="card-body">' +
         ratingLineHtml('card-rating-line') +
-        '<h3 class="card-name" title="' + esc(p.name) + '">' + esc(p.name) + '</h3>' +
+        '<h3 class="card-name" title="' + esc(p.name) + '"><a href="product.php?id=' + p.id + '" style="color:inherit;text-decoration:none;">' + esc(p.name) + '</a></h3>' +
         '<div class="card-price-row">' +
           '<span class="card-price">' + p.price + '<small> AED</small></span>' +
           (p.old ? '<span class="card-old">' + p.old + ' AED</span>' : '') +
@@ -91,7 +91,7 @@ function vipBestCardHtml(p, index) {
       '</div>' +
       '<div class="vip-card-body">' +
         ratingLineHtml('vip-rating-line', ' · Verified') +
-        '<h3 class="vip-card-name" title="' + esc(p.name) + '">' + esc(p.name) + '</h3>' +
+        '<h3 class="vip-card-name" title="' + esc(p.name) + '"><a href="product.php?id=' + p.id + '" style="color:inherit;text-decoration:none;">' + esc(p.name) + '</a></h3>' +
         '<div class="vip-price-box">' +
           '<div class="vip-price-main">' +
             '<span class="vip-price">' + p.price + '<small> AED</small></span>' +
@@ -239,22 +239,8 @@ document.addEventListener('keydown', (e) => {
 
 /* ---------- Age gate ---------- */
 (function ageGate() {
-  const modal = $('#ageModal');
-  if (!modal) return;
-  const under = $('#ageUnderMsg');
-  if (localStorage.getItem(LS_AGE) === 'true') { modal.remove(); return; }
-  openLayer(modal, 'modal');
-  const yesBtn = $('#ageYes');
-  if (yesBtn) {
-    yesBtn.addEventListener('click', () => {
-      localStorage.setItem(LS_AGE, 'true');
-      closeLayer(modal);
-      setTimeout(() => modal.remove(), 500);
-    });
-  }
-  const noBtn = $('#ageNo');
-  if (noBtn && under) {
-    noBtn.addEventListener('click', () => { under.classList.add('is-visible'); });
+  if (typeof initUniversalAgeGate === 'function') {
+    initUniversalAgeGate();
   }
 })();
 

@@ -97,7 +97,7 @@ function card_html(array $p): string
         . '</div>'
         . '<div class="card-body">'
         . rating_line()
-        . '<h3 class="card-name" title="' . e($p['name'] ?? '') . '">' . e($p['name'] ?? '') . '</h3>'
+        . '<h3 class="card-name" title="' . e($p['name'] ?? '') . '"><a href="/product.php?id=' . e($p['id'] ?? '') . '" style="color:inherit;text-decoration:none;">' . e($p['name'] ?? '') . '</a></h3>'
         . '<div class="card-price-row">' . $price . '</div>'
         . '<div class="card-actions">'
         . '<button class="add-btn" data-add="' . e($p['id'] ?? '') . '"><svg class="icon icon-sm"><use href="#i-wa"/></svg> Order Now</button>'
@@ -124,7 +124,7 @@ function vip_card_html(array $p, int $index): string
         . '<div class="vip-card-media ' . media_bg($p) . ' ' . e($p['theme'] ?? '') . '">' . $photo . art_use($p) . '</div>'
         . '<div class="vip-card-body">'
         . rating_line('vip-rating-line', ' · Verified')
-        . '<h3 class="vip-card-name" title="' . e($p['name'] ?? '') . '">' . e($p['name'] ?? '') . '</h3>'
+        . '<h3 class="vip-card-name" title="' . e($p['name'] ?? '') . '"><a href="/product.php?id=' . e($p['id'] ?? '') . '" style="color:inherit;text-decoration:none;">' . e($p['name'] ?? '') . '</a></h3>'
         . '<div class="vip-price-box"><div class="vip-price-main">'
         . '<span class="vip-price">' . e($p['price'] ?? 0) . '<small> AED</small></span>'
         . (!empty($p['old']) ? '<span class="vip-old">' . e($p['old']) . ' AED</span>' : '')
@@ -149,7 +149,7 @@ function cat_card_html(array $p): string
         . '</div>'
         . '<div class="card-body">'
         . rating_line()
-        . '<h3 class="card-name" title="' . e($p['name'] ?? '') . '">' . e($p['name'] ?? '') . '</h3>'
+        . '<h3 class="card-name" title="' . e($p['name'] ?? '') . '"><a href="/product.php?id=' . e($p['id'] ?? '') . '" style="color:inherit;text-decoration:none;">' . e($p['name'] ?? '') . '</a></h3>'
         . stock_html($p)
         . '<div class="card-price-row">'
         . '<span class="card-price">' . e($p['price'] ?? 0) . '<small> AED</small></span>'

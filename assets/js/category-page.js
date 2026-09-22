@@ -4,10 +4,18 @@
 'use strict';
 
 (function categoryPage() {
-  if (localStorage.getItem(LS_AGE) !== 'true') { location.replace('/'); return; }
+  if (typeof initUniversalAgeGate === 'function') {
+    initUniversalAgeGate();
+  }
+
 
   const params = new URLSearchParams(location.search);
-  const key = params.get('cat') || 'all';
+  let key = params.get('cat') || '';
+  if (!key) {
+    const m = location.pathname.match(/\/category\/([a-zA-Z0-9_-]+)/);
+    if (m) key = m[1];
+  }
+  if (!key) key = 'all';
   const cat = CATS[key] || { title: 'All Products', sub: 'Best vape shop in Dubai', desc: 'The full Vape Club Dubai catalogue — original devices, sticks, disposables, pods and juices with express delivery.', photo: '', theme: 'art-emerald', art: 'pack' };
   const list = catProducts(key);
   document.title = (CATS[key] ? CATS[key].title : 'All Products') + ' — Vape Club Dubai';

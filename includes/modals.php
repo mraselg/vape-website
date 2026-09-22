@@ -284,6 +284,33 @@ $delivery  = (float) ($S['delivery_fee'] ?? 20);
     </button>
   </div>
 </nav>
+<?php
+$AGE = $VCD_HOME['age_gate'] ?? [
+    'enabled' => true,
+    'title' => 'Are you 18 or older?',
+    'text' => 'This store sells nicotine products regulated by UAE law. Please confirm you are of legal smoking age to enter.',
+    'under_msg' => 'Access denied. You must be at least 18 years old to view or purchase from this store.',
+    'yes_label' => 'Yes, I am 18+',
+    'no_label' => 'No, I am under 18',
+    'note' => 'ESMA compliant · Verified original products only'
+];
+if ($AGE['enabled'] ?? true):
+?>
+<!-- ========== AGE GATE (UNIVERSAL) ========== -->
+<div class="modal" id="ageModal" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
+  <div class="modal-panel age-panel">
+    <div class="age-shield"><svg class="icon"><use href="#i-18"/></svg></div>
+    <h2 id="ageTitle"><?= e($AGE['title'] ?? 'Are you 18 or older?') ?></h2>
+    <p><?= e($AGE['text'] ?? 'This store sells nicotine products regulated by UAE law. Please confirm you are of legal smoking age to enter.') ?></p>
+    <div class="age-under-msg" id="ageUnderMsg" style="display:none; color:#ef4444; margin-bottom:12px; font-weight:600;"><?= e($AGE['under_msg'] ?? 'Access denied. You must be at least 18 years old.') ?></div>
+    <div class="age-btns">
+      <button class="btn btn-primary btn-block" id="ageYes"><svg class="icon"><use href="#i-check"/></svg> <?= e($AGE['yes_label'] ?? 'Yes, I am 18+') ?></button>
+      <button class="btn btn-ghost btn-block" id="ageNo"><?= e($AGE['no_label'] ?? 'No, I am under 18') ?></button>
+    </div>
+    <p class="age-note"><svg class="icon"><use href="#i-shield"/></svg> <?= e($AGE['note'] ?? 'ESMA compliant · Verified original products only') ?></p>
+  </div>
+</div>
+<?php endif; ?>
 
 <?php require __DIR__ . '/whatsapp-chat-modal.php'; ?>
 

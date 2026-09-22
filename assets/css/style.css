@@ -178,7 +178,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); color: var(--ink); line-heigh
 .announce-track span { display: inline-flex; align-items: center; gap: 8px; padding-inline: 28px; color: #d7f5e8; white-space: nowrap; }
 .announce-track .dot { color: var(--gold); }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.announce-lang { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: none; align-items: center; gap: 8px; }
+.announce-lang { position: absolute; right: 0; top: 0; bottom: 0; display: none; align-items: center; gap: 8px; padding-left: 28px; padding-right: 12px; background: linear-gradient(90deg, transparent, #07202e 35%, #251c05 100%); z-index: 2; }
 .lang-toggle { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; }
 .lang-toggle button { background: transparent; border: 0; color: var(--body); font-size: 11px; font-weight: 700; padding: 4px 10px; }
 .lang-toggle button.is-active { background: var(--emerald); color: var(--emerald-ink); }

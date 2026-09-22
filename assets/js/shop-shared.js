@@ -989,6 +989,37 @@ function triggerVisitorBeacon() {
   } catch (e) {}
 }
 
+function initUniversalAgeGate() {
+  const modal = $('#ageModal');
+  if (!modal) return;
+  const under = $('#ageUnderMsg');
+  if (localStorage.getItem(LS_AGE) === 'true') {
+    modal.remove();
+    return;
+  }
+  openLayer(modal, 'modal');
+  const yesBtn = $('#ageYes');
+  if (yesBtn && !yesBtn._bound) {
+    yesBtn._bound = true;
+    yesBtn.addEventListener('click', () => {
+      localStorage.setItem(LS_AGE, 'true');
+      closeLayer(modal);
+      setTimeout(() => modal.remove(), 400);
+    });
+  }
+  const noBtn = $('#ageNo');
+  if (noBtn && !noBtn._bound) {
+    noBtn._bound = true;
+    noBtn.addEventListener('click', () => {
+      if (under) {
+        under.classList.add('is-visible');
+        under.style.display = 'block';
+      }
+    });
+  }
+}
+window.initUniversalAgeGate = initUniversalAgeGate;
+
 // Run initial shared setups
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
@@ -996,12 +1027,14 @@ if (document.readyState === 'loading') {
     syncBottomNavActive();
     syncBadges();
     triggerVisitorBeacon();
+    initUniversalAgeGate();
   });
 } else {
   initThemeSwitcher();
   syncBottomNavActive();
   syncBadges();
   triggerVisitorBeacon();
+  initUniversalAgeGate();
 }
 
 
